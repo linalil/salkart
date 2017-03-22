@@ -21,7 +21,7 @@
 
         var _available = [];
         var _selected = [];
-        
+
         var _multiCursor = 0;
         var _multiStart = '';
         var _multiEnd = '';
@@ -42,7 +42,7 @@
             available: true,
             notavailable: false,
             selected: false
-        }        
+        }
 
         //Initialize
         var _container = this;
@@ -56,6 +56,10 @@
 
             var _id = $(this).prop('id').substr(4);
 
+            /* TODO: Her kan vi sikkert endre, slik at ein
+                     ikkje vel multiple seter, men eit gitt antall.
+            */
+
             if (settings.multiple === true) {
                 if (_multiCursor == 0) {
                     _multiCursor = 1;
@@ -68,30 +72,34 @@
                     selectMultiple(_multiStart, _multiEnd);
                     _multiStart = '';
                     _multiEnd = '';
-                }                
+                }
             }
             else {
                 if ($(this).prop('checked') == true)
+
+                    /* Kan sikkert bruke selectSeat-metoden
+                       for å velje fleire sete også?
+                    */
                     selectSeat(_id);
                 else {
                     deselectSeat(_id);
                 }
             }
-        });        
+        });
 
         //Private Functions
 
         //Initialize
         function init(){
-            for (i = 0; i < settings.rows; i++) {   
+            for (i = 0; i < settings.rows; i++) {
                 for (j = 0; j < settings.columns; j++) {
-                    
+
                     //Defining ID
                     var _id = i + '-' + j;
-                    
+
                     //Creating new seat object and providing ID
                     var _seatObject = new seat();
-                    _seatObject.id = _id;                  
+                    _seatObject.id = _id;
 
                     //Check if seat is already in booked status
                     if ($.inArray(_id, settings.booked) >= 0) {
@@ -113,7 +121,7 @@
             }
         }
 
-        //Draw layout
+        //Draw layout - metoden som faktisk teiknar opp alt!
         function draw(container) {
             //Clearing the current layout
             container.empty();
@@ -125,7 +133,7 @@
             }
 
             container.append(_rowLabel);
-            
+
             //Creating Initial Layout
             for (i = 0; i < settings.rows; i++) {
 
@@ -140,9 +148,9 @@
                     //Finding the seat from the array
                     var _seatObject = _seats.filter(function(seat){
                         return seat.id == _id;
-                    })[0];                  
+                    })[0];
 
-                    
+
 
                     var _seatClass = 'seat';
                     var _seatBlockColor = '#fff';
@@ -181,11 +189,15 @@
         //Select a single seat
         function selectSeat(id) {
             if ($.inArray(id, _selected) == -1) {
-                _selected.push(id);                
+                _selected.push(id);
                 var _seatObj = _seats.filter(function (seat) {
                     return seat.id == id;
                 });
                 _seatObj[0].selected = true;
+
+                //TODO: Snakke med databasen og vise gitt sete som "valgt"
+                //TODO: Gjere setet utilgjengeleg for andre brukarar.
+
             }
         }
 
@@ -198,10 +210,14 @@
                 return seat.id == id;
             });
             _seatObj[0].selected = false;
+
+            //TODO: Snakke med databasen og merke setet som ledig igjen
+            //TODO: Gjere setet tilgjengeleg for andre brukarar.
+
         }
 
         //Select multiple seats
-        function selectMultiple(start, end) {            
+        function selectMultiple(start, end) {
             var _i = start.split('-');
             var _j = end.split('-');
 
@@ -250,12 +266,14 @@
             getSelected: function () {
                 return _seats.filter(function (seat) {
                     return seat.selected == true;
+
                 });
             },
             setMultiple: function (value) {
                 _multiCursor = 0;
                 settings.multiple = value === 'true';
             },
+            
             getBlocks: function(){
                 return _blocks;
             },
@@ -271,15 +289,18 @@
                     return item.label !== label;
                 });
             },
+
+            //Metoden som oppdaterar med ny farge når vi set ei blokk. (?)
+
             defineBlock: function (label, seats) {
                 $.each(seats, function (i, v) {
-                    var _this = this;                    
+                    var _this = this;
                     var _seat = _seats.filter(function (seat) {
                         return seat.id == _this.id;
-                    });                    
+                    });
                     _seat[0].block = label;
                     _seat[0].selected = false;
-                });                
+                });
                 draw(_container);
             }
         }

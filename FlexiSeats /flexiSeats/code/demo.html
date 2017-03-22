@@ -6,7 +6,7 @@
     <link href="styles/tooltipster.css" rel="stylesheet" />
     <link href="styles/tooltipster-shadow.css" rel="stylesheet" />
     <link href="styles/font-awesome.min.css" rel="stylesheet" />
-    
+
     <script src="scripts/jquery-2.1.4.min.js"></script>
     <script src="scripts/flexiseats.js"></script>
     <script src="scripts/jquery.tooltipster.min.js"></script>
@@ -23,11 +23,17 @@
 
             getBlocks();
 
+            /* Funksjon som hentar inn verdiar frå tekstfelta øverst,
+              når ein trykker på knappen "Draw"
+            */
             $('#btnDraw').click(function () {
                 var _rows = parseInt($('#txtRows').val());
-                var _cols = parseInt($('#txtCols').val());                
+                var _cols = parseInt($('#txtCols').val());
             });
 
+            /* Metode som legg til ei ny blokk i nedtrekkslista,
+               når ein trykker på knappen "Add" i botnen av sida.
+            */
             $('#btnAddBlock').click(function () {
                 var _label = $('#txtBlockLabel').val();
                 var _price = $('#txtBlockPrice').val();
@@ -36,7 +42,10 @@
                 seats.addBlock(_label, _price, _color);
                 getBlocks();
             });
-            
+
+            /* Metode som hentar inn eksisterande blokker, og legg desse til i
+               nedtrekkslista.
+            */
             function getBlocks() {
                 $('#lstBlocks').empty();
                 $.each(seats.getBlocks(), function (i, v) {
@@ -45,22 +54,26 @@
                 });
             }
 
+            //Metode som byter mellom Single og Multiple-mode.
             $('.flexiSeatsMode').click(function () {
                 seats.setMultiple($(this).val());
             });
 
+            //Metoden som definerar farge på seta som er valgt.
             $('#btnDefineGold').click(function () {
-                var _label = $('#lstBlocks').val();                
+                var _label = $('#lstBlocks').val();
                 seats.defineBlock(_label, seats.getSelected());
             });
-            
+
+
+            //Her blir det satt nokre innstillingar for kvart enkelt sete. 
             $('.seat').tooltipster({
                 offsetY: -10,
                 theme: 'tooltipster-shadow'
             });
         });
     </script>
-    
+
 </head>
 <body>
     <div>
@@ -91,7 +104,7 @@
         <input type="radio" name="mode" value="true" class="flexiSeatsMode" />Multiple
     </div>
 
-    <div class="methods">        
+    <div class="methods">
         <select id="lstBlocks"></select>
         <button type="button" id="btnDefineGold">Define Selected</button>
     </div>
