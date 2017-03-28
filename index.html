@@ -76,40 +76,13 @@
 
 </head>
 <body>
-    <div>
-        Rows: <input id="txtRows" type="text" />
-        Columns: <input id="txtCols" type="text" />
-        <input type="button" id="btnDraw" value="Draw" />
-    </div>
 
-    <div id="seats">
-
-    </div>
-
-    <div>
-        <br />
-        <h4>Mode</h4>
-        <input type="radio" name="mode" value="false" class="flexiSeatsMode" />Single
-        <input type="radio" name="mode" value="true" class="flexiSeatsMode" />Multiple
-    </div>
+    <div id="seats"></div>
 
     <div class="methods">
         <select id="lstBlocks"></select>
         <button type="button" id="btnDefineGold">Define Selected</button>
     </div>
-
-    <h6>Add Block</h6>
-    <table>
-        <tr>
-            <td>Label</td>
-            <td><input type="text" id="txtBlockLabel" /></td>
-            <td>Price</td>
-            <td><input type="text" id="txtBlockPrice" /></td>
-            <td>Color</td>
-            <td><input type="text" id="txtBlockColor" /></td>
-        </tr>
-    </table>
-    <button type="button" id="btnAddBlock">Add</button>
 
     <script src="https://www.gstatic.com/firebasejs/3.7.3/firebase.js"></script>
     <script>
