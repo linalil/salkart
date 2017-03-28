@@ -1,7 +1,4 @@
-﻿/* flexiSeats: jQuery plugin to create flexible and interactive seating layouts */
-/* Author: Pratik Galoria */
-/* Version 1.0 */
-
+﻿
 (function ($) {
     $.fn.flexiSeats = function (options) {
         var scope = this;
@@ -273,7 +270,7 @@
                 _multiCursor = 0;
                 settings.multiple = value === 'true';
             },
-            
+
             getBlocks: function(){
                 return _blocks;
             },
