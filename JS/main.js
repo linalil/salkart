@@ -1,10 +1,83 @@
-/* flexiSeats: jQuery plugin to create flexible and interactive seating layouts */
-/* Author: Pratik Galoria */
-/* Version 1.0 */
+﻿
+$(document).ready(function () {
+  let seats = $('#seats').flexiSeats({
+    rows: 3,
+    columns: 4,
+    multiple: false,
+
+});
+
+var database = firebase.database().ref('//').once('value', function(snapshot){
+  console.log(snapshot.val())
+
+  var talRader = snapshot.child('Rad').val()
+  var talSeter = snapshot.child('Seter').val()
+
+  seats = $('#seats').flexiSeats({
+      rows: talRader,
+      columns: talSeter,
+      multiple: false,
+
+  });
+});
+
+    getBlocks();
+
+    /* Funksjon som hentar inn verdiar frå tekstfelta øverst,
+      når ein trykker på knappen "Draw"
+    */
+    $('#btnDraw').click(function () {
+        var _rows = parseInt($('#txtRows').val());
+        var _cols = parseInt($('#txtCols').val());
+    });
+
+    /* Metode som legg til ei ny blokk i nedtrekkslista,
+       når ein trykker på knappen "Add" i botnen av sida.
+    */
+    $('#btnAddBlock').click(function () {
+        var _label = $('#txtBlockLabel').val();
+        var _price = $('#txtBlockPrice').val();
+        var _color = $('#txtBlockColor').val();
+
+        seats.addBlock(_label, _price, _color);
+        getBlocks();
+    });
+
+    /* Metode som hentar inn eksisterande blokker, og legg desse til i
+       nedtrekkslista.
+    */
+    function getBlocks() {
+        $('#lstBlocks').empty();
+        $.each(seats.getBlocks(), function (i, v) {
+            var _block = $('<option value="' + this.label + '">' + this.label + ' (' + this.price + ' Rs.)</option>');
+            $('#lstBlocks').append(_block);
+        });
+    }
+
+    //Metode som byter mellom Single og Multiple-mode.
+    $('.flexiSeatsMode').click(function () {
+        seats.setMultiple($(this).val());
+    });
+
+    //Metoden som definerar farge på seta som er valgt.
+    $('#btnDefineGold').click(function () {
+        var _label = $('#lstBlocks').val();
+        seats.defineBlock(_label, seats.getSelected());
+    });
+
+
+    //Her blir det satt nokre innstillingar for kvart enkelt sete.
+    $('.seat').tooltipster({
+        offsetY: -10,
+        theme: 'tooltipster-shadow'
+    });
+});
+/*------------------------------------------------------------------------*/
 
 (function ($) {
     $.fn.flexiSeats = function (options) {
         var scope = this;
+
 
         //Options
         var settings = $.extend({
