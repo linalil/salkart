@@ -70,13 +70,18 @@ var database = firebase.database().ref('//').once('value', function(snapshot) {
         offsetY: -10,
         theme: 'tooltipster-shadow'
     });
+
+
 });
 /*------------------------------------------------------------------------*/
 
+
+
+
+/*------------------------------------------------------------------------*/
 (function ($) {
     $.fn.flexiSeats = function (options) {
-        var scope = this;
-
+        var scope = this
 
         //Options
         var settings = $.extend({
@@ -85,9 +90,10 @@ var database = firebase.database().ref('//').once('value', function(snapshot) {
             booked: [],
             notavailable: [],
             multiple: false
-        }, options);
+        }, options)
 
         //Local Variables
+
         var _blocks = [];
         var _seats = [];
 
@@ -117,6 +123,15 @@ var database = firebase.database().ref('//').once('value', function(snapshot) {
         }
 
         //Initialize
+
+        var numSeats = 1
+        $('select').on('change', function (e) {
+            var optionSelected = $("option:selected", this);
+            numSeats = this.value
+            console.log("Verdi, select: " + numSeats)
+        })
+
+
         var _container = this;
         init();
         draw(_container);
@@ -132,6 +147,36 @@ var database = firebase.database().ref('//').once('value', function(snapshot) {
                      ikkje vel multiple seter, men eit gitt antall.
             */
 
+            console.log("Verdi på numSeats er" + numSeats)
+
+            //Viss ein skal bestille eit sete
+            if(numSeats == 1){
+
+              console.log("Du prøvar å booke eit sete")
+
+              if ($(this).prop('checked') == true)
+
+                  /* Kan sikkert bruke selectSeat-metoden
+                     for å velje fleire sete også?
+                  */
+                  selectSeat(_id);
+              else {
+                  deselectSeat(_id);
+              }
+            }
+
+            else{
+
+              console.log("Du prøvar å booke fleire sete")
+
+              selectMultiple(_id, numSeats)
+
+            }
+
+
+
+
+            /*
             if (settings.multiple === true) {
                 if (_multiCursor == 0) {
                     _multiCursor = 1;
@@ -148,15 +193,11 @@ var database = firebase.database().ref('//').once('value', function(snapshot) {
             }
             else {
                 if ($(this).prop('checked') == true)
-
-                    /* Kan sikkert bruke selectSeat-metoden
-                       for å velje fleire sete også?
-                    */
                     selectSeat(_id);
                 else {
                     deselectSeat(_id);
                 }
-            }
+            }*/
         });
 
         //Private Functions
@@ -266,6 +307,7 @@ var database = firebase.database().ref('//').once('value', function(snapshot) {
                 var _seatObj = _seats.filter(function (seat) {
                     return seat.id == id;
                 });
+                console.log("Enkeltsetet sin id: " + id)
                 _seatObj[0].selected = true;
 
                 //TODO: Snakke med databasen og vise gitt sete som "valgt"
@@ -290,6 +332,7 @@ var database = firebase.database().ref('//').once('value', function(snapshot) {
             var _seatObj = _seats.filter(function (seat) {
                 return seat.id == id;
             });
+
             _seatObj[0].selected = false;
 
             var dbRef = firebase.database().ref('/Plassering/' + _seatObj[0].id)
@@ -306,10 +349,19 @@ var database = firebase.database().ref('//').once('value', function(snapshot) {
         }
 
         //Select multiple seats
-        function selectMultiple(start, end) {
+        function selectMultiple(start, numSeats) {
             var _i = start.split('-');
-            var _j = end.split('-');
+            //var _j = end.split('-');
+            var endX = _i[1] + (numSeats-1)
+            var _slutt = _i[1] + '-' + endX
 
+            /*
+            2-4
+            _i[0] = 2
+            _i[1] = 4
+            */
+
+            /*
             if (parseInt(_i[0]) > parseInt(_j[0])) {
                 var _temp = _i[0];
                 _i[0] = _j[0];
@@ -320,8 +372,19 @@ var database = firebase.database().ref('//').once('value', function(snapshot) {
                 var _temp = _i[1];
                 _i[1] = _j[1];
                 _j[1] = _temp;
+            }*/
+
+            for(x = parseInt(_i[1]) ; x <= parseInt(endX) ; x++){
+              if ($('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).data('status') != 'notavailable' && $('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).data('status') != 'booked') {
+                  $('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).prop('checked', 'checked');
+                  selectSeat(_i[0] + '-' + x);
+                  console.log("Valgte sete" + _i[0] + '-' + x)
+              }
+
+
             }
 
+            /*
             for (i = parseInt(_i[0]) ; i <= parseInt(_j[0]) ; i++) {
                 for (j = parseInt(_i[1]) ; j <= parseInt(_j[1]) ; j++) {
                     if ($('input:checkbox[id="seat' + i + '-' + j + '"]', scope).data('status') != 'notavailable' && $('input:checkbox[id="seat' + i + '-' + j + '"]', scope).data('status') != 'booked') {
@@ -330,6 +393,7 @@ var database = firebase.database().ref('//').once('value', function(snapshot) {
                     }
                 }
             }
+            */
         }
 
         $('#nullstill').click(function () {
