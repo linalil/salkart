@@ -1,4 +1,4 @@
-﻿
+
 $(document).ready(function () {
   let seats = $('#seats').flexiSeats({
     rows: 3,
@@ -7,7 +7,7 @@ $(document).ready(function () {
 
 });
 
-var database = firebase.database().ref('//').once('value', function(snapshot){
+var database = firebase.database().ref('//').once('value', function(snapshot) {
   console.log(snapshot.val())
 
   var talRader = snapshot.child('Rad').val()
@@ -40,8 +40,8 @@ var database = firebase.database().ref('//').once('value', function(snapshot){
         var _color = $('#txtBlockColor').val();
 
         seats.addBlock(_label, _price, _color);
-        getBlocks();
-    });
+        getBlocks()
+    })
 
     /* Metode som hentar inn eksisterande blokker, og legg desse til i
        nedtrekkslista.
@@ -56,15 +56,14 @@ var database = firebase.database().ref('//').once('value', function(snapshot){
 
     //Metode som byter mellom Single og Multiple-mode.
     $('.flexiSeatsMode').click(function () {
-        seats.setMultiple($(this).val());
-    });
+        seats.setMultiple($(this).val())
+    })
 
     //Metoden som definerar farge på seta som er valgt.
     $('#btnDefineGold').click(function () {
         var _label = $('#lstBlocks').val();
-        seats.defineBlock(_label, seats.getSelected());
-    });
-
+        seats.defineBlock(_label, seats.getSelected())
+    })
 
     //Her blir det satt nokre innstillingar for kvart enkelt sete.
     $('.seat').tooltipster({
@@ -244,6 +243,7 @@ var database = firebase.database().ref('//').once('value', function(snapshot){
                         _checkbox.prop('disabled', 'disabled');
                         _checkbox.attr('data-status', 'booked');
                     }
+
                     else if (_seatObject.notavailable) {
                         _checkbox.prop('disabled', 'disabled');
                         _checkbox.attr('data-status', 'notavailable');
@@ -271,6 +271,14 @@ var database = firebase.database().ref('//').once('value', function(snapshot){
                 //TODO: Snakke med databasen og vise gitt sete som "valgt"
                 //TODO: Gjere setet utilgjengeleg for andre brukarar.
 
+                console.log('SeteID: ' + _seatObj[0].id)
+                var dbRef = firebase.database().ref('/Plassering/' + _seatObj[0].id)
+                    .update({ id: _seatObj[0].id,
+                              reservert: 'true',
+                              booked: 'false'
+                              });
+
+
             }
         }
 
@@ -283,6 +291,14 @@ var database = firebase.database().ref('//').once('value', function(snapshot){
                 return seat.id == id;
             });
             _seatObj[0].selected = false;
+
+            var dbRef = firebase.database().ref('/Plassering/' + _seatObj[0].id)
+                .update({ id: _seatObj[0].id,
+                          reservert: 'false',
+                          booked: 'false'
+                          });
+
+
 
             //TODO: Snakke med databasen og merke setet som ledig igjen
             //TODO: Gjere setet tilgjengeleg for andre brukarar.
@@ -315,6 +331,30 @@ var database = firebase.database().ref('//').once('value', function(snapshot){
                 }
             }
         }
+
+        $('#nullstill').click(function () {
+
+          $.each(_seats, function (i, v) {
+              var _this = this
+              var _seat = _seats.filter(function (seat) {
+                  return seat.id == _this.id;
+              });
+
+              _seat[0].booked = false;
+              _seat[0].selected = false;
+              _seat[0].available = true;
+
+
+              var dbRef = firebase.database().ref('/Plassering/' + _seat[0].id)
+                  .update({ id: _seat[0].id,
+                            reservert: 'false',
+                            booked: 'false'
+                            });
+
+            })
+
+            draw(_container)
+        })
 
         //API
         return {
@@ -364,7 +404,6 @@ var database = firebase.database().ref('//').once('value', function(snapshot){
             },
 
             //Metoden som oppdaterar med ny farge når vi set ei blokk. (?)
-
             defineBlock: function (label, seats) {
                 $.each(seats, function (i, v) {
                     var _this = this;
@@ -373,9 +412,21 @@ var database = firebase.database().ref('//').once('value', function(snapshot){
                     });
                     _seat[0].block = label;
                     _seat[0].selected = false;
+                    _seat[0].booked = true;
+                    _seat[0].available = false;
+
+                    var dbRef = firebase.database().ref('/Plassering/' + _seat[0].id)
+                        .update({ id: _seat[0].id,
+                                  reservert: 'false',
+                                  booked: 'true'
+                                  });
+
                 });
                 draw(_container);
             }
+
+
+
         }
     };
 }(jQuery));
