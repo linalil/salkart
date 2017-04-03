@@ -346,7 +346,7 @@ $(document).ready(function () {
         function selectMultiple(start, numSeats) {
             var _i = start.split('-');
             //var _j = end.split('-');
-            var endX = _i[1] + (numSeats-1)
+            var endX = parseInt(_i[1]) + (numSeats - 1)
             var _slutt = _i[1] + '-' + endX
 
             /*
@@ -368,7 +368,9 @@ $(document).ready(function () {
                 _j[1] = _temp;
             }*/
 
+            console.log("Skal lese frå sete: " + _i[1] + " til sete " + endX + " på rad " + _i[0])
             for(x = parseInt(_i[1]) ; x <= parseInt(endX) ; x++){
+
               if ($('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).data('status') != 'notavailable' && $('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).data('status') != 'booked') {
                   $('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).prop('checked', 'checked');
                   selectSeat(_i[0] + '-' + x);
