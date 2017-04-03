@@ -1,35 +1,26 @@
 
 $(document).ready(function () {
-  let seats = $('#seats').flexiSeats({
-    rows: 3,
-    columns: 4,
-    multiple: false,
+  var database = firebase.database().ref('//').once('value', function (snapshot) {
+    console.log(snapshot.val())
 
-});
+    var talRader = snapshot.child('Rad').val()
+    var talSeter = snapshot.child('Seter').val()
 
-var database = firebase.database().ref('//').once('value', function(snapshot) {
-  console.log(snapshot.val())
+    let seats = $('#seats').flexiSeats({
+        rows: talRader,
+        columns: talSeter,
+        multiple: false
+    })
 
-  var talRader = snapshot.child('Rad').val()
-  var talSeter = snapshot.child('Seter').val()
-
-  seats = $('#seats').flexiSeats({
-      rows: talRader,
-      columns: talSeter,
-      multiple: false,
-
-  });
-});
-
-    getBlocks();
+    getBlocks()
 
     /* Funksjon som hentar inn verdiar frå tekstfelta øverst,
       når ein trykker på knappen "Draw"
     */
     $('#btnDraw').click(function () {
-        var _rows = parseInt($('#txtRows').val());
-        var _cols = parseInt($('#txtCols').val());
-    });
+        var _rows = parseInt($('#txtRows').val())
+        var _cols = parseInt($('#txtCols').val())
+    })
 
     /* Metode som legg til ei ny blokk i nedtrekkslista,
        når ein trykker på knappen "Add" i botnen av sida.
@@ -72,14 +63,17 @@ var database = firebase.database().ref('//').once('value', function(snapshot) {
     });
 
 
+  });
+
+
+
+
+
 });
 /*------------------------------------------------------------------------*/
 
 
-
-
-/*------------------------------------------------------------------------*/
-(function ($) {
+(function mainFunction ($) {
     $.fn.flexiSeats = function (options) {
         var scope = this
 
