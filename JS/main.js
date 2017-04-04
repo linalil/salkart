@@ -65,15 +65,12 @@ $(document).ready(function () {
 
   });
 
-
-
-
+mainFunction(jQuery)
 
 });
 /*------------------------------------------------------------------------*/
 
-
-(function mainFunction ($) {
+function mainFunction ($) {
     $.fn.flexiSeats = function (options) {
         var scope = this
 
@@ -146,7 +143,7 @@ $(document).ready(function () {
             //Viss ein skal bestille eit sete
             if(numSeats == 1){
 
-              console.log("Du prøvar å booke eit sete")
+              console.log("Du provar å booke eit sete")
 
               if ($(this).prop('checked') == true)
 
@@ -161,7 +158,7 @@ $(document).ready(function () {
 
             else{
 
-              console.log("Du prøvar å booke fleire sete")
+              console.log("Du provar å booke fleire sete")
 
               selectMultiple(_id, numSeats)
 
@@ -257,8 +254,6 @@ $(document).ready(function () {
                         return seat.id == _id;
                     })[0];
 
-
-
                     var _seatClass = 'seat';
                     var _seatBlockColor = '#fff';
                     var _price = 0;
@@ -274,7 +269,24 @@ $(document).ready(function () {
                     var _checkbox = $('<input id="seat' + _seatObject.id + '" data-block="' + _seatObject.block + '" type="checkbox" />');
                     var _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '" style="background-color: ' + _seatBlockColor + '"  title="#' + String.fromCharCode(65 + i) + '-' + j + ', ' + _price + ' Rs."></label>');
 
+                    var dbReservert = firebase.database().ref('/Plassering/' + _id + '/reservert/')
+                    dbReservert.on('value', function(snapshot){
+                        if(snapshot.val() == "true"){
+
+                        }
+                    })
+
+                    var dbBooked = firebase.database().ref('/Plassering/' + _id + '/booked/')
+                    dbBooked.on('value', function(snapshot){
+                        if(snapshot.val() == "true"){
+
+                        }
+                    })
+
+                    console.log(_seatObject.id + "skal sjekkast verdi på, booked:" + _seatObject.booked + ", reservert: " + _seatObject.reservert)
+
                     if (_seatObject.booked) {
+
                         _checkbox.prop('disabled', 'disabled');
                         _checkbox.attr('data-status', 'booked');
                     }
@@ -284,7 +296,7 @@ $(document).ready(function () {
                         _checkbox.attr('data-status', 'notavailable');
                     }
                     else {
-
+                        console.log("Ingen attr satt for sete " + _id)
                     }
 
                     _row.append(_checkbox);
@@ -368,7 +380,7 @@ $(document).ready(function () {
                 _j[1] = _temp;
             }*/
 
-            console.log("Skal lese frå sete: " + _i[1] + " til sete " + endX + " på rad " + _i[0])
+            console.log("Skal lese fra sete: " + _i[1] + " til sete " + endX + " paa rad " + _i[0])
             for(x = parseInt(_i[1]) ; x <= parseInt(endX) ; x++){
 
               if ($('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).data('status') != 'notavailable' && $('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).data('status') != 'booked') {
@@ -489,4 +501,4 @@ $(document).ready(function () {
 
         }
     };
-}(jQuery));
+};
