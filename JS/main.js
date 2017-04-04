@@ -85,6 +85,8 @@ function mainFunction ($) {
 
         //Local Variables
 
+        let mySeats = [];
+
         var _blocks = [];
         var _seats = [];
 
@@ -121,11 +123,7 @@ function mainFunction ($) {
             console.log("Verdi, select: " + numSeats)
         })
 
-
         var _container = this;
-
-        //init();
-        //draw(_container);
 
         //Events
         this.on('click', 'input:checkbox', function () {
@@ -134,13 +132,8 @@ function mainFunction ($) {
 
             var _id = $(this).prop('id').substr(4);
 
-            console.log("Verdi på numSeats er" + numSeats)
-
             //Viss ein skal bestille eit sete
             if(numSeats == 1){
-
-              console.log("Du provar å booke eit sete")
-
               if ($(this).prop('checked') == true)
                   selectSeat(_id);
               else {
@@ -149,37 +142,15 @@ function mainFunction ($) {
             }
 
             else{
-              console.log("Du provar å booke fleire sete")
               selectMultiple(_id, numSeats)
             }
-
-            /*
-            if (settings.multiple === true) {
-                if (_multiCursor == 0) {
-                    _multiCursor = 1;
-                    _multiStart = _id;
-                    selectSeat(_id);
-                }
-                else {
-                    _multiCursor = 0;
-                    _multiEnd = _id;
-                    selectMultiple(_multiStart, _multiEnd);
-                    _multiStart = '';
-                    _multiEnd = '';
-                }
-            }
-            else {
-                if ($(this).prop('checked') == true)
-                    selectSeat(_id);
-                else {
-                    deselectSeat(_id);
-                }
-            }*/
         });
 
         //Private Functions
         //Initialize
-        var dbInitRef = firebase.database().ref('/Plassering').once('value', function (snapshot){
+        var dbInitRef = firebase.database().ref('/Plassering')
+
+        dbInitRef.once('value', function (snapshot){
 
           for(i = 0; i < settings.rows; i++){
             for(j = 0; j < settings.columns; j++){
@@ -196,7 +167,6 @@ function mainFunction ($) {
                 _seatObject.booked = true
               }
 
-
               if(snapshot.child(_id).child('reservert').val() == 'true'){
                 console.log('Id lik ' + i + '-' + j + ' er reservert')
                 _seatObject.available = false
@@ -210,6 +180,36 @@ function mainFunction ($) {
           draw(_container)
         })
 
+
+
+
+
+        dbInitRef.on("child_changed", function(snapshot) {
+          var c = snapshot.val();
+          console.log(c.id + ' was changed, reservert:' + c.reservert + ', og booked:' + c.booked)
+          var _seatObj = _seats.filter(function (seat) {
+              return seat.id == c.id;
+          });
+
+          if(($.inArray(c.id, mySeats)) == -1){
+
+            if(c.reservert == 'true'){
+              _seatObj[0].available = false
+              _seatObj[0].notavailable = true
+            }
+            else if(c.booked == 'true'){
+
+              _seatObj[0].booked = true
+              _seatObj[0].available = false
+            }
+          }
+
+          else{
+            _seatObj[0].reservert = true
+          }
+
+          draw(_container)
+        });
 
         function init(){
 
@@ -287,11 +287,13 @@ function mainFunction ($) {
                     var _checkbox = $('<input id="seat' + _seatObject.id + '" data-block="' + _seatObject.block + '" type="checkbox" />');
                     var _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '" style="background-color: ' + _seatBlockColor + '"  title="#' + String.fromCharCode(65 + i) + '-' + j + ', ' + _price + ' Rs."></label>');
 
-                    //Må her sjekke i databasen for updates når ein teiknar på nytt.
-
                     if (_seatObject.booked) {
                         _checkbox.prop('disabled', 'disabled');
                         _checkbox.attr('data-status', 'booked');
+                    }
+                    else if (_seatObject.selected) {
+                        _checkbox.prop('checked', 'checked');
+                        //_checkbox.attr('data-status', 'reserved');
                     }
 
                     else if (_seatObject.notavailable) {
@@ -316,11 +318,9 @@ function mainFunction ($) {
                 var _seatObj = _seats.filter(function (seat) {
                     return seat.id == id;
                 });
-                console.log("Enkeltsetet sin id: " + id)
-                _seatObj[0].selected = true;
 
-                //TODO: Snakke med databasen og vise gitt sete som "valgt"
-                //TODO: Gjere setet utilgjengeleg for andre brukarar.
+                _seatObj[0].selected = true;
+                mySeats.push(id)
 
                 console.log('SeteID: ' + _seatObj[0].id)
                 var dbRef = firebase.database().ref('/Plassering/' + _seatObj[0].id)
@@ -341,6 +341,9 @@ function mainFunction ($) {
             });
 
             _seatObj[0].selected = false;
+
+            let index = parseInt(($.inArray(id, mySeats)))
+            mySeats.splice(index, 1)
 
             var dbRef = firebase.database().ref('/Plassering/' + _seatObj[0].id)
                 .update({ id: _seatObj[0].id,
@@ -379,19 +382,17 @@ function mainFunction ($) {
               _seat[0].booked = false;
               _seat[0].selected = false;
               _seat[0].available = true;
+              _seat[0].notavailable = false;
 
+              draw(_container)
 
               var dbRef = firebase.database().ref('/Plassering/' + _seat[0].id)
                   .update({ id: _seat[0].id,
                             reservert: 'false',
                             booked: 'false',
-                            notavailable: 'false',
-                            available: 'true'
                             });
 
             })
-
-            draw(_container)
         })
 
         //API
