@@ -114,7 +114,6 @@ function mainFunction ($) {
         }
 
         //Initialize
-
         var numSeats = 1
         $('select').on('change', function (e) {
             var optionSelected = $("option:selected", this);
@@ -124,8 +123,9 @@ function mainFunction ($) {
 
 
         var _container = this;
-        init();
-        draw(_container);
+
+        //init();
+        //draw(_container);
 
         //Events
         this.on('click', 'input:checkbox', function () {
@@ -133,10 +133,6 @@ function mainFunction ($) {
                 return false;
 
             var _id = $(this).prop('id').substr(4);
-
-            /* TODO: Her kan vi sikkert endre, slik at ein
-                     ikkje vel multiple seter, men eit gitt antall.
-            */
 
             console.log("Verdi på numSeats er" + numSeats)
 
@@ -146,10 +142,6 @@ function mainFunction ($) {
               console.log("Du provar å booke eit sete")
 
               if ($(this).prop('checked') == true)
-
-                  /* Kan sikkert bruke selectSeat-metoden
-                     for å velje fleire sete også?
-                  */
                   selectSeat(_id);
               else {
                   deselectSeat(_id);
@@ -157,15 +149,9 @@ function mainFunction ($) {
             }
 
             else{
-
               console.log("Du provar å booke fleire sete")
-
               selectMultiple(_id, numSeats)
-
             }
-
-
-
 
             /*
             if (settings.multiple === true) {
@@ -192,9 +178,41 @@ function mainFunction ($) {
         });
 
         //Private Functions
-
         //Initialize
+        var dbInitRef = firebase.database().ref('/Plassering').once('value', function (snapshot){
+
+          for(i = 0; i < settings.rows; i++){
+            for(j = 0; j < settings.columns; j++){
+
+              //Defining ID
+              let _id = i + '-' + j;
+
+              //Creating new seat object and providing ID
+              var _seatObject = new seat();
+              _seatObject.id = _id;
+
+              if(snapshot.child(_id).child('booked').val() == 'true'){
+                console.log('Bookar sete med id ' + _id)
+                _seatObject.booked = true
+              }
+
+
+              if(snapshot.child(_id).child('reservert').val() == 'true'){
+                console.log('Id lik ' + i + '-' + j + ' er reservert')
+                _seatObject.available = false
+                _seatObject.notavailable = true
+              }
+
+              _seats.push(_seatObject);
+            }
+          }
+
+          draw(_container)
+        })
+
+
         function init(){
+
             for (i = 0; i < settings.rows; i++) {
                 for (j = 0; j < settings.columns; j++) {
 
@@ -212,17 +230,17 @@ function mainFunction ($) {
 
                     //Check if seat is available for booking
                     else if ($.inArray(_id, settings.notavailable) >= 0) {
-                        _seatObject.available = false;
-                        _seatObject.notavailable = true;
+                        _seatObject.available = false
+                        _seatObject.notavailable = true
                     }
 
                     //Other conditions
                     else {
                     }
-
                     _seats.push(_seatObject);
                 }
             }
+
         }
 
         //Draw layout - metoden som faktisk teiknar opp alt!
@@ -269,24 +287,9 @@ function mainFunction ($) {
                     var _checkbox = $('<input id="seat' + _seatObject.id + '" data-block="' + _seatObject.block + '" type="checkbox" />');
                     var _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '" style="background-color: ' + _seatBlockColor + '"  title="#' + String.fromCharCode(65 + i) + '-' + j + ', ' + _price + ' Rs."></label>');
 
-                    var dbReservert = firebase.database().ref('/Plassering/' + _id + '/reservert/')
-                    dbReservert.on('value', function(snapshot){
-                        if(snapshot.val() == "true"){
-
-                        }
-                    })
-
-                    var dbBooked = firebase.database().ref('/Plassering/' + _id + '/booked/')
-                    dbBooked.on('value', function(snapshot){
-                        if(snapshot.val() == "true"){
-
-                        }
-                    })
-
-                    console.log(_seatObject.id + "skal sjekkast verdi på, booked:" + _seatObject.booked + ", reservert: " + _seatObject.reservert)
+                    //Må her sjekke i databasen for updates når ein teiknar på nytt.
 
                     if (_seatObject.booked) {
-
                         _checkbox.prop('disabled', 'disabled');
                         _checkbox.attr('data-status', 'booked');
                     }
@@ -325,8 +328,6 @@ function mainFunction ($) {
                               reservert: 'true',
                               booked: 'false'
                               });
-
-
             }
         }
 
@@ -347,11 +348,6 @@ function mainFunction ($) {
                           booked: 'false'
                           });
 
-
-
-            //TODO: Snakke med databasen og merke setet som ledig igjen
-            //TODO: Gjere setet tilgjengeleg for andre brukarar.
-
         }
 
         //Select multiple seats
@@ -361,25 +357,6 @@ function mainFunction ($) {
             var endX = parseInt(_i[1]) + (numSeats - 1)
             var _slutt = _i[1] + '-' + endX
 
-            /*
-            2-4
-            _i[0] = 2
-            _i[1] = 4
-            */
-
-            /*
-            if (parseInt(_i[0]) > parseInt(_j[0])) {
-                var _temp = _i[0];
-                _i[0] = _j[0];
-                _j[0] = _temp;
-            }
-
-            if (parseInt(_i[1]) > parseInt(_j[1])) {
-                var _temp = _i[1];
-                _i[1] = _j[1];
-                _j[1] = _temp;
-            }*/
-
             console.log("Skal lese fra sete: " + _i[1] + " til sete " + endX + " paa rad " + _i[0])
             for(x = parseInt(_i[1]) ; x <= parseInt(endX) ; x++){
 
@@ -388,20 +365,7 @@ function mainFunction ($) {
                   selectSeat(_i[0] + '-' + x);
                   console.log("Valgte sete" + _i[0] + '-' + x)
               }
-
-
             }
-
-            /*
-            for (i = parseInt(_i[0]) ; i <= parseInt(_j[0]) ; i++) {
-                for (j = parseInt(_i[1]) ; j <= parseInt(_j[1]) ; j++) {
-                    if ($('input:checkbox[id="seat' + i + '-' + j + '"]', scope).data('status') != 'notavailable' && $('input:checkbox[id="seat' + i + '-' + j + '"]', scope).data('status') != 'booked') {
-                        $('input:checkbox[id="seat' + i + '-' + j + '"]', scope).prop('checked', 'checked');
-                        selectSeat(i + '-' + j);
-                    }
-                }
-            }
-            */
         }
 
         $('#nullstill').click(function () {
@@ -420,7 +384,9 @@ function mainFunction ($) {
               var dbRef = firebase.database().ref('/Plassering/' + _seat[0].id)
                   .update({ id: _seat[0].id,
                             reservert: 'false',
-                            booked: 'false'
+                            booked: 'false',
+                            notavailable: 'false',
+                            available: 'true'
                             });
 
             })
