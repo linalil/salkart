@@ -1,5 +1,8 @@
 
 $(document).ready(function () {
+
+  /*Opnar kopling til databasen og hentar inn tal rader og seter.
+    Lagrar denne informasjonen i eit seteobjekt.*/
   var database = firebase.database().ref('//').once('value', function (snapshot) {
     console.log(snapshot.val())
 
@@ -65,6 +68,7 @@ $(document).ready(function () {
 
   });
 
+//Køyrer hovudfunksjonen under.
 mainFunction(jQuery)
 
 });
@@ -85,6 +89,7 @@ function mainFunction ($) {
 
         //Local Variables
 
+        //Variabel som lagrar kva sete du har trykt på.
         let mySeats = [];
 
         var _blocks = [];
@@ -105,6 +110,7 @@ function mainFunction ($) {
             color: null
         }
 
+        //Definisjonen av eit sete-objekt.
         seat = function () { };
         seat.prototype = {
             id: null,
@@ -115,7 +121,7 @@ function mainFunction ($) {
             selected: false
         }
 
-        //Initialize
+        //Sjekkar kor mange sete brukar ønskjer å velje, endrar seg i forhold til nedtrekkslista.
         var numSeats = 1
         $('select').on('change', function (e) {
             var optionSelected = $("option:selected", this);
@@ -126,6 +132,8 @@ function mainFunction ($) {
         var _container = this;
 
         //Events
+
+        //Lagar event for når brukar trykker på eit sete.
         this.on('click', 'input:checkbox', function () {
             if ($(this).data('status') == 'booked')
                 return false;
@@ -140,7 +148,6 @@ function mainFunction ($) {
                   deselectSeat(_id);
               }
             }
-
             else{
               selectMultiple(_id, numSeats)
             }
@@ -148,10 +155,14 @@ function mainFunction ($) {
 
         //Private Functions
         //Initialize
+
+        //Opnar databasetilkopling til 'Plassering'-greina.
         var dbInitRef = firebase.database().ref('/Plassering')
 
+        //Første gong når ein teknar opp salkartet.
         dbInitRef.once('value', function (snapshot){
 
+          //Går gjennom seter og rader som satt i settings.
           for(i = 0; i < settings.rows; i++){
             for(j = 0; j < settings.columns; j++){
 
@@ -162,13 +173,17 @@ function mainFunction ($) {
               var _seatObject = new seat();
               _seatObject.id = _id;
 
+              //Sjekkar om setet med gitt id har status booka i databasen.
               if(snapshot.child(_id).child('booked').val() == 'true'){
                 console.log('Bookar sete med id ' + _id)
+                //Set i så fall booked til true, slik at setet blir teikna opp grønt.
                 _seatObject.booked = true
               }
 
+              //Sjekkar om setet med gitt id har status reservert i databasen.
               if(snapshot.child(_id).child('reservert').val() == 'true'){
                 console.log('Id lik ' + i + '-' + j + ' er reservert')
+                //Passar i så fall på at det ikkje skal vere tilgjengeleg.
                 _seatObject.available = false
                 _seatObject.notavailable = true
               }
@@ -177,26 +192,34 @@ function mainFunction ($) {
             }
           }
 
+          //Teiknar opp salkartet
           draw(_container)
         })
 
 
-
-
-
+        //Dersom eit av borna under 'Plassering' endrar seg, så vil callbackmetoden under køyrast.
         dbInitRef.on("child_changed", function(snapshot) {
+
+          //c er bornet der det har skjedd ei endring, altså det setet som har endra status.
           var c = snapshot.val();
           console.log(c.id + ' was changed, reservert:' + c.reservert + ', og booked:' + c.booked)
+
+          //Hentar ut dette setet frå lista over alle ved hjelp av id-en.
           var _seatObj = _seats.filter(function (seat) {
               return seat.id == c.id;
           });
 
+          //Sjekkar at setet ikkje er eit av "dine sete" lagra i mySeats
           if(($.inArray(c.id, mySeats)) == -1){
 
+            //Dersom det er reservert (og ikkje ditt), sett status 'utilgjengeleg'
+            //Setet vil då bli farga mørkegrått.
             if(c.reservert == 'true'){
               _seatObj[0].available = false
               _seatObj[0].notavailable = true
             }
+
+            //Dersom det er booka, set booka til true (Setet blir grønt).
             else if(c.booked == 'true'){
 
               _seatObj[0].booked = true
@@ -204,15 +227,18 @@ function mainFunction ($) {
             }
           }
 
+          //Dersom setet er blant dei du har plukka, set reservert til true (Setet blir blått).
           else{
             _seatObj[0].reservert = true
           }
 
+          //Teikn salkartet på nytt.
           draw(_container)
         });
 
+        //Funksjon som ikkje er i bruk lenger..
+        /*
         function init(){
-
             for (i = 0; i < settings.rows; i++) {
                 for (j = 0; j < settings.columns; j++) {
 
@@ -241,7 +267,7 @@ function mainFunction ($) {
                 }
             }
 
-        }
+        }*/
 
         //Draw layout - metoden som faktisk teiknar opp alt!
         function draw(container) {
@@ -319,9 +345,13 @@ function mainFunction ($) {
                     return seat.id == id;
                 });
 
+                //Oppdaterar status til reservert.
                 _seatObj[0].selected = true;
+
+                //Lagrar setet i lista over mine sete, mySeats
                 mySeats.push(id)
 
+                //Oppdaterar databasen.
                 console.log('SeteID: ' + _seatObj[0].id)
                 var dbRef = firebase.database().ref('/Plassering/' + _seatObj[0].id)
                     .update({ id: _seatObj[0].id,
@@ -340,11 +370,14 @@ function mainFunction ($) {
                 return seat.id == id;
             });
 
+            //Endrar status til at setet ikkje er reservert.
             _seatObj[0].selected = false;
 
+            //Slettar setet frå mi liste over sete, mySeats.
             let index = parseInt(($.inArray(id, mySeats)))
             mySeats.splice(index, 1)
 
+            //Oppdaterar databasen.
             var dbRef = firebase.database().ref('/Plassering/' + _seatObj[0].id)
                 .update({ id: _seatObj[0].id,
                           reservert: 'false',
@@ -357,10 +390,14 @@ function mainFunction ($) {
         function selectMultiple(start, numSeats) {
             var _i = start.split('-');
             //var _j = end.split('-');
+
+            //Finn endepunktet som ein skal gå til, basert på kor mange sete ein ønskjer.
             var endX = parseInt(_i[1]) + (numSeats - 1)
             var _slutt = _i[1] + '-' + endX
 
             console.log("Skal lese fra sete: " + _i[1] + " til sete " + endX + " paa rad " + _i[0])
+
+            //Går langs gitte rad, og plukkar ønska tal seter - desse får endra status.
             for(x = parseInt(_i[1]) ; x <= parseInt(endX) ; x++){
 
               if ($('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).data('status') != 'notavailable' && $('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).data('status') != 'booked') {
@@ -371,6 +408,7 @@ function mainFunction ($) {
             }
         }
 
+        //Metode som nullstiller kart og database når ein trykker på nullstill.
         $('#nullstill').click(function () {
 
           $.each(_seats, function (i, v) {
@@ -442,18 +480,23 @@ function mainFunction ($) {
                 });
             },
 
-            //Metoden som oppdaterar med ny farge når vi set ei blokk. (?)
+            //Metoden som "kjøper billettar" når vi trykker på knappen.
             defineBlock: function (label, seats) {
+
+                //For kvart av seta som er selected...
                 $.each(seats, function (i, v) {
                     var _this = this;
                     var _seat = _seats.filter(function (seat) {
                         return seat.id == _this.id;
                     });
+
+                    //..endre status på setet,
                     _seat[0].block = label;
                     _seat[0].selected = false;
                     _seat[0].booked = true;
                     _seat[0].available = false;
 
+                    //..og oppdater databasen.
                     var dbRef = firebase.database().ref('/Plassering/' + _seat[0].id)
                         .update({ id: _seat[0].id,
                                   reservert: 'false',
@@ -461,6 +504,8 @@ function mainFunction ($) {
                                   });
 
                 });
+
+                //Teikn opp på nytt når alle sete er gjennomgått.
                 draw(_container);
             }
 
