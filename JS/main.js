@@ -126,6 +126,7 @@ function mainFunction($) {
             var optionSelected = $("option:selected", this);
             numSeats = this.value
             console.log("Verdi, select: " + numSeats)
+            clearMySeats()
         })
 
         var _container = this;
@@ -142,15 +143,19 @@ function mainFunction($) {
             //Viss ein skal bestille eit sete
             if (numSeats == 1) {
                 if ($(this).prop('checked') == true) {
-
-                    //Funksjonalitet som sjekkar kor mange du har valgt.
-
                     selectSeat(_id)
+
                 } else {
+
                     deselectSeat(_id)
                 }
             } else {
-                selectMultiple(_id, numSeats)
+              if ($(this).prop('checked') == true) {
+                  selectMultiple(_id, numSeats)
+              } else {
+                  clearMySeats()
+              }
+
             }
         });
 
@@ -308,20 +313,10 @@ function mainFunction($) {
         function selectSeat(id) {
             if ($.inArray(id, _selected) == -1) {
 
+              if(numSeats == 1){
+                clearMySeats()
+              }
 
-                if (mySeats.length >= numSeats) {
-
-                    console.log("No bør ein slette")
-
-                    for (let i = 0; i < mySeats.length; i++) {
-                        let tempId = mySeats[i]
-                        console.log("Slettar id" + tempId)
-
-                        deselectSeat(tempId)
-                    }
-                }
-
-                console.log("numSeats er" + numSeats + " og privat lagra sete er " + mySeats.length)
                 _selected.push(id);
                 var _seatObj = _seats.filter(function(seat) {
                     return seat.id == id;
@@ -361,11 +356,6 @@ function mainFunction($) {
             //Endrar status til at setet ikkje er reservert.
             _seatObj[0].selected = false;
 
-            //Slettar setet frå mi liste over sete, mySeats.
-            let index = parseInt(($.inArray(id, mySeats)))
-            mySeats.splice(index, 1)
-            console.log("Tall element i privat er " + mySeats.length)
-
             //Oppdaterar databasen.
             var dbRef = firebase.database().ref('/Plassering/' + _seatObj[0].id)
             dbRef.transaction(function(sete) {
@@ -380,6 +370,20 @@ function mainFunction($) {
             });
         }
 
+        //Metode som slettar lokalt lagra sete
+        function clearMySeats(){
+          console.log("Slettar lagra sete..")
+
+          for (let i = 0; i < mySeats.length; i++) {
+              let tempId = mySeats[i]
+              console.log("Koyrer deselect for id: " + tempId)
+
+              deselectSeat(tempId)
+          }
+          mySeats.length = 0
+
+        }
+
         //Select multiple seats
         function selectMultiple(start, numSeats) {
             var _i = start.split('-');
@@ -388,8 +392,11 @@ function mainFunction($) {
             var endX = parseInt(_i[1]) + (numSeats - 1)
             var _slutt = _i[1] + '-' + endX
 
-            console.log("Skal lese fra sete: " + _i[1] + " til sete " + endX + " paa rad " + _i[0])
+            if (mySeats.length >= numSeats) {
+              clearMySeats()
+            }
 
+            console.log("Skal no lese fra sete: " + _i[1] + " til sete " + endX + " paa rad " + _i[0])
             //Går langs gitte rad, og plukkar ønska tal seter - desse får endra status.
             for (x = parseInt(_i[1]); x <= parseInt(endX); x++) {
 
