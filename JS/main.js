@@ -1,81 +1,80 @@
+$(document).ready(function() {
 
-$(document).ready(function () {
+    /*Opnar kopling til databasen og hentar inn tal rader og seter.
+      Lagrar denne informasjonen i eit seteobjekt.*/
+    var database = firebase.database().ref('//').once('value', function(snapshot) {
+        console.log(snapshot.val())
 
-  /*Opnar kopling til databasen og hentar inn tal rader og seter.
-    Lagrar denne informasjonen i eit seteobjekt.*/
-  var database = firebase.database().ref('//').once('value', function (snapshot) {
-    console.log(snapshot.val())
+        var talRader = snapshot.child('Rad').val()
+        var talSeter = snapshot.child('Seter').val()
 
-    var talRader = snapshot.child('Rad').val()
-    var talSeter = snapshot.child('Seter').val()
+        let seats = $('#seats').flexiSeats({
+            rows: talRader,
+            columns: talSeter,
+            multiple: false
+        })
 
-    let seats = $('#seats').flexiSeats({
-        rows: talRader,
-        columns: talSeter,
-        multiple: false
-    })
-
-    getBlocks()
-
-    /* Funksjon som hentar inn verdiar frå tekstfelta øverst,
-      når ein trykker på knappen "Draw"
-    */
-    $('#btnDraw').click(function () {
-        var _rows = parseInt($('#txtRows').val())
-        var _cols = parseInt($('#txtCols').val())
-    })
-
-    /* Metode som legg til ei ny blokk i nedtrekkslista,
-       når ein trykker på knappen "Add" i botnen av sida.
-    */
-    $('#btnAddBlock').click(function () {
-        var _label = $('#txtBlockLabel').val();
-        var _price = $('#txtBlockPrice').val();
-        var _color = $('#txtBlockColor').val();
-
-        seats.addBlock(_label, _price, _color);
         getBlocks()
-    })
 
-    /* Metode som hentar inn eksisterande blokker, og legg desse til i
-       nedtrekkslista.
-    */
-    function getBlocks() {
-        $('#lstBlocks').empty();
-        $.each(seats.getBlocks(), function (i, v) {
-            var _block = $('<option value="' + this.label + '">' + this.label + ' (' + this.price + ' Rs.)</option>');
-            $('#lstBlocks').append(_block);
+        /* Funksjon som hentar inn verdiar frå tekstfelta øverst,
+          når ein trykker på knappen "Draw"
+        */
+        $('#btnDraw').click(function() {
+            var _rows = parseInt($('#txtRows').val())
+            var _cols = parseInt($('#txtCols').val())
+        })
+
+        /* Metode som legg til ei ny blokk i nedtrekkslista,
+           når ein trykker på knappen "Add" i botnen av sida.
+        */
+        $('#btnAddBlock').click(function() {
+            var _label = $('#txtBlockLabel').val();
+            var _price = $('#txtBlockPrice').val();
+            var _color = $('#txtBlockColor').val();
+
+            seats.addBlock(_label, _price, _color);
+            getBlocks()
+        })
+
+        /* Metode som hentar inn eksisterande blokker, og legg desse til i
+           nedtrekkslista.
+        */
+        function getBlocks() {
+            $('#lstBlocks').empty();
+            $.each(seats.getBlocks(), function(i, v) {
+                var _block = $('<option value="' + this.label + '">' + this.label + ' (' + this.price + ' Rs.)</option>');
+                $('#lstBlocks').append(_block);
+            });
+        }
+
+        //Metode som byter mellom Single og Multiple-mode.
+        $('.flexiSeatsMode').click(function() {
+            seats.setMultiple($(this).val())
+        })
+
+        //Metoden som definerar farge på seta som er valgt.
+        $('#btnDefineGold').click(function() {
+            var _label = $('#lstBlocks').val();
+            seats.defineBlock(_label, seats.getSelected())
+        })
+
+        //Her blir det satt nokre innstillingar for kvart enkelt sete.
+        $('.seat').tooltipster({
+            offsetY: -10,
+            theme: 'tooltipster-shadow'
         });
-    }
 
-    //Metode som byter mellom Single og Multiple-mode.
-    $('.flexiSeatsMode').click(function () {
-        seats.setMultiple($(this).val())
-    })
 
-    //Metoden som definerar farge på seta som er valgt.
-    $('#btnDefineGold').click(function () {
-        var _label = $('#lstBlocks').val();
-        seats.defineBlock(_label, seats.getSelected())
-    })
-
-    //Her blir det satt nokre innstillingar for kvart enkelt sete.
-    $('.seat').tooltipster({
-        offsetY: -10,
-        theme: 'tooltipster-shadow'
     });
 
-
-  });
-
-//Køyrer hovudfunksjonen under.
-mainFunction(jQuery)
+    //Køyrer hovudfunksjonen under.
+    mainFunction(jQuery)
 
 });
 /*------------------------------------------------------------------------*/
 
-function mainFunction ($) {
-    $.fn.flexiSeats = function (options) {
+function mainFunction($) {
+    $.fn.flexiSeats = function(options) {
         var scope = this
 
         //Options
@@ -103,7 +102,7 @@ function mainFunction ($) {
         var _multiEnd = '';
 
         //Objects
-        block = function () { };
+        block = function() {};
         block.prototype = {
             label: null,
             price: null,
@@ -111,7 +110,7 @@ function mainFunction ($) {
         }
 
         //Definisjonen av eit sete-objekt.
-        seat = function () { };
+        seat = function() {};
         seat.prototype = {
             id: null,
             block: null,
@@ -123,7 +122,7 @@ function mainFunction ($) {
 
         //Sjekkar kor mange sete brukar ønskjer å velje, endrar seg i forhold til nedtrekkslista.
         var numSeats = 1
-        $('select').on('change', function (e) {
+        $('select').on('change', function(e) {
             var optionSelected = $("option:selected", this);
             numSeats = this.value
             console.log("Verdi, select: " + numSeats)
@@ -134,26 +133,24 @@ function mainFunction ($) {
         //Events
 
         //Lagar event for når brukar trykker på eit sete.
-        this.on('click', 'input:checkbox', function () {
+        this.on('click', 'input:checkbox', function() {
             if ($(this).data('status') == 'booked')
                 return false;
 
             var _id = $(this).prop('id').substr(4);
 
             //Viss ein skal bestille eit sete
-            if(numSeats == 1){
-              if ($(this).prop('checked') == true){
+            if (numSeats == 1) {
+                if ($(this).prop('checked') == true) {
 
-                //Funksjonalitet som sjekkar kor mange du har valgt.
+                    //Funksjonalitet som sjekkar kor mange du har valgt.
 
-                selectSeat(_id)
-              }
-              else {
-                  deselectSeat(_id)
-              }
-            }
-            else{
-              selectMultiple(_id, numSeats)
+                    selectSeat(_id)
+                } else {
+                    deselectSeat(_id)
+                }
+            } else {
+                selectMultiple(_id, numSeats)
             }
         });
 
@@ -164,117 +161,85 @@ function mainFunction ($) {
         var dbInitRef = firebase.database().ref('/Plassering')
 
         //Første gong når ein teknar opp salkartet.
-        dbInitRef.once('value', function (snapshot){
+        dbInitRef.once('value', function(snapshot) {
 
-          //Går gjennom seter og rader som satt i settings.
-          for(i = 0; i < settings.rows; i++){
-            for(j = 0; j < settings.columns; j++){
+            //Går gjennom seter og rader som satt i settings.
+            for (i = 0; i < settings.rows; i++) {
+                for (j = 0; j < settings.columns; j++) {
 
-              //Defining ID
-              let _id = i + '-' + j;
+                    //Defining ID
+                    let _id = i + '-' + j;
 
-              //Creating new seat object and providing ID
-              var _seatObject = new seat();
-              _seatObject.id = _id;
+                    //Creating new seat object and providing ID
+                    var _seatObject = new seat();
+                    _seatObject.id = _id;
 
-              //Sjekkar om setet med gitt id har status booka i databasen.
-              if(snapshot.child(_id).child('booked').val() == 'true'){
-                console.log('Bookar sete med id ' + _id)
-                //Set i så fall booked til true, slik at setet blir teikna opp grønt.
-                _seatObject.booked = true
-              }
+                    //Sjekkar om setet med gitt id har status booka i databasen.
+                    if (snapshot.child(_id).child('booked').val() == 'true') {
+                        console.log('Bookar sete med id ' + _id)
+                        //Set i så fall booked til true, slik at setet blir teikna opp grønt.
+                        _seatObject.booked = true
+                    }
 
-              //Sjekkar om setet med gitt id har status reservert i databasen.
-              if(snapshot.child(_id).child('reservert').val() == 'true'){
-                console.log('Id lik ' + i + '-' + j + ' er reservert')
-                //Passar i så fall på at det ikkje skal vere tilgjengeleg.
-                _seatObject.available = false
-                _seatObject.notavailable = true
-              }
+                    //Sjekkar om setet med gitt id har status reservert i databasen.
+                    if (snapshot.child(_id).child('reservert').val() == 'true') {
+                        console.log('Id lik ' + i + '-' + j + ' er reservert')
+                        //Passar i så fall på at det ikkje skal vere tilgjengeleg.
+                        _seatObject.available = false
+                        _seatObject.notavailable = true
+                    }
 
-              _seats.push(_seatObject);
+                    _seats.push(_seatObject);
+                }
             }
-          }
 
-          //Teiknar opp salkartet
-          draw(_container)
+            //Teiknar opp salkartet
+            draw(_container)
         })
 
 
         //Dersom eit av borna under 'Plassering' endrar seg, så vil callbackmetoden under køyrast.
         dbInitRef.on("child_changed", function(snapshot) {
 
-          //c er bornet der det har skjedd ei endring, altså det setet som har endra status.
-          var c = snapshot.val();
-          console.log(c.id + ' was changed, reservert:' + c.reservert + ', og booked:' + c.booked)
+            //c er bornet der det har skjedd ei endring, altså det setet som har endra status.
+            var c = snapshot.val();
+            console.log(c.id + ' was changed, reservert:' + c.reservert + ', og booked:' + c.booked)
 
-          //Hentar ut dette setet frå lista over alle ved hjelp av id-en.
-          var _seatObj = _seats.filter(function (seat) {
-              return seat.id == c.id;
-          });
+            //Hentar ut dette setet frå lista over alle ved hjelp av id-en.
+            var _seatObj = _seats.filter(function(seat) {
+                return seat.id == c.id;
+            });
 
-          //Sjekkar at setet ikkje er eit av "dine sete" lagra i mySeats
-          if(($.inArray(c.id, mySeats)) == -1){
+            //Sjekkar at setet ikkje er eit av "dine sete" lagra i mySeats
+            if (($.inArray(c.id, mySeats)) == -1) {
 
-            //Dersom det er reservert (og ikkje ditt), sett status 'utilgjengeleg'
-            //Setet vil då bli farga mørkegrått.
-            if(c.reservert == 'true'){
-              _seatObj[0].available = false
-              _seatObj[0].notavailable = true
-            }
+                //Dersom det er reservert (og ikkje ditt), sett status 'utilgjengeleg'
+                //Setet vil då bli farga mørkegrått.
+                if (c.reservert == 'true') {
+                    _seatObj[0].available = false
+                    _seatObj[0].notavailable = true
+                }
 
-            //Dersom det er booka, set booka til true (Setet blir grønt).
-            else if(c.booked == 'true'){
+                //Dersom det er booka, set booka til true (Setet blir grønt).
+                else if (c.booked == 'true') {
 
-              _seatObj[0].booked = true
-              _seatObj[0].available = false
-            }
-          }
-
-          //Dersom setet er blant dei du har plukka, set reservert til true (Setet blir blått).
-          else{
-            _seatObj[0].reservert = true
-          }
-
-          //Teikn salkartet på nytt.
-          draw(_container)
-        });
-
-        //Funksjon som ikkje er i bruk lenger..
-        /*
-        function init(){
-            for (i = 0; i < settings.rows; i++) {
-                for (j = 0; j < settings.columns; j++) {
-
-                    //Defining ID
-                    var _id = i + '-' + j;
-
-                    //Creating new seat object and providing ID
-                    var _seatObject = new seat();
-                    _seatObject.id = _id;
-
-                    //Check if seat is already in booked status
-                    if ($.inArray(_id, settings.booked) >= 0) {
-                        _seatObject.booked = true;
-                    }
-
-                    //Check if seat is available for booking
-                    else if ($.inArray(_id, settings.notavailable) >= 0) {
-                        _seatObject.available = false
-                        _seatObject.notavailable = true
-                    }
-
-                    //Other conditions
-                    else {
-                    }
-                    _seats.push(_seatObject);
+                    _seatObj[0].booked = true
+                    _seatObj[0].available = false
                 }
             }
 
-        }*/
+            //Dersom setet er blant dei du har plukka, set reservert til true (Setet blir blått).
+            else {
+                _seatObj[0].reservert = true
+            }
 
-        //Draw layout - metoden som faktisk teiknar opp alt!
+            //Teikn salkartet på nytt.
+            draw(_container)
+        });
+
+        //Draw layout - metoden som teiknar opp salkart
         function draw(container) {
+
             //Clearing the current layout
             container.empty();
 
@@ -298,7 +263,7 @@ function mainFunction ($) {
                     var _id = i + '-' + j;
 
                     //Finding the seat from the array
-                    var _seatObject = _seats.filter(function(seat){
+                    var _seatObject = _seats.filter(function(seat) {
                         return seat.id == _id;
                     })[0];
 
@@ -307,8 +272,10 @@ function mainFunction ($) {
                     var _price = 0;
 
                     if (_seatObject.block != null) {
-                        _seatBlockColor = _blocks.filter(function (block) { return block.label == _seatObject.block })[0].color;
-                        var _block = _blocks.filter(function (block) {
+                        _seatBlockColor = _blocks.filter(function(block) {
+                            return block.label == _seatObject.block
+                        })[0].color;
+                        var _block = _blocks.filter(function(block) {
                             return block.label == _seatObject.block;
                         });
                         _price = _block[0].price;
@@ -320,17 +287,13 @@ function mainFunction ($) {
                     if (_seatObject.booked) {
                         _checkbox.prop('disabled', 'disabled');
                         _checkbox.attr('data-status', 'booked');
-                    }
-                    else if (_seatObject.selected) {
+                    } else if (_seatObject.selected) {
                         _checkbox.prop('checked', 'checked');
                         //_checkbox.attr('data-status', 'reserved');
-                    }
-
-                    else if (_seatObject.notavailable) {
+                    } else if (_seatObject.notavailable) {
                         _checkbox.prop('disabled', 'disabled');
                         _checkbox.attr('data-status', 'notavailable');
-                    }
-                    else {
+                    } else {
 
                     }
 
@@ -346,21 +309,21 @@ function mainFunction ($) {
             if ($.inArray(id, _selected) == -1) {
 
 
-              if(mySeats.length >= numSeats){
+                if (mySeats.length >= numSeats) {
 
-                console.log("No bør ein slette")
+                    console.log("No bør ein slette")
 
-                for(let i = 0; i < mySeats.length; i++){
-                  let tempId = mySeats[i]
-                  console.log("Slettar id" + tempId)
+                    for (let i = 0; i < mySeats.length; i++) {
+                        let tempId = mySeats[i]
+                        console.log("Slettar id" + tempId)
 
-                  deselectSeat(tempId)
+                        deselectSeat(tempId)
+                    }
                 }
-              }
 
-              console.log("numSeats er" + numSeats + " og privat lagra sete er " + mySeats.length)
+                console.log("numSeats er" + numSeats + " og privat lagra sete er " + mySeats.length)
                 _selected.push(id);
-                var _seatObj = _seats.filter(function (seat) {
+                var _seatObj = _seats.filter(function(seat) {
                     return seat.id == id;
                 });
 
@@ -371,20 +334,27 @@ function mainFunction ($) {
                 mySeats.push(id)
 
                 //Oppdaterar databasen.
-                var dbRef = firebase.database().ref('/Plassering/' + _seatObj[0].id)
-                    .update({ id: _seatObj[0].id,
-                              reservert: 'true',
-                              booked: 'false'
-                              });
+                let dbRef = firebase.database().ref('/Plassering/' + _seatObj[0].id)
+                dbRef.transaction(function(sete) {
+                    if (sete) {
+                        sete.id = _seatObj[0].id
+                        sete.reservert = true
+                        sete.booked = false
+                    } else {
+                        console.log("Feilmelding for transaksjon")
+                    }
+                    return sete;
+                });
+
             }
         }
 
         //Deselect a single seat
         function deselectSeat(id) {
-            _selected = $.grep(_selected, function (item) {
+            _selected = $.grep(_selected, function(item) {
                 return item !== id;
             });
-            var _seatObj = _seats.filter(function (seat) {
+            var _seatObj = _seats.filter(function(seat) {
                 return seat.id == id;
             });
 
@@ -398,17 +368,21 @@ function mainFunction ($) {
 
             //Oppdaterar databasen.
             var dbRef = firebase.database().ref('/Plassering/' + _seatObj[0].id)
-                .update({ id: _seatObj[0].id,
-                          reservert: 'false',
-                          booked: 'false'
-                          });
-
+            dbRef.transaction(function(sete) {
+                if (sete) {
+                    sete.id = _seatObj[0].id
+                    sete.reservert = false
+                    sete.booked = false
+                } else {
+                    console.log("Feilmelding for transaksjon")
+                }
+                return sete;
+            });
         }
 
         //Select multiple seats
         function selectMultiple(start, numSeats) {
             var _i = start.split('-');
-            //var _j = end.split('-');
 
             //Finn endepunktet som ein skal gå til, basert på kor mange sete ein ønskjer.
             var endX = parseInt(_i[1]) + (numSeats - 1)
@@ -417,94 +391,98 @@ function mainFunction ($) {
             console.log("Skal lese fra sete: " + _i[1] + " til sete " + endX + " paa rad " + _i[0])
 
             //Går langs gitte rad, og plukkar ønska tal seter - desse får endra status.
-            for(x = parseInt(_i[1]) ; x <= parseInt(endX) ; x++){
+            for (x = parseInt(_i[1]); x <= parseInt(endX); x++) {
 
-              if ($('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).data('status') != 'notavailable' && $('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).data('status') != 'booked') {
-                  $('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).prop('checked', 'checked');
-                  selectSeat(_i[0] + '-' + x);
-              }
+                if ($('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).data('status') != 'notavailable' && $('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).data('status') != 'booked') {
+                    $('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).prop('checked', 'checked');
+                    selectSeat(_i[0] + '-' + x);
+                }
             }
         }
 
         //Metode som nullstiller kart og database når ein trykker på nullstill.
-        $('#nullstill').click(function () {
+        $('#nullstill').click(function() {
 
-          $.each(_seats, function (i, v) {
-              var _this = this
-              var _seat = _seats.filter(function (seat) {
-                  return seat.id == _this.id;
-              });
+            $.each(_seats, function(i, v) {
+                var _this = this
+                var _seat = _seats.filter(function(seat) {
+                    return seat.id == _this.id;
+                });
 
-              _seat[0].booked = false;
-              _seat[0].selected = false;
-              _seat[0].available = true;
-              _seat[0].notavailable = false;
+                _seat[0].booked = false;
+                _seat[0].selected = false;
+                _seat[0].available = true;
+                _seat[0].notavailable = false;
 
-              var dbRef = firebase.database().ref('/Plassering/' + _seat[0].id)
-                  .update({ id: _seat[0].id,
-                            reservert: 'false',
-                            booked: 'false',
-                            });
-
+                var dbRef = firebase.database().ref('/Plassering/' + _seat[0].id)
+                dbRef.transaction(function(sete) {
+                    if (sete) {
+                        sete.id = _seat[0].id
+                        sete.reservert = false
+                        sete.booked = false
+                    } else {
+                        console.log("Feilmelding for transaksjon")
+                    }
+                    return sete;
+                });
             })
-
             draw(_container)
         })
 
         //API
         return {
-            draw: function () {
+            draw: function() {
                 draw(_container);
             },
-            getAvailable: function () {
-                return _seats.filter(function (seat) {
+            getAvailable: function() {
+                return _seats.filter(function(seat) {
                     return seat.available == true;
                 });
             },
-            getNotAvailable: function () {
-                return _seats.filter(function (seat) {
+            getNotAvailable: function() {
+                return _seats.filter(function(seat) {
                     return seat.notavailable == true;
                 });
             },
-            getBooked: function () {
-                return _seats.filter(function (seat) {
+            getBooked: function() {
+                return _seats.filter(function(seat) {
                     return seat.booked == true;
                 });
             },
-            getSelected: function () {
-                return _seats.filter(function (seat) {
+            getSelected: function() {
+                return _seats.filter(function(seat) {
                     return seat.selected == true;
 
                 });
             },
-            setMultiple: function (value) {
+            setMultiple: function(value) {
                 _multiCursor = 0;
                 settings.multiple = value === 'true';
             },
 
-            getBlocks: function(){
+            getBlocks: function() {
                 return _blocks;
             },
-            addBlock: function (label, price, color) {
+            addBlock: function(label, price, color) {
                 var _newBlock = new block();
                 _newBlock.label = label;
                 _newBlock.price = price;
                 _newBlock.color = color;
                 _blocks.push(_newBlock);
             },
-            removeBlock: function (label) {
-                _blocks = $.grep(_blocks, function (item) {
+            removeBlock: function(label) {
+                _blocks = $.grep(_blocks, function(item) {
                     return item.label !== label;
                 });
             },
 
             //Metoden som "kjøper billettar" når vi trykker på knappen.
-            defineBlock: function (label, seats) {
+            defineBlock: function(label, seats) {
 
                 //For kvart av seta som er selected...
-                $.each(seats, function (i, v) {
+                $.each(seats, function(i, v) {
                     var _this = this;
-                    var _seat = _seats.filter(function (seat) {
+                    var _seat = _seats.filter(function(seat) {
                         return seat.id == _this.id;
                     });
 
@@ -516,11 +494,16 @@ function mainFunction ($) {
 
                     //..og oppdater databasen.
                     var dbRef = firebase.database().ref('/Plassering/' + _seat[0].id)
-                        .update({ id: _seat[0].id,
-                                  reservert: 'false',
-                                  booked: 'true'
-                                  });
-
+                    dbRef.transaction(function(sete) {
+                        if (sete) {
+                            sete.id = _seat[0].id
+                            sete.reservert = false
+                            sete.booked = true
+                        } else {
+                            console.log("Feilmelding for transaksjon")
+                        }
+                        return sete;
+                    });
                 });
 
                 //Teikn opp på nytt når alle sete er gjennomgått.
