@@ -3,10 +3,13 @@ $(document).ready(function() {
     /*Opnar kopling til databasen og hentar inn tal rader og seter.
       Lagrar denne informasjonen i eit seteobjekt.*/
     var database = firebase.database().ref('//').once('value', function(snapshot) {
-        console.log(snapshot.val())
+
+
 
         var talRader = snapshot.child('Rad').val()
         var talSeter = snapshot.child('Seter').val()
+
+        console.log("Rader: " + talRader + ", Seter: " + talSeter)
 
         let seats = $('#seats').flexiSeats({
             rows: talRader,
@@ -150,11 +153,13 @@ function mainFunction($) {
                     deselectSeat(_id)
                 }
             } else {
-              if ($(this).prop('checked') == true) {
+
+              selectMultiple(_id, numSeats)
+              /*if ($(this).prop('checked') == true) {
                   selectMultiple(_id, numSeats)
               } else {
                   clearMySeats()
-              }
+              }*/
 
             }
         });
@@ -168,6 +173,7 @@ function mainFunction($) {
         //Første gong når ein teknar opp salkartet.
         dbInitRef.once('value', function(snapshot) {
 
+            console.log("Initialisering av salkart... ")
             //Går gjennom seter og rader som satt i settings.
             for (i = 0; i < settings.rows; i++) {
                 for (j = 0; j < settings.columns; j++) {
@@ -180,14 +186,14 @@ function mainFunction($) {
                     _seatObject.id = _id;
 
                     //Sjekkar om setet med gitt id har status booka i databasen.
-                    if (snapshot.child(_id).child('booked').val() == 'true') {
+                    if (snapshot.child(_id).child('booked').val() == true) {
                         console.log('Bookar sete med id ' + _id)
                         //Set i så fall booked til true, slik at setet blir teikna opp grønt.
                         _seatObject.booked = true
                     }
 
                     //Sjekkar om setet med gitt id har status reservert i databasen.
-                    if (snapshot.child(_id).child('reservert').val() == 'true') {
+                    if (snapshot.child(_id).child('reservert').val() == true) {
                         console.log('Id lik ' + i + '-' + j + ' er reservert')
                         //Passar i så fall på at det ikkje skal vere tilgjengeleg.
                         _seatObject.available = false
@@ -220,17 +226,23 @@ function mainFunction($) {
 
                 //Dersom det er reservert (og ikkje ditt), sett status 'utilgjengeleg'
                 //Setet vil då bli farga mørkegrått.
-                if (c.reservert == 'true') {
+                if (c.reservert == true) {
                     _seatObj[0].available = false
                     _seatObj[0].notavailable = true
                 }
 
                 //Dersom det er booka, set booka til true (Setet blir grønt).
-                else if (c.booked == 'true') {
+                else if (c.booked == true) {
 
                     _seatObj[0].booked = true
                     _seatObj[0].available = false
                 }
+
+                else if(c.reservert == false && c.booked == false){
+                    _seatObj[0].available = true
+                    _seatObj[0].notavailable = false
+                }
+
             }
 
             //Dersom setet er blant dei du har plukka, set reservert til true (Setet blir blått).
