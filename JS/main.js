@@ -142,10 +142,14 @@ function mainFunction ($) {
 
             //Viss ein skal bestille eit sete
             if(numSeats == 1){
-              if ($(this).prop('checked') == true)
-                  selectSeat(_id);
+              if ($(this).prop('checked') == true){
+
+                //Funksjonalitet som sjekkar kor mange du har valgt.
+
+                selectSeat(_id)
+              }
               else {
-                  deselectSeat(_id);
+                  deselectSeat(_id)
               }
             }
             else{
@@ -340,6 +344,24 @@ function mainFunction ($) {
         //Select a single seat
         function selectSeat(id) {
             if ($.inArray(id, _selected) == -1) {
+
+
+              if(mySeats.length >= numSeats){
+
+                console.log("No bør ein slette")
+
+                for(let i = 0; i < mySeats.length; i++){
+                  let tempId = mySeats[i]
+                  console.log("Slettar id" + tempId)
+
+                  deselectSeat(tempId)
+                }
+
+                console.log("Etter sletting er lengda lik " + mySeats.length)
+
+              }
+
+              console.log("numSeats er" + numSeats + " og seats er" + mySeats.length)
                 _selected.push(id);
                 var _seatObj = _seats.filter(function (seat) {
                     return seat.id == id;
@@ -376,6 +398,7 @@ function mainFunction ($) {
             //Slettar setet frå mi liste over sete, mySeats.
             let index = parseInt(($.inArray(id, mySeats)))
             mySeats.splice(index, 1)
+            console.log("Tall element i privat er " + mySeats.length)
 
             //Oppdaterar databasen.
             var dbRef = firebase.database().ref('/Plassering/' + _seatObj[0].id)
