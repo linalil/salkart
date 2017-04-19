@@ -291,7 +291,7 @@ function mainFunction ($) {
 
                 //Providing Row label
                 var _row = $('<div class="row"></div>');
-                var _colLabel = $('<span class="row-label">' + String.fromCharCode(65+i) + '</span>');
+                var _colLabel = $('<span class="row-label">' + i + '</span>');
                 _row.append(_colLabel);
 
                 for (j = 0; j < settings.columns; j++) {
@@ -331,7 +331,7 @@ function mainFunction ($) {
                         _checkbox.attr('data-status', 'notavailable');
                     }
                     else {
-                        console.log("Ingen attr satt for sete " + _id)
+
                     }
 
                     _row.append(_checkbox);
@@ -356,12 +356,9 @@ function mainFunction ($) {
 
                   deselectSeat(tempId)
                 }
-
-                console.log("Etter sletting er lengda lik " + mySeats.length)
-
               }
 
-              console.log("numSeats er" + numSeats + " og seats er" + mySeats.length)
+              console.log("numSeats er" + numSeats + " og privat lagra sete er " + mySeats.length)
                 _selected.push(id);
                 var _seatObj = _seats.filter(function (seat) {
                     return seat.id == id;
@@ -374,7 +371,6 @@ function mainFunction ($) {
                 mySeats.push(id)
 
                 //Oppdaterar databasen.
-                console.log('SeteID: ' + _seatObj[0].id)
                 var dbRef = firebase.database().ref('/Plassering/' + _seatObj[0].id)
                     .update({ id: _seatObj[0].id,
                               reservert: 'true',
@@ -426,7 +422,6 @@ function mainFunction ($) {
               if ($('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).data('status') != 'notavailable' && $('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).data('status') != 'booked') {
                   $('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).prop('checked', 'checked');
                   selectSeat(_i[0] + '-' + x);
-                  console.log("Valgte sete" + _i[0] + '-' + x)
               }
             }
         }
@@ -445,8 +440,6 @@ function mainFunction ($) {
               _seat[0].available = true;
               _seat[0].notavailable = false;
 
-              draw(_container)
-
               var dbRef = firebase.database().ref('/Plassering/' + _seat[0].id)
                   .update({ id: _seat[0].id,
                             reservert: 'false',
@@ -454,6 +447,8 @@ function mainFunction ($) {
                             });
 
             })
+
+            draw(_container)
         })
 
         //API
