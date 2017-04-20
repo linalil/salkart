@@ -118,7 +118,7 @@ function mainFunction ($) {
       var _id = $(this).prop('id').substr(4)
 
       // Viss ein skal bestille eit sete
-      if (numSeats == 1) {
+      if (parseInt(numSeats) === 1) {
         if ($(this).prop('checked') === true) {
           selectSeat(_id)
         } else {
