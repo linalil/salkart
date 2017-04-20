@@ -471,6 +471,9 @@ function mainFunction ($) {
           })
         })
 
+        // Nullstiller eigne sete.
+        mySeats.length = 0
+
         // Teikn opp på nytt når alle sete er gjennomgått.
         draw(_container)
       }
