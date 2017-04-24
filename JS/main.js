@@ -251,7 +251,7 @@ function mainFunction ($) {
           }
 
           var _checkbox = $('<input id="seat' + _seatObject.id + '" data-block="' + _seatObject.block + '" type="checkbox" />')
-          var _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '" style="background-color: ' + _seatBlockColor + '"  title="#' + String.fromCharCode(65 + i) + '-' + j + ', ' + _price + ' Rs."></label>')
+          var _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '"  title="#' + String.fromCharCode(65 + i) + '-' + j + ', ' + _price + ' Rs."></label>')
 
           if (_seatObject.booked) {
             _checkbox.prop('disabled', 'disabled')
@@ -412,7 +412,7 @@ function mainFunction ($) {
       return false
     }
 
-    // Metode som sjekkar om gitte sete er reservert. 
+    // Metode som sjekkar om gitte sete er reservert.
     function checkReserved (id) {
       let reserved = _seats.filter(function (seat) {
         return seat.notavailable === true
