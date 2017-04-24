@@ -67,11 +67,9 @@ body {
 	font-size: 1.2em;
 	font-weight: bold;
 }
-.bilde{
+.bilde img{
 	order: 1;
-	width: 55px;
-	height: 80px;
-	background: #9B9B9B;
+	height: 90px;
 }
 .eventinfo{
 	order: 2;
@@ -116,6 +114,11 @@ body {
 	min-width: 300px;
 	flex-grow: 1;
 }
+.beskrivelse{
+	font-family: 'Raleway', sans-serif;
+	font-size: 1.5em;
+	font-weight: bold;
+}
 .setekart{
 	margin-left: 20px;
 	order: 2;
@@ -136,12 +139,12 @@ body {
 	order: 2;
 }
 .ledig_sete{
-	background: #D8D8D8;
+	background: #B9B9B9;
 	order: 1;
 	margin: 5px
 }
 .opptatt{
-	background: #9B9B9B;
+	background: #6C4977;
 	order: 1;
 	margin: 5px
 }
@@ -151,9 +154,12 @@ body {
 	margin: 5px
 }
 .mine{
-	background: #B8E986;
+	background: #7ED321;
 	order: 1;
 	margin: 5px
+}
+.advarsel{
+	display: none;
 }
 
 /*-------------------------------------*/
@@ -251,23 +257,23 @@ input[type=checkbox] + label:before {
 
 input[type=checkbox] + label:before {
   content: "\f111";
-  color: #ddd;
+  color: #B9B9B9;
   cursor: pointer;
 }
 
 input[type=checkbox]:checked + label:before {
   content: "\f007";
-	color: #27ae60;
+	color: #7ED321;
 }
 
 input[type=checkbox]:disabled[data-status=booked] + label:before{
   content: "\f057";
-	color: #999;
+	color: #6C4977;
 }
 
 input[type=checkbox]:disabled[data-status=notavailable] + label:before{
   content: "\f007";
-	color: #2980b9;
+	color: #4990E2;
 }
 /*--------------FLEXBOX---------------*/
 .beholder{
