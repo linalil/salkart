@@ -25,10 +25,167 @@ footer, header, hgroup, menu, nav, section {
 	display: block;
 }
 body {
-    margin: 10px;
+  margin: 0px;
 	line-height: 1;
-    font-family: Arial;
+  font-family: 'Raleway', sans-serif;
 }
+.container-fluid{
+
+}
+.nav{
+	background-color: #D8D8D8;
+	height: 100px;
+	width: 100%;
+	margin: 0px;
+	padding: 0px;
+}
+/*-------------------------------------*/
+.reservasjonsinfo{
+	margin: auto;
+	margin-bottom: 50px;
+	width: 60%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	-webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+.event{
+	display: flex;
+}
+.tittel, .tid{
+	font-family: 'Raleway', sans-serif;
+	font-size: 1.8em;
+	font-weight: bold;
+}
+.sjanger, .lengde, .sal{
+	font-family: 'Raleway', sans-serif;
+	font-size: 1.2em;
+}
+.dato{
+	font-family: 'Raleway', sans-serif;
+	font-size: 1.2em;
+	font-weight: bold;
+}
+.bilde{
+	order: 1;
+	width: 55px;
+	height: 80px;
+	background: #9B9B9B;
+}
+.eventinfo{
+	order: 2;
+	text-align: left;
+	margin: 0px 20px;
+}
+.tidspunkt{
+	order: 3;
+	text-align: center;
+	justify-content: flex-end;
+}
+/*-------------------------------------*/
+.hovedinnhold{
+
+}
+.overskrift{
+	font-family: 'Raleway', sans-serif;
+	font-size: 1.5em;
+	font-weight: bold;
+	margin: 15px auto;
+	width: 60%;
+	color: #4A4A4A;
+}
+/*-------------------------------------*/
+.billettbakgrunn{
+	background-color: #F2F2F2;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.billettvalg{
+	margin: auto;
+	width: 60%;
+	display: flex;
+	flex-direction: row;
+	-webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+	justify-content: space-between;
+}
+.sidepanel{
+	margin: 0px;
+	order: 1;
+	min-width: 300px;
+	flex-grow: 1;
+}
+.setekart{
+	margin-left: 20px;
+	order: 2;
+	/*border: 1px solid black;*/
+}
+.seat{
+	background-color: #F2F2F2;
+}
+.sirkel{
+	width: 10px;
+	height: 10px;
+
+	-moz-border-radius: 50px;
+	-webkit-border-radius: 50px;
+	border-radius: 50px;
+}
+.ledig{
+	order: 2;
+}
+.ledig_sete{
+	background: #D8D8D8;
+	order: 1;
+	margin: 5px
+}
+.opptatt{
+	background: #9B9B9B;
+	order: 1;
+	margin: 5px
+}
+.midlertidig{
+	background: #4990E2;
+	order: 1;
+	margin: 5px
+}
+.mine{
+	background: #B8E986;
+	order: 1;
+	margin: 5px
+}
+
+/*-------------------------------------*/
+.prisoversikt{
+	width: 60%;
+	margin: 20px auto;
+}
+.pristabell{
+width: 100%;
+}
+.pristabell th{
+	border: 1px solid #F2F2F2;
+	height: 30px;
+	padding: 10px;
+	font-weight: bold;
+	background: #F2F2F2;
+}
+.pristabell td{
+	border: 1px solid #F2F2F2;
+	padding: 10px;
+}
+.sum td{
+	border-bottom: 2px solid #9B9B9B;
+}
+.prisoversikt button{
+	float: right;
+	margin: 10px 10px 30px;
+}
+.prisoversikt .kort{
+	width: 100px;
+}
+/*-------------------------------------*/
 ol, ul {
 	list-style: none;
 }
@@ -44,10 +201,16 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
-
+#seats label{
+	transform: scale(1.5);
+	width: 21px;
+}
+.col-label{
+	margin-left: 2px;
+}
 /* Custom */
 .legends {
-  font-family: Arial;
+  font-family: 'Raleway', sans-serif;
   font-size: 12px;
   margin: 10px 0;
   color: #666;
@@ -57,28 +220,24 @@ table {
     margin: 10px 0;
 }
 
-.row {
-  line-height: 12px;
-}
+.row .seat{
 
-.row .seat.bg{
-    background: #ff6a00;
 }
 
 .row span.row-label {
-    font-size: 11px;
+    font-size: 14px;
     display: inline-block;
     width: 15px;
-    padding-right: 5px;
-    text-align: right;
+    padding-right: 0px;
+    text-align: left;
 }
 
 .row span.col-label {
-    font-size: 11px;
+    font-size: 14px;
     display: inline-block;
-    width: 14.3px;
-    text-align: center;
-    margin-bottom: 4px;
+    width: 19px;
+    text-align: left;
+    margin-bottom: 10px;
 }
 
 input[type=checkbox] { display:none; } /* to hide the checkbox itself */
@@ -97,16 +256,20 @@ input[type=checkbox] + label:before {
 }
 
 input[type=checkbox]:checked + label:before {
-  content: "\f111";
-  color: #2980b9;
+  content: "\f007";
+	color: #27ae60;
 }
 
 input[type=checkbox]:disabled[data-status=booked] + label:before{
-  content: "\f111";
-  color: #27ae60;
+  content: "\f057";
+	color: #999;
 }
 
 input[type=checkbox]:disabled[data-status=notavailable] + label:before{
-  content: "\f111";
-  color: #999;
+  content: "\f007";
+	color: #2980b9;
+}
+/*--------------FLEXBOX---------------*/
+.beholder{
+	display: flex;
 }

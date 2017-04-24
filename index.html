@@ -1,48 +1,198 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-    <title>flexiSeats</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sete-reservasjon</title>
+
     <link href="styles/styles.css" rel="stylesheet" />
+    <link href="styles/bootstrap.min.css" rel="stylesheet">
     <link href="styles/tooltipster.css" rel="stylesheet" />
     <link href="styles/tooltipster-shadow.css" rel="stylesheet" />
     <link href="styles/font-awesome.min.css" rel="stylesheet" />
+
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,600" rel="stylesheet">
+
 
     <script src="JS/jquery-2.1.4.min.js"></script>
     <script src="JS/jquery.tooltipster.min.js"></script>
     <script src="JS/main.js"></script>
 </head>
+
 <body>
-
-    <div id="seats"></div>
-
-
-    <div class="methods">
-
-          <select id="select">
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-          </select>
-
-
-        <button type="button" id="btnDefineGold">Kj&#248;p billetter</button>
+    <div class="nav">
+        <div class="col-md-12">
+            <div class="nav"></div>
+        </div>
     </div>
+    <div class="hovedinnhold">
+        <div class="overskrift">
+            VALGT FILM
+        </div>
+        <div class="reservasjonsinfo">
+            <div class="event">
+                <div class="bilde">
+                    <img src="#" />
+                </div>
+                <div class="eventinfo">
+                    <div class="tittel">
+                        Skjønnheten og udyret
+                    </div>
+                    <div class="sjanger">
+                        Familie/eventyr
+                    </div>
+                    <div class="lengde">
+                        2 T. 9 Min
+                    </div>
+                </div>
+            </div>
 
-    <div class="methods">
+            <div class="tidspunkt">
+                <div class="dato">
+                    FREDAG 1. JANUAR
+                </div>
+                <div class="tid">
+                    18:30
+                </div>
+                <div class="sal">
+                    MB 4
+                </div>
+            </div>
+
+        </div>
+        <div class="billettbakgrunn">
+            <div class="overskrift">
+                VALG AV BILLETTER
+            </div>
+            <div class="billettvalg">
+                <div class="sidepanel">
+                    <div class="type_sete">
+                        <div class="beskrivelse">
+                            Velg antall og type billetter:
+                        </div>
+                        <div class="voksen">
+                            <label id="velg_seter" for="select">Voksen</label>
+                            <select id="select">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                  </select>
+                        </div>
+                        <div class="barn">
+                            <label id="valg_barn" for="barn">Barn (Under 15 aar)</label>
+                            <select id="barn">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                  </select>
+                        </div>
+                        <div class="honnor">
+                            <label id="valg_honnor" for="honnor">Honn&#248;r</label>
+                            <select id="honnor">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                  </select>
+                        </div>
+                    </div>
+                    <div
+                    <div class="seteinfo beholder">
+                        <div class="sirkel ledig_sete"></div>
+                        <div class="ledig">
+                            Ledige billetter
+                        </div>
+                    </div>
+                    <div class="seteinfo beholder">
+                        <div class="sirkel opptatt"></div>
+                        <div class="ledig">
+                            Opptatte billetter
+                        </div>
+                    </div>
+                    <div class="seteinfo beholder">
+                        <div class="sirkel midlertidig"></div>
+                        <div class="ledig">
+                            Midlertidig valgt
+                        </div>
+                    </div>
+                    <div class="seteinfo beholder">
+                        <div class="sirkel mine"></div>
+                        <div class="ledig">
+                            Mine valgte billetter
+                        </div>
+                    </div>
+                    <div class="valgte_billetter">
+                      <p>
+                        Dine valgte billetter:
+                      </p>
+                      <div id="valgte_billetter"></div>
+                    </div>
+
+
+            </div>
+
+            <div id="seats" class="setekart"></div>
+            <div id="advarsel" class="advarsel"></div>
+        </div>
+    </div>
+    <div class="overskrift">
+        PRIS
+    </div>
+    <div class="prisoversikt">
+        <table class="pristabell">
+            <tr>
+                <th>Type billett</th>
+                <th>Antall</th>
+                <th>Pris</th>
+            </tr>
+            <tr>
+                <td>Voksen</td>
+                <td class="kort">2</td>
+                <td class="kort">220 kr</td>
+            </tr>
+            <tr>
+                <td>Barn</td>
+                <td class="kort">1</td>
+                <td class="kort">80 kr</td>
+            </tr>
+            <tr class="sum">
+                <td>Honn&oslash;r</td>
+                <td class="kort">1</td>
+                <td class="kort">80 kr</td>
+            </tr>
+            <tr class="sum">
+                <td>Sum</td>
+                <td class="kort">4</td>
+                <td class="kort">380 kr</td>
+            </tr>
+        </table>
+        <br/><br/>
+        <button type="button" id="btnDefineGold">G&aring; til betaling</button>
         <button type="button" id="nullstill">Nullstill</button>
     </div>
 
+    </div>
+    <!--container-fluid-->
+
     <script src="https://www.gstatic.com/firebasejs/3.7.3/firebase.js"></script>
     <script>
-      // Initialize Firebase
-      var config = {
-        apiKey: "AIzaSyDCnkcV3PhN78bYV0tz3wWlalhLtGUd2sg",
-        authDomain: "salkart2017.firebaseapp.com",
-        databaseURL: "https://salkart2017.firebaseio.com",
-        storageBucket: "salkart2017.appspot.com",
-        messagingSenderId: "640284529620"
-      };
-      firebase.initializeApp(config);
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyDCnkcV3PhN78bYV0tz3wWlalhLtGUd2sg",
+            authDomain: "salkart2017.firebaseapp.com",
+            databaseURL: "https://salkart2017.firebaseio.com",
+            storageBucket: "salkart2017.appspot.com",
+            messagingSenderId: "640284529620"
+        };
+        firebase.initializeApp(config);
     </script>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="JS/bootstrap.min.js"></script>
+
 </body>
+
 </html>
