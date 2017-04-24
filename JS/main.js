@@ -359,9 +359,12 @@ function mainFunction ($) {
       // console.log('No skal vi sjekke for gaps:')
       checkNoGaps(start)
 
+
+
       console.log('Skal no lese fra sete: ' + _i[1] + ' til sete ' + endX + ' paa rad ' + _i[0])
       if (parseInt(endX) < settings.columns) {
-        console.log('No teiknar vi! ')
+
+
         for (let x = parseInt(_i[1]); x <= parseInt(endX); x++) {
           if ($('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).data('status') !== 'notavailable' && $('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).data('status') !== 'booked') {
             $('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).prop('checked', 'checked')
@@ -375,8 +378,9 @@ function mainFunction ($) {
     }
 
     function checkNoGaps (startId) {
-      checkSeatGapsLeft(startId)
-      checkSeatGapsRight(startId)
+      if(checkSeatGapsLeft(startId) && checkSeatGapsRight(startId)) {
+
+      }
     }
 
     // Metode som sjekkar for gaps på venstre side.
