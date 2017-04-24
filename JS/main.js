@@ -355,6 +355,9 @@ function mainFunction ($) {
         clearMySeats()
       }
 
+      console.log('No skal vi sjekke for gaps:')
+      checkNoGaps(start)
+
       console.log('Skal no lese fra sete: ' + _i[1] + ' til sete ' + endX + ' paa rad ' + _i[0])
       if (parseInt(endX) < settings.columns) {
         console.log('No teiknar vi! ')
@@ -366,7 +369,40 @@ function mainFunction ($) {
         }
       } else {
         console.log('Feilmelding: sete ' + endX + ' er utanfor salen.')
-        clearMySeats()
+        // clearMySeats()
+      }
+    }
+
+    function checkNoGaps (startId) {
+      checkSeatGapsLeft(startId)
+      checkSeatGapsRight(startId)
+    }
+
+    // Metode som sjekkar for gaps på venstre side.
+    function checkSeatGapsLeft (startId) {
+      let _i = startId.split('-')
+      let doubleLeft = parseInt(_i[1]) - 2
+      let left = parseInt(_i[1]) - 1
+      // Sjekkar om setet to hakk til venstre i salen er meir enn eit hakk frå kanten.
+      if (doubleLeft >= 0) {
+        console.log('To hakk til venstre for ' + _i[1] + ' er ' + doubleLeft)
+        console.log('Eit hakk til venstre for ' + _i[1] + ' er ' + left)
+      } else {
+        console.log('Setet er 1 eller 0 hakk fra kanten til venstre.')
+      }
+    }
+
+    // Metode som sjekkar for gaps på høgre side.
+    function checkSeatGapsRight (startId) {
+      let _i = startId.split('-')
+      let endSeat = parseInt(_i[1]) + parseInt(numSeats - 1)
+      let doubleRight = parseInt(endSeat + 2)
+      let right = parseInt(endSeat + 1)
+      if (doubleRight <= (settings.columns - 1)) {
+        console.log('To hakk til hogre for ' + endSeat + ' er ' + doubleRight)
+        console.log('Eit hakk til hogre for ' + endSeat + ' er ' + right)
+      } else {
+        console.log('Setet er 0 eller 1 hakk fra kanten til hogre.')
       }
     }
 
