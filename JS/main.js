@@ -110,7 +110,6 @@ function mainFunction ($) {
     var _container = this
 
     // Events
-    // Lagar event for når brukar trykker på eit sete.
     this.on('click', 'input:checkbox', function () {
       if ($(this).data('status') === 'booked') {
         return false
@@ -286,6 +285,7 @@ function mainFunction ($) {
 
         // Oppdaterar status til reservert.
         _seatObj[0].selected = true
+        _seatObj[0].notavailable = true
 
         // Lagrar setet i lista over mine sete, mySeats
         mySeats.push(id)
@@ -317,6 +317,7 @@ function mainFunction ($) {
 
       // Endrar status til at setet ikkje er reservert.
       _seatObj[0].selected = false
+      _seatObj[0].notavailable = false
 
       // Oppdaterar databasen.
       var dbRef = firebase.database().ref('/Plassering/' + _seatObj[0].id)
@@ -355,7 +356,7 @@ function mainFunction ($) {
         clearMySeats()
       }
 
-      console.log('No skal vi sjekke for gaps:')
+      // console.log('No skal vi sjekke for gaps:')
       checkNoGaps(start)
 
       console.log('Skal no lese fra sete: ' + _i[1] + ' til sete ' + endX + ' paa rad ' + _i[0])
@@ -386,10 +387,44 @@ function mainFunction ($) {
       // Sjekkar om setet to hakk til venstre i salen er meir enn eit hakk frå kanten.
       if (doubleLeft >= 0) {
         console.log('To hakk til venstre for ' + _i[1] + ' er ' + doubleLeft)
+        console.log('Booka: ' + checkBooked(_i[0] + '-' + doubleLeft))
+        console.log('Reservert: ' + checkReserved(_i[0] + '-' + doubleLeft))
         console.log('Eit hakk til venstre for ' + _i[1] + ' er ' + left)
+        console.log('Booka: ' + checkBooked(_i[0] + '-' + left))
+        console.log('Reservert: ' + checkReserved(_i[0] + '-' + left))
       } else {
         console.log('Setet er 1 eller 0 hakk fra kanten til venstre.')
       }
+    }
+
+    // Metode som sjekkar om gitt sete er booka.
+    function checkBooked (id) {
+      let booked = _seats.filter(function (seat) {
+        return seat.booked === true
+      })
+      let i = 0
+      while (booked[i] != null) {
+        if (booked[i].id === id) {
+          return true
+        }
+        i++
+      }
+      return false
+    }
+
+    // Metode som sjekkar om gitte sete er reservert. 
+    function checkReserved (id) {
+      let reserved = _seats.filter(function (seat) {
+        return seat.notavailable === true
+      })
+      let i = 0
+      while (reserved[i] != null) {
+        if (reserved[i].id === id) {
+          return true
+        }
+        i++
+      }
+      return false
     }
 
     // Metode som sjekkar for gaps på høgre side.
@@ -398,9 +433,14 @@ function mainFunction ($) {
       let endSeat = parseInt(_i[1]) + parseInt(numSeats - 1)
       let doubleRight = parseInt(endSeat + 2)
       let right = parseInt(endSeat + 1)
+
       if (doubleRight <= (settings.columns - 1)) {
         console.log('To hakk til hogre for ' + endSeat + ' er ' + doubleRight)
+        console.log('Booka: ' + checkBooked(_i[0] + '-' + doubleRight))
+        console.log('Reservert: ' + checkReserved(_i[0] + '-' + doubleRight))
         console.log('Eit hakk til hogre for ' + endSeat + ' er ' + right)
+        console.log('Booka: ' + checkBooked(_i[0] + '-' + right))
+        console.log('Reservert: ' + checkReserved(_i[0] + '-' + right))
       } else {
         console.log('Setet er 0 eller 1 hakk fra kanten til hogre.')
       }
