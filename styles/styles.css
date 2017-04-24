@@ -116,8 +116,19 @@ body {
 }
 .beskrivelse{
 	font-family: 'Raleway', sans-serif;
-	font-size: 1.5em;
+	font-size: 1em;
 	font-weight: bold;
+}
+.type_sete{
+
+}
+.type_sete label{
+	font-family: 'Raleway', sans-serif;
+	font-size: 1em;
+	font-weight: bold;
+}
+.type_sete #select{
+
 }
 .setekart{
 	margin-left: 20px;
@@ -159,7 +170,7 @@ body {
 	margin: 5px
 }
 .advarsel{
-	display: none;
+	visibility: hidden;
 }
 
 /*-------------------------------------*/
