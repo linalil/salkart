@@ -48,10 +48,7 @@ $(document).ready(function () {
     })
 
     // Her blir det satt nokre innstillingar for kvart enkelt sete.
-    $('.seat').tooltipster({
-      offsetY: -10,
-      theme: 'tooltipster-shadow'
-    })
+
   })
 
     // Køyrer hovudfunksjonen under.
@@ -113,6 +110,8 @@ function mainFunction ($) {
     this.on('click', 'input:checkbox', function () {
       if ($(this).data('status') === 'booked') {
         return false
+      } else if ($(this).data('status') === 'selected') {
+        return false
       }
       var _id = $(this).prop('id').substr(4)
 
@@ -120,12 +119,14 @@ function mainFunction ($) {
       if (parseInt(numSeats) === 1) {
         if ($(this).prop('checked') === true) {
           selectSeat(_id)
+          console.log('Vel enkeltsete')
         } else {
           deselectSeat(_id)
         }
       } else {
         if ($(this).prop('checked') === true) {
           selectMultiple(_id, numSeats)
+          console.log('Vel fleire sete')
         } else {
           clearMySeats()
         }
@@ -208,7 +209,6 @@ function mainFunction ($) {
 
     // Draw layout - metoden som teiknar opp salkart
     function draw (container) {
-      // Clearing the current layout
       container.empty()
 
       // Providing Column labels
@@ -219,7 +219,6 @@ function mainFunction ($) {
 
       container.append(_rowLabel)
 
-      // Creating Initial Layout
       for (var i = 0; i < settings.rows; i++) {
         // Providing Row label
         var _row = $('<div class="row"></div>')
@@ -258,7 +257,6 @@ function mainFunction ($) {
             _checkbox.attr('data-status', 'booked')
           } else if (_seatObject.selected) {
             _checkbox.prop('checked', 'checked')
-            // _checkbox.attr('data-status', 'reserved')
           } else if (_seatObject.notavailable) {
             _checkbox.prop('disabled', 'disabled')
             _checkbox.attr('data-status', 'notavailable')
@@ -335,18 +333,18 @@ function mainFunction ($) {
 
     // Metode som slettar lokalt lagra sete
     function clearMySeats () {
-      console.log('Slettar lagra sete..')
+      // console.log('Slettar lagra sete..')
 
       for (let i = 0; i < mySeats.length; i++) {
         let tempId = mySeats[i]
-        console.log('Koyrer deselect for id: ' + tempId)
+        // console.log('Koyrer deselect for id: ' + tempId)
         deselectSeat(tempId)
       }
       mySeats.length = 0
     }
 
     // Select multiple seats
-    function selectMultiple (start, numSeats) {
+    function selectMultiple (start) {
       var _i = start.split('-')
 
       // Finn endepunktet som ein skal gå til, basert på kor mange sete ein ønskjer.
@@ -354,32 +352,60 @@ function mainFunction ($) {
 
       if (mySeats.length >= numSeats) {
         clearMySeats()
+        console.log('Innhald i mine sete: ' + mySeats)
       }
 
       // console.log('No skal vi sjekke for gaps:')
-      checkNoGaps(start)
-
-
-
-      console.log('Skal no lese fra sete: ' + _i[1] + ' til sete ' + endX + ' paa rad ' + _i[0])
-      if (parseInt(endX) < settings.columns) {
-
-
+      if (checkNoGaps(start) && checkBound(_i[0], _i[1], endX) && checkAvailable(_i[0], _i[1], endX)) {
+        console.log('Skal no lese fra sete: ' + _i[1] + ' til sete ' + endX + ' paa rad ' + _i[0])
         for (let x = parseInt(_i[1]); x <= parseInt(endX); x++) {
-          if ($('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).data('status') !== 'notavailable' && $('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).data('status') !== 'booked') {
-            $('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).prop('checked', 'checked')
-            selectSeat(_i[0] + '-' + x)
-          }
+          $('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).prop('checked', 'checked')
+          selectSeat(_i[0] + '-' + x)
         }
+        console.log('Innhald i mine sete: ' + mySeats)
       } else {
-        console.log('Feilmelding: sete ' + endX + ' er utanfor salen.')
-        // clearMySeats()
+        $('input:checkbox[id="seat' + start + '"]', scope).prop('checked', 'unchecked')
+        draw(_container)
+        document.getElementById('advarsel').style.visibility = 'visible'
+        return
       }
+
+    }
+
+    function checkAvailable (row, startX, endX) {
+      for (let i = startX; i <= endX; i++) {
+        if ($('input:checkbox[id="seat' + row + '-' + i + '"]', scope).data('status') === 'notavailable' ||
+        $('input:checkbox[id="seat' + row + '-' + i + '"]', scope).data('status') === 'booked' ||
+        $('input:checkbox[id="seat' + row + '-' + i + '"]', scope).data('status') === 'selected') {
+          return false
+        }
+      }
+      return true
+    }
+
+    function checkBound (row, startX, endX) {
+      // Ved ulikt tal seter på ulike rader, kan på sikt row brukast her.
+      for (let i = startX; i <= endX; i++) {
+        if (i >= settings.columns) {
+          console.log('Setet er utanfor salkartet')
+          return false
+        } else {
+          console.log('Setet ' + i + ' er innanfor')
+        }
+      }
+      return true
     }
 
     function checkNoGaps (startId) {
-      if(checkSeatGapsLeft(startId) && checkSeatGapsRight(startId)) {
-
+      if (checkSeatGapsLeft(startId) && checkSeatGapsRight(startId)) {
+        return true
+      } else {
+        if (!checkSeatGapsLeft(startId)) {
+          console.log('Gap til venstre')
+        } else if (!checkSeatGapsRight(startId)) {
+          console.log('Gap til hogre')
+        }
+        return false
       }
     }
 
@@ -390,15 +416,30 @@ function mainFunction ($) {
       let left = parseInt(_i[1]) - 1
       // Sjekkar om setet to hakk til venstre i salen er meir enn eit hakk frå kanten.
       if (doubleLeft >= 0) {
-        console.log('To hakk til venstre for ' + _i[1] + ' er ' + doubleLeft)
-        console.log('Booka: ' + checkBooked(_i[0] + '-' + doubleLeft))
-        console.log('Reservert: ' + checkReserved(_i[0] + '-' + doubleLeft))
-        console.log('Eit hakk til venstre for ' + _i[1] + ' er ' + left)
-        console.log('Booka: ' + checkBooked(_i[0] + '-' + left))
-        console.log('Reservert: ' + checkReserved(_i[0] + '-' + left))
-      } else {
-        console.log('Setet er 1 eller 0 hakk fra kanten til venstre.')
+        if (checkBooked(_i[0] + '-' + doubleLeft) || checkReserved(_i[0] + '-' + doubleLeft)) {
+          if (!checkBooked(_i[0] + '-' + left) && !checkReserved(_i[0] + '-' + left)) {
+            return false
+          }
+        }
       }
+      return true
+    }
+
+    // Metode som sjekkar for gaps på høgre side.
+    function checkSeatGapsRight (startId) {
+      let _i = startId.split('-')
+      let endSeat = parseInt(_i[1]) + parseInt(numSeats - 1)
+      let doubleRight = parseInt(endSeat + 2)
+      let right = parseInt(endSeat + 1)
+
+      if (doubleRight <= (settings.columns - 1)) {
+        if (checkBooked(_i[0] + '-' + doubleRight) || checkReserved(_i[0] + '-' + doubleRight)) {
+          if (!checkBooked(_i[0] + '-' + right) && !checkReserved(_i[0] + '-' + right)) {
+            return false
+          }
+        }
+      }
+      return true
     }
 
     // Metode som sjekkar om gitt sete er booka.
@@ -429,25 +470,6 @@ function mainFunction ($) {
         i++
       }
       return false
-    }
-
-    // Metode som sjekkar for gaps på høgre side.
-    function checkSeatGapsRight (startId) {
-      let _i = startId.split('-')
-      let endSeat = parseInt(_i[1]) + parseInt(numSeats - 1)
-      let doubleRight = parseInt(endSeat + 2)
-      let right = parseInt(endSeat + 1)
-
-      if (doubleRight <= (settings.columns - 1)) {
-        console.log('To hakk til hogre for ' + endSeat + ' er ' + doubleRight)
-        console.log('Booka: ' + checkBooked(_i[0] + '-' + doubleRight))
-        console.log('Reservert: ' + checkReserved(_i[0] + '-' + doubleRight))
-        console.log('Eit hakk til hogre for ' + endSeat + ' er ' + right)
-        console.log('Booka: ' + checkBooked(_i[0] + '-' + right))
-        console.log('Reservert: ' + checkReserved(_i[0] + '-' + right))
-      } else {
-        console.log('Setet er 0 eller 1 hakk fra kanten til hogre.')
-      }
     }
 
     // Metode som nullstiller kart og database når ein trykker på nullstill.
