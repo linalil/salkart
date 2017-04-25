@@ -25,7 +25,7 @@
 <body>
     <div class="nav">
         <div class="navigering">
-          <img src="img/Logo.png" alt="logo" class="logo"/>
+            <img src="img/Logo.png" alt="logo" class="logo" />
         </div>
     </div>
     <div class="hovedinnhold">
@@ -77,28 +77,28 @@
                             <label id="velg_seter" for="select">Voksen</label>
                             <select id="select">
                               <option value="0">0</option>
-                    <option value="1" selected>1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                  </select>
+                              <option value="1" selected>1</option>
+                              <option value="2">2</option>
+                              <option value="3">3</option>
+                            </select>
                         </div>
                         <div class="beholder">
                             <label id="valg_barn" for="barn">Barn (Under 15 &aring;r)</label>
                             <select id="barn">
                               <option value="0">0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                  </select>
+                              <option value="1">1</option>
+                              <option value="2">2</option>
+                              <option value="3">3</option>
+                            </select>
                         </div>
                         <div class="beholder">
                             <label id="valg_honnor" for="honnor">Honn&#248;r</label>
                             <select id="honnor">
                               <option value="0">0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                  </select>
+                              <option value="1">1</option>
+                              <option value="2">2</option>
+                              <option value="3">3</option>
+                            </select>
                         </div>
                     </div>
                     <div class="seteinfo">
@@ -139,11 +139,9 @@
                     <div id="seats" class="setekart"></div>
 
                     <div id="advarsel" class="advarsel">
-                      <img src="img/Advarsel.png" alt="En advarsel "/>
-                      <p class="advarselstekst" id="advarselstekst">
-                        Du kan ikke plassere deg her!
-                      </p>
-                      </div>
+                        <img src="img/Advarsel.png" alt="En advarsel " />
+                        <p class="advarselstekst" id="advarselstekst"></p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -159,23 +157,23 @@
                 </tr>
                 <tr>
                     <td>Voksen</td>
-                    <td class="kort" id="voksen_antall">2</td>
-                    <td class="kort" id="voksen_pris">220 kr</td>
+                    <td class="kort" id="voksen_antall"></td>
+                    <td class="kort" id="voksen_pris"></td>
                 </tr>
                 <tr>
                     <td>Barn</td>
-                    <td class="kort" id="barn_antall">1</td>
-                    <td class="kort" id="barn_pris">80 kr</td>
+                    <td class="kort" id="barn_antall"></td>
+                    <td class="kort" id="barn_pris"></td>
                 </tr>
                 <tr class="sum">
                     <td>Honn&oslash;r</td>
-                    <td class="kort" id="honnor_antall">1</td>
-                    <td class="kort" id="honnor_pris">80 kr</td>
+                    <td class="kort" id="honnor_antall"></td>
+                    <td class="kort" id="honnor_pris"></td>
                 </tr>
                 <tr class="sum">
                     <td>Sum</td>
-                    <td class="kort" id="sum_antall">4</td>
-                    <td class="kort" id="sum_pris">380 kr</td>
+                    <td class="kort" id="sum_antall"></td>
+                    <td class="kort" id="sum_pris"></td>
                 </tr>
             </table>
             <br/><br/>
@@ -183,25 +181,25 @@
             <!--<button type="button" id="nullstill">Nullstill</button>-->
         </div>
 
-      </div>
-        <!--container-fluid-->
+    </div>
+    <!--container-fluid-->
 
-        <script src="https://www.gstatic.com/firebasejs/3.7.3/firebase.js"></script>
-        <script>
-            // Initialize Firebase
-            var config = {
-                apiKey: "AIzaSyDCnkcV3PhN78bYV0tz3wWlalhLtGUd2sg",
-                authDomain: "salkart2017.firebaseapp.com",
-                databaseURL: "https://salkart2017.firebaseio.com",
-                storageBucket: "salkart2017.appspot.com",
-                messagingSenderId: "640284529620"
-            };
-            firebase.initializeApp(config);
-        </script>
-        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <!-- Include all compiled plugins (below), or include individual files as needed -->
-        <script src="JS/bootstrap.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.7.3/firebase.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyDCnkcV3PhN78bYV0tz3wWlalhLtGUd2sg",
+            authDomain: "salkart2017.firebaseapp.com",
+            databaseURL: "https://salkart2017.firebaseio.com",
+            storageBucket: "salkart2017.appspot.com",
+            messagingSenderId: "640284529620"
+        };
+        firebase.initializeApp(config);
+    </script>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="JS/bootstrap.min.js"></script>
 
 </body>
 
