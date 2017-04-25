@@ -47,7 +47,8 @@ $(document).ready(function () {
       seats.defineBlock(_label, seats.getSelected())
     })
   })
-    // Køyrer hovudfunksjonen under.
+
+  // Køyrer hovudfunksjonen under.
   mainFunction(jQuery)
 })
 /* ------------------------------------------------------------------------ */
@@ -157,6 +158,23 @@ function mainFunction ($) {
         }
       }
     })
+
+    function updateTable (totalSeter) {
+      $('#voksen_antall').html($('#select').val())
+      $('#barn_antall').html($('#barn').val())
+      $('#honnor_antall').html($('#honnor').val())
+
+      let voksenPris = parseInt(110 * parseInt($('#select').val()))
+      let barnePris = parseInt(80 * parseInt($('#barn').val()))
+      let honnorPris = parseInt(80 * parseInt($('#honnor').val()))
+
+      $('#voksen_pris').html(voksenPris + ' kr')
+      $('#barn_pris').html(barnePris + ' kr')
+      $('#honnor_pris').html(honnorPris + ' kr')
+
+      $('#sum_antall').html(totalSeter)
+      $('#sum_pris').html(parseInt(voksenPris + barnePris + honnorPris) + ' kr')
+    }
 
   // Private Functions
     // Opnar databasetilkopling til 'Plassering'-greina.
