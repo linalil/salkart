@@ -419,8 +419,17 @@ function mainFunction ($) {
           return true
         } else {
           $('input:checkbox[id="seat' + start + '"]', scope).prop('checked', 'unchecked')
-          draw(_container)
+          if (!checkNoGaps(start)) {
+            $('#advarselstekst').html('Ugyldig seteplassering! Du kan ikke la enkeltseter stå igjen mellom reserverte og dine egne!')
+          } else if (!checkBound(_i[0], _i[1], endX)) {
+            $('#advarselstekst').html('Ugyldig seteplassering! Out of bound')
+          } else if (!checkAvailable(_i[0], _i[1], endX)) {
+            $('#advarselstekst').html('Ugyldig seteplassering! Ikkje nok sete tilgjengeleg på valgt plass!')
+          } else {
+            $('#advarselstekst').html('Ugyldig seteplassering!')
+          }
           document.getElementById('advarsel').style.visibility = 'visible'
+          draw(_container)
           return false
         }
       }
@@ -428,7 +437,7 @@ function mainFunction ($) {
 
     function tryReversed (row, startX, endX) {
       for (let i = 1; i <= numSeats; i++) {
-        if (parseInt(endX) - i === (settings.columns - 1) || checkAvailable(row, (startX - i), (endX - i))) {
+        if (parseInt(endX) - i === (settings.columns - 1) || (checkAvailable(row, (startX - i), (endX - i))) && checkBound(row, (startX - i), (endX - i))) {
           let newId = row + '-' + (startX - i)
           console.log('Prøvar å legge inn frå ' + newId)
           return selectMultiple(newId)
@@ -452,7 +461,10 @@ function mainFunction ($) {
       // Ved ulikt tal seter på ulike rader, kan på sikt row brukast her.
       for (let i = startX; i <= endX; i++) {
         if (i >= settings.columns) {
-          console.log('Setet er utanfor salkartet')
+          console.log('Setet er utanfor salkartet på hogre side')
+          return false
+        } else if (i < 0) {
+          console.log('Setet er utanfor salkartet på venstre side')
           return false
         } else {
           console.log('Setet ' + i + ' er innanfor')
@@ -466,6 +478,7 @@ function mainFunction ($) {
         document.getElementById('advarsel').style.visibility = 'hidden'
         return true
       } else {
+        $('#advarselstekst').html('Ugyldig seteplassering! Du kan ikke la enkeltseter stå igjen mellom reserverte og dine egne!')
         if (!checkSeatGapsLeft(startId)) {
           console.log('Gap til venstre')
         } else if (!checkSeatGapsRight(startId)) {
