@@ -47,10 +47,7 @@ $(document).ready(function () {
       seats.defineBlock(_label, seats.getSelected())
     })
 
-    // Her blir det satt nokre innstillingar for kvart enkelt sete.
-
   })
-
     // Køyrer hovudfunksjonen under.
   mainFunction(jQuery)
 })
@@ -106,11 +103,40 @@ function mainFunction ($) {
       clearMySeats()
     }) */
 
+    $('#barn').change(function () {
+      let barn = $(this).val()
+      let voksen = $('#select').val()
+      let honnor = $('#honnor').val()
+      numSeats = parseInt(barn) + parseInt(voksen) + parseInt(honnor)
+      console.log('Verdi til saman: ' + numSeats)
+      clearMySeats()
+    })
+
+    $('#select').change(function () {
+      let voksen = $(this).val()
+      let barn = $('#barn').val()
+      let honnor = $('#honnor').val()
+      numSeats = parseInt(barn) + parseInt(voksen) + parseInt(honnor)
+      console.log('Verdi til saman: ' + numSeats)
+      clearMySeats()
+    })
+
+    $('#honnor').change(function () {
+      let honnor = $(this).val()
+      let barn = $('#barn').val()
+      let voksen = $('#select').val()
+      numSeats = parseInt(barn) + parseInt(voksen) + parseInt(honnor)
+      console.log('Verdi til saman: ' + numSeats)
+      clearMySeats()
+    })
+
+    /*
     $('select').on('change', function (e) {
       numSeats = this.value
       console.log('Verdi, select:' + numSeats)
       clearMySeats()
-    })
+    }) */
+
     var _container = this
 
     // Events
@@ -255,7 +281,6 @@ function mainFunction ($) {
 
             _price = _block[0].price
           }
-
           var _checkbox = $('<input id="seat' + _seatObject.id + '" data-block="' + _seatObject.block + '" type="checkbox" />')
           var _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '"  title="#' + String.fromCharCode(65 + i) + '-' + j + ', ' + _price + ' Rs."></label>')
 
@@ -293,7 +318,6 @@ function mainFunction ($) {
 
             // Lagrar setet i lista over mine sete, mySeats
             mySeats.push(id)
-
           } else {
             $('input:checkbox[id="seat' + id + '"]', scope).prop('checked', 'unchecked')
             draw(_container)
