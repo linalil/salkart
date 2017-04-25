@@ -276,22 +276,14 @@ function mainFunction ($) {
           })[0]
 
           var _seatClass = 'seat'
-          var _seatBlockColor = '#fff'
-          var _price = 0
 
           if (_seatObject.block != null) {
-            _seatBlockColor = _blocks.filter(function (block) {
+            let _seatBlockColor = _blocks.filter(function (block) {
               return block.label === _seatObject.block
             })[0].color
-
-            var _block = _blocks.filter(function (block) {
-              return block.label === _seatObject.block
-            })
-
-            _price = _block[0].price
           }
           var _checkbox = $('<input id="seat' + _seatObject.id + '" data-block="' + _seatObject.block + '" type="checkbox" />')
-          var _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '"  title="' + (i + 1) + '-' + (j + 1) + ' "></label>')
+          var _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '"  title="' + (i + 1) + '-' + (j + 1) + '"></label>')
 
           if (_seatObject.booked) {
             _checkbox.prop('disabled', 'disabled')
@@ -313,7 +305,6 @@ function mainFunction ($) {
     // Select a single seat
     function selectSeat (id) {
       if ($.inArray(id, _selected) === -1) {
-
         if (parseInt(numSeats) === 1) {
           clearMySeats()
           if (checkNoGaps(id)) {
