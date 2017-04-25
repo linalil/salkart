@@ -46,7 +46,6 @@ $(document).ready(function () {
       var _label = $('#lstBlocks').val()
       seats.defineBlock(_label, seats.getSelected())
     })
-
   })
     // Køyrer hovudfunksjonen under.
   mainFunction(jQuery)
@@ -98,6 +97,7 @@ function mainFunction ($) {
     updateTable(numSeats)
 
     $('#barn').change(function () {
+      document.getElementById('advarsel').style.visibility = 'hidden'
       let barn = $(this).val()
       let voksen = $('#select').val()
       let honnor = $('#honnor').val()
@@ -108,6 +108,7 @@ function mainFunction ($) {
     })
 
     $('#select').change(function () {
+      document.getElementById('advarsel').style.visibility = 'hidden'
       let voksen = $(this).val()
       let barn = $('#barn').val()
       let honnor = $('#honnor').val()
@@ -118,6 +119,7 @@ function mainFunction ($) {
     })
 
     $('#honnor').change(function () {
+      document.getElementById('advarsel').style.visibility = 'hidden'
       let honnor = $(this).val()
       let barn = $('#barn').val()
       let voksen = $('#select').val()
@@ -245,7 +247,6 @@ function mainFunction ($) {
 
       $('#sum_antall').html(totalSeter)
       $('#sum_pris').html(parseInt(voksenPris + barnePris + honnorPris) + ' kr')
-
     }
 
     // Draw layout - metoden som teiknar opp salkart
@@ -255,7 +256,7 @@ function mainFunction ($) {
       // Providing Column labels
       var _rowLabel = $('<div class="row"><span class="row-label"></span></div>')
       for (var c = 0; c < settings.columns; c++) {
-        _rowLabel.append('<span class="col-label">' + c + '</span>')
+        _rowLabel.append('<span class="col-label">' + (c + 1) + '</span>')
       }
 
       container.append(_rowLabel)
@@ -263,7 +264,7 @@ function mainFunction ($) {
       for (var i = 0; i < settings.rows; i++) {
         // Providing Row label
         var _row = $('<div class="row"></div>')
-        var _colLabel = $('<span class="row-label">' + i + '</span>')
+        var _colLabel = $('<span class="row-label">' + (i + 1) + '</span>')
         _row.append(_colLabel)
 
         for (var j = 0; j < settings.columns; j++) {
@@ -290,7 +291,7 @@ function mainFunction ($) {
             _price = _block[0].price
           }
           var _checkbox = $('<input id="seat' + _seatObject.id + '" data-block="' + _seatObject.block + '" type="checkbox" />')
-          var _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '"  title="#' + String.fromCharCode(65 + i) + '-' + j + ', ' + _price + ' Rs."></label>')
+          var _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '"  title="' + (i + 1) + '-' + (j + 1) + ' "></label>')
 
           if (_seatObject.booked) {
             _checkbox.prop('disabled', 'disabled')
@@ -312,6 +313,7 @@ function mainFunction ($) {
     // Select a single seat
     function selectSeat (id) {
       if ($.inArray(id, _selected) === -1) {
+
         if (parseInt(numSeats) === 1) {
           clearMySeats()
           if (checkNoGaps(id)) {
@@ -453,6 +455,7 @@ function mainFunction ($) {
 
     function checkNoGaps (startId) {
       if (checkSeatGapsLeft(startId) && checkSeatGapsRight(startId)) {
+        document.getElementById('advarsel').style.visibility = 'hidden'
         return true
       } else {
         if (!checkSeatGapsLeft(startId)) {
