@@ -48,6 +48,35 @@ $(document).ready(function () {
     })
   })
 
+  /* -------------- SESSION ------------------- */
+
+    // Anonym sign-in
+    firebase.auth().signInAnonymously().catch(function(error) {
+        // Handle Errors here.
+        console.log('Signar-in anonymt')
+        var errorCode = error.code
+        var errorMessage = error.message
+        // ...
+      });
+
+    // Hentar anonyme brukardata
+    firebase.auth().onAuthStateChanged(function(user) {
+      console.log('er inne i AuthStateChanged-funksjonen')
+    if (user) {
+      // User is signed in.
+      var isAnonymous = user.isAnonymous;
+      var uid = user.uid;
+      console.log('Det eksisterer ein brukar')
+      // ...
+    } else {
+      // User is signed out.
+      // ...
+    }
+    // ...
+  })
+
+    /* -------------- SESSION ------------------- */
+
   // Køyrer hovudfunksjonen under.
   mainFunction(jQuery)
 })
