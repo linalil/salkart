@@ -435,7 +435,6 @@ function mainFunction ($) {
     }
 
     function removeGreenBoxes () {
-      document.getElementById('valgte_billetter_beskrivelse').style.visibility = 'hidden'
       document.getElementById('dine_valgte_billetter').style.visibility = 'hidden'
       var mySaved = document.getElementById('valgte_billetter')
       while (mySaved.firstChild) {
@@ -623,6 +622,7 @@ function mainFunction ($) {
         })
       })
       removeGreenBoxes()
+      updateTable()
       draw(_container)
     })
 
@@ -702,6 +702,7 @@ function mainFunction ($) {
         // Nullstiller eigne sete.
         mySeats.length = 0
         removeGreenBoxes()
+        document.getElementById('valgte_billetter_beskrivelse').style.visibility = 'hidden'
 
         // Teikn opp på nytt når alle sete er gjennomgått.
         draw(_container)
