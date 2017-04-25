@@ -189,7 +189,7 @@ body {
 	order: 1;
 	margin: 5px
 }
-#valgte_billetter{
+.valgte_billetter{
 	display: inline-block;
 	padding: 3px 7px;
 	border-radius: 10px;
@@ -197,7 +197,7 @@ body {
 	margin: 2px 1px;
 	visibility: hidden;
 }
-.valgte_billetter{
+.dine_valgte_billetter{
 	width: 180px;
 }
 .advarsel{
