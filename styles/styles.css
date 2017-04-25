@@ -205,6 +205,9 @@ body {
 .dine_valgte_billetter{
 	width: 180px;
 }
+.dine_valgte_billetter p{
+	visibility: hidden;
+}
 .advarsel{
 	visibility:hidden;
 	color: #D0011B;
