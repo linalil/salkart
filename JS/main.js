@@ -98,8 +98,15 @@ function mainFunction ($) {
 
     // Sjekkar kor mange sete brukar ønskjer å velje, endrar seg i forhold til nedtrekkslista.
     let numSeats = 1
+
+    /*
+    $(document).on('change', 'select', function () {
+      numSeats = this.value
+      console.log('Verdi, select:' + numSeats)
+      clearMySeats()
+    }) */
+
     $('select').on('change', function (e) {
-      // var optionSelected = $('option:selected', this)
       numSeats = this.value
       console.log('Verdi, select:' + numSeats)
       clearMySeats()
@@ -272,21 +279,40 @@ function mainFunction ($) {
     // Select a single seat
     function selectSeat (id) {
       if ($.inArray(id, _selected) === -1) {
-        if (numSeats === 1) {
+        if (parseInt(numSeats) === 1) {
           clearMySeats()
+          if (checkNoGaps(id)) {
+            _selected.push(id)
+            var _seatObj = _seats.filter(function (seat) {
+              return seat.id === id
+            })
+
+            // Oppdaterar status til reservert.
+            _seatObj[0].selected = true
+            _seatObj[0].notavailable = true
+
+            // Lagrar setet i lista over mine sete, mySeats
+            mySeats.push(id)
+
+          } else {
+            $('input:checkbox[id="seat' + id + '"]', scope).prop('checked', 'unchecked')
+            draw(_container)
+            document.getElementById('advarsel').style.visibility = 'visible'
+            return
+          }
+        } else {
+          _selected.push(id)
+          _seatObj = _seats.filter(function (seat) {
+            return seat.id === id
+          })
+
+          // Oppdaterar status til reservert.
+          _seatObj[0].selected = true
+          _seatObj[0].notavailable = true
+
+          // Lagrar setet i lista over mine sete, mySeats
+          mySeats.push(id)
         }
-
-        _selected.push(id)
-        var _seatObj = _seats.filter(function (seat) {
-          return seat.id === id
-        })
-
-        // Oppdaterar status til reservert.
-        _seatObj[0].selected = true
-        _seatObj[0].notavailable = true
-
-        // Lagrar setet i lista over mine sete, mySeats
-        mySeats.push(id)
 
         // Oppdaterar databasen.
         let dbRef = firebase.database().ref('/Plassering/' + _seatObj[0].id)
@@ -333,14 +359,13 @@ function mainFunction ($) {
 
     // Metode som slettar lokalt lagra sete
     function clearMySeats () {
-      // console.log('Slettar lagra sete..')
-
       for (let i = 0; i < mySeats.length; i++) {
         let tempId = mySeats[i]
-        // console.log('Koyrer deselect for id: ' + tempId)
+        console.log('Deselect ' + tempId)
         deselectSeat(tempId)
       }
       mySeats.length = 0
+      console.log('Sletting utfort')
     }
 
     // Select multiple seats
@@ -355,7 +380,6 @@ function mainFunction ($) {
         console.log('Innhald i mine sete: ' + mySeats)
       }
 
-      // console.log('No skal vi sjekke for gaps:')
       if (checkNoGaps(start) && checkBound(_i[0], _i[1], endX) && checkAvailable(_i[0], _i[1], endX)) {
         console.log('Skal no lese fra sete: ' + _i[1] + ' til sete ' + endX + ' paa rad ' + _i[0])
         for (let x = parseInt(_i[1]); x <= parseInt(endX); x++) {
@@ -369,7 +393,6 @@ function mainFunction ($) {
         document.getElementById('advarsel').style.visibility = 'visible'
         return
       }
-
     }
 
     function checkAvailable (row, startX, endX) {
