@@ -199,7 +199,7 @@ body {
 	border-radius: 10px;
 	background-color: #7ED321;
 	margin: 2px 1px;
-	visibility: visible;
+	visibility: hidden;
 }
 .dine_valgte_billetter{
 	width: 180px;
