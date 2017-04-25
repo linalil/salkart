@@ -134,6 +134,9 @@ body {
 	font-weight: bold;
 	order: 1;
 }
+.type_sete .beholder:hover{
+	color: ddd;
+}
 .type_sete .beholder{
 	display: flex;
 	justify-content:space-between;
