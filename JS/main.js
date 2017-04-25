@@ -94,14 +94,7 @@ function mainFunction ($) {
     }
 
     // Sjekkar kor mange sete brukar ønskjer å velje, endrar seg i forhold til nedtrekkslista.
-    let numSeats = 1
-
-    /*
-    $(document).on('change', 'select', function () {
-      numSeats = this.value
-      console.log('Verdi, select:' + numSeats)
-      clearMySeats()
-    }) */
+    let numSeats = $('#select').val()
 
     $('#barn').change(function () {
       let barn = $(this).val()
