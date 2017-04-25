@@ -51,27 +51,27 @@ $(document).ready(function () {
   /* -------------- SESSION ------------------- */
 
     // Anonym sign-in
-    firebase.auth().signInAnonymously().catch(function (error) {
-      // Handle Errors here.
-      console.log('Signar-in anonymt')
-      var errorCode = error.code
-      var errorMessage = error.message
-    })
+  firebase.auth().signInAnonymously().catch(function (error) {
+    // Handle Errors here.
+    console.log('Signar-in anonymt')
+    var errorCode = error.code
+    var errorMessage = error.message
+  })
 
     // Hentar anonyme brukardata
-    firebase.auth().onAuthStateChanged(function (user) {
-      console.log('er inne i AuthStateChanged-funksjonen')
-      if (user) {
-      // User is signed in.
-        var isAnonymous = user.isAnonymous
-        var uid = user.uid
-        console.log('Det eksisterer ein brukar')
-      } else {
-        // User is signed out.
-      }
-    })
+  firebase.auth().onAuthStateChanged(function (user) {
+    console.log('er inne i AuthStateChanged-funksjonen')
+    if (user) {
+    // User is signed in.
+      var isAnonymous = user.isAnonymous
+      var uid = user.uid
+      console.log('Det eksisterer ein brukar')
+    } else {
+      // User is signed out.
+    }
+  })
 
-    /* -------------- SESSION ------------------- */
+  /* -------------- SESSION ------------------- */
 
   // Køyrer hovudfunksjonen under.
   mainFunction(jQuery)
@@ -167,17 +167,17 @@ function mainFunction ($) {
       var _id = $(this).prop('id').substr(4)
 
       // Viss ein skal bestille eit sete
-      if (parseInt(numSeats) === 1) {
+      if (parseInt(numSeats) === 0) {
+        return false
+      } else if (parseInt(numSeats) === 1) {
         if ($(this).prop('checked') === true) {
           selectSeat(_id)
-          console.log('Vel enkeltsete')
         } else {
           deselectSeat(_id)
         }
       } else {
         if ($(this).prop('checked') === true) {
           selectMultiple(_id, numSeats)
-          console.log('Vel fleire sete')
         } else {
           clearMySeats()
         }
@@ -221,14 +221,12 @@ function mainFunction ($) {
 
           // Sjekkar om setet med gitt id har status booka i databasen.
           if (snapshot.child(_id).child('booked').val() === true) {
-            console.log('Bookar sete med id ' + _id)
             // Set i så fall booked til true, slik at setet blir teikna opp grønt.
             _seatObject.booked = true
           }
 
           // Sjekkar om setet med gitt id har status reservert i databasen.
           if (snapshot.child(_id).child('reservert').val() === true) {
-            console.log('Id lik ' + i + '-' + j + ' er reservert')
             // Passar i så fall på at det ikkje skal vere tilgjengeleg.
             _seatObject.available = false
             _seatObject.notavailable = true
@@ -345,10 +343,14 @@ function mainFunction ($) {
 
             // Lagrar setet i lista over mine sete, mySeats
             mySeats.push(id)
+            $('#valgte_billetter').append('<div class="valgte_billetter">' + getVisualId(id) + '</div>')
+            document.getElementById('valgte_billetter_beskrivelse').style.visibility = 'visible'
+            document.getElementById('dine_valgte_billetter').style.visibility = 'visible'
           } else {
             $('input:checkbox[id="seat' + id + '"]', scope).prop('checked', 'unchecked')
             draw(_container)
             document.getElementById('advarsel').style.visibility = 'visible'
+
             return
           }
         } else {
@@ -363,6 +365,9 @@ function mainFunction ($) {
 
           // Lagrar setet i lista over mine sete, mySeats
           mySeats.push(id)
+          $('#valgte_billetter').append('<div class="valgte_billetter">' + getVisualId(id) + '</div>')
+          document.getElementById('valgte_billetter_beskrivelse').style.visibility = 'visible'
+          document.getElementById('dine_valgte_billetter').style.visibility = 'visible'
         }
 
         // Oppdaterar databasen.
@@ -380,8 +385,16 @@ function mainFunction ($) {
       }
     }
 
+    function getVisualId (id) {
+      let _i = id.split('-')
+      return (parseInt(_i[0]) + 1) + '-' + (parseInt(_i[1]) + 1)
+    }
+
     // Deselect a single seat
     function deselectSeat (id) {
+      if (parseInt(numSeats) === 1) {
+        removeGreenBoxes()
+      }
       _selected = $.grep(_selected, function (item) {
         return item !== id
       })
@@ -416,7 +429,18 @@ function mainFunction ($) {
         deselectSeat(tempId)
       }
       mySeats.length = 0
+      removeGreenBoxes()
+
       console.log('Sletting utfort')
+    }
+
+    function removeGreenBoxes () {
+      document.getElementById('valgte_billetter_beskrivelse').style.visibility = 'hidden'
+      document.getElementById('dine_valgte_billetter').style.visibility = 'hidden'
+      var mySaved = document.getElementById('valgte_billetter')
+      while (mySaved.firstChild) {
+        mySaved.removeChild(mySaved.firstChild)
+      }
     }
 
     // Select multiple seats
@@ -428,7 +452,6 @@ function mainFunction ($) {
 
       if (mySeats.length >= numSeats) {
         clearMySeats()
-        console.log('Innhald i mine sete: ' + mySeats)
       }
 
       if (checkNoGaps(start) && checkBound(_i[0], _i[1], endX) && checkAvailable(_i[0], _i[1], endX)) {
@@ -437,11 +460,9 @@ function mainFunction ($) {
           $('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).prop('checked', 'checked')
           selectSeat(_i[0] + '-' + x)
         }
-        console.log('Innhald i mine sete: ' + mySeats)
         return true
       } else {
         if (tryReversed(_i[0], _i[1], endX)) {
-          console.log('Det gjekk an å legge inn lenger framme')
           return true
         } else {
           $('input:checkbox[id="seat' + start + '"]', scope).prop('checked', 'unchecked')
@@ -465,7 +486,6 @@ function mainFunction ($) {
       for (let i = 1; i <= numSeats; i++) {
         if (parseInt(endX) - i === (settings.columns - 1) || (checkAvailable(row, (startX - i), (endX - i))) && checkBound(row, (startX - i), (endX - i))) {
           let newId = row + '-' + (startX - i)
-          console.log('Prøvar å legge inn frå ' + newId)
           return selectMultiple(newId)
         }
       }
@@ -602,6 +622,7 @@ function mainFunction ($) {
           return sete
         })
       })
+      removeGreenBoxes()
       draw(_container)
     })
 
@@ -680,6 +701,7 @@ function mainFunction ($) {
 
         // Nullstiller eigne sete.
         mySeats.length = 0
+        removeGreenBoxes()
 
         // Teikn opp på nytt når alle sete er gjennomgått.
         draw(_container)
