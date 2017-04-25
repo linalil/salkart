@@ -135,8 +135,9 @@ body {
 	order: 1;
 }
 .type_sete .beholder:hover{
-	color: ddd;
+	margin-left: 1px;
 }
+
 .type_sete .beholder{
 	display: flex;
 	justify-content:space-between;
@@ -198,7 +199,7 @@ body {
 	border-radius: 10px;
 	background-color: #7ED321;
 	margin: 2px 1px;
-	visibility: hidden;
+	visibility: visible;
 }
 .dine_valgte_billetter{
 	width: 180px;
