@@ -33,11 +33,16 @@ body {
 
 }
 .nav{
-	background-color: #D8D8D8;
+	background-color: #4990E2;
 	height: 100px;
 	width: 100%;
 	margin: 0px;
 	padding: 0px;
+}
+.logo{
+	width: 80px;
+	height: 80px;
+	margin: 10px 30px;
 }
 /*-------------------------------------*/
 .reservasjonsinfo{
