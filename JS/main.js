@@ -46,40 +46,8 @@ $(document).ready(function () {
       var _label = $('#lstBlocks').val()
       seats.defineBlock(_label, seats.getSelected())
     })
-
   })
-
-
-  /* -------------- SESSION ------------------- */
-
-    // Anonym sign-in
-    firebase.auth().signInAnonymously().catch(function(error) {
-        // Handle Errors here.
-        console.log('Signar-in anonymt')
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // ...
-      });
-
-    // Hentar anonyme brukardata
-    firebase.auth().onAuthStateChanged(function(user) {
-      console.log('er inne i AuthStateChanged-funksjonen')
-    if (user) {
-      // User is signed in.
-      var isAnonymous = user.isAnonymous;
-      var uid = user.uid;
-      console.log('Det eksisterer ein brukar')
-      // ...
-    } else {
-      // User is signed out.
-      // ...
-    }
-    // ...
-  });
-
-    /* -------------- SESSION ------------------- */
-
-  // Køyrer hovudfunksjonen under.
+    // Køyrer hovudfunksjonen under.
   mainFunction(jQuery)
 })
 /* ------------------------------------------------------------------------ */
@@ -126,40 +94,40 @@ function mainFunction ($) {
 
     // Sjekkar kor mange sete brukar ønskjer å velje, endrar seg i forhold til nedtrekkslista.
     let numSeats = $('#select').val()
+    updateTable(numSeats)
 
     $('#barn').change(function () {
+      document.getElementById('advarsel').style.visibility = 'hidden'
       let barn = $(this).val()
       let voksen = $('#select').val()
       let honnor = $('#honnor').val()
       numSeats = parseInt(barn) + parseInt(voksen) + parseInt(honnor)
+      updateTable(numSeats)
       console.log('Verdi til saman: ' + numSeats)
       clearMySeats()
     })
 
     $('#select').change(function () {
+      document.getElementById('advarsel').style.visibility = 'hidden'
       let voksen = $(this).val()
       let barn = $('#barn').val()
       let honnor = $('#honnor').val()
       numSeats = parseInt(barn) + parseInt(voksen) + parseInt(honnor)
+      updateTable(numSeats)
       console.log('Verdi til saman: ' + numSeats)
       clearMySeats()
     })
 
     $('#honnor').change(function () {
+      document.getElementById('advarsel').style.visibility = 'hidden'
       let honnor = $(this).val()
       let barn = $('#barn').val()
       let voksen = $('#select').val()
       numSeats = parseInt(barn) + parseInt(voksen) + parseInt(honnor)
+      updateTable(numSeats)
       console.log('Verdi til saman: ' + numSeats)
       clearMySeats()
     })
-
-    /*
-    $('select').on('change', function (e) {
-      numSeats = this.value
-      console.log('Verdi, select:' + numSeats)
-      clearMySeats()
-    }) */
 
     var _container = this
 
@@ -189,7 +157,6 @@ function mainFunction ($) {
         }
       }
     })
-
 
   // Private Functions
     // Opnar databasetilkopling til 'Plassering'-greina.
@@ -265,6 +232,23 @@ function mainFunction ($) {
       draw(_container)
     })
 
+    function updateTable (totalSeter) {
+      $('#voksen_antall').html($('#select').val())
+      $('#barn_antall').html($('#barn').val())
+      $('#honnor_antall').html($('#honnor').val())
+
+      let voksenPris = parseInt(110 * parseInt($('#select').val()))
+      let barnePris = parseInt(80 * parseInt($('#barn').val()))
+      let honnorPris = parseInt(80 * parseInt($('#honnor').val()))
+
+      $('#voksen_pris').html(voksenPris + ' kr')
+      $('#barn_pris').html(barnePris + ' kr')
+      $('#honnor_pris').html(honnorPris + ' kr')
+
+      $('#sum_antall').html(totalSeter)
+      $('#sum_pris').html(parseInt(voksenPris + barnePris + honnorPris) + ' kr')
+    }
+
     // Draw layout - metoden som teiknar opp salkart
     function draw (container) {
       container.empty()
@@ -272,7 +256,7 @@ function mainFunction ($) {
       // Providing Column labels
       var _rowLabel = $('<div class="row"><span class="row-label"></span></div>')
       for (var c = 0; c < settings.columns; c++) {
-        _rowLabel.append('<span class="col-label">' + c + '</span>')
+        _rowLabel.append('<span class="col-label">' + (c + 1) + '</span>')
       }
 
       container.append(_rowLabel)
@@ -280,7 +264,7 @@ function mainFunction ($) {
       for (var i = 0; i < settings.rows; i++) {
         // Providing Row label
         var _row = $('<div class="row"></div>')
-        var _colLabel = $('<span class="row-label">' + i + '</span>')
+        var _colLabel = $('<span class="row-label">' + (i + 1) + '</span>')
         _row.append(_colLabel)
 
         for (var j = 0; j < settings.columns; j++) {
@@ -292,22 +276,14 @@ function mainFunction ($) {
           })[0]
 
           var _seatClass = 'seat'
-          var _seatBlockColor = '#fff'
-          var _price = 0
 
           if (_seatObject.block != null) {
-            _seatBlockColor = _blocks.filter(function (block) {
+            let _seatBlockColor = _blocks.filter(function (block) {
               return block.label === _seatObject.block
             })[0].color
-
-            var _block = _blocks.filter(function (block) {
-              return block.label === _seatObject.block
-            })
-
-            _price = _block[0].price
           }
           var _checkbox = $('<input id="seat' + _seatObject.id + '" data-block="' + _seatObject.block + '" type="checkbox" />')
-          var _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '"  title="#' + String.fromCharCode(65 + i) + '-' + j + ', ' + _price + ' Rs."></label>')
+          var _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '"  title="' + (i + 1) + '-' + (j + 1) + '"></label>')
 
           if (_seatObject.booked) {
             _checkbox.prop('disabled', 'disabled')
@@ -406,12 +382,6 @@ function mainFunction ($) {
       })
     }
 
-    /******************* */
-
-    /******************* */
-
-
-
     // Metode som slettar lokalt lagra sete
     function clearMySeats () {
       for (let i = 0; i < mySeats.length; i++) {
@@ -442,12 +412,38 @@ function mainFunction ($) {
           selectSeat(_i[0] + '-' + x)
         }
         console.log('Innhald i mine sete: ' + mySeats)
+        return true
       } else {
-        $('input:checkbox[id="seat' + start + '"]', scope).prop('checked', 'unchecked')
-        draw(_container)
-        document.getElementById('advarsel').style.visibility = 'visible'
-        return
+        if (tryReversed(_i[0], _i[1], endX)) {
+          console.log('Det gjekk an å legge inn lenger framme')
+          return true
+        } else {
+          $('input:checkbox[id="seat' + start + '"]', scope).prop('checked', 'unchecked')
+          if (!checkNoGaps(start)) {
+            $('#advarselstekst').html('Ugyldig seteplassering! Du kan ikke la enkeltseter stå igjen mellom reserverte og dine egne!')
+          } else if (!checkBound(_i[0], _i[1], endX)) {
+            $('#advarselstekst').html('Ugyldig seteplassering! Out of bound')
+          } else if (!checkAvailable(_i[0], _i[1], endX)) {
+            $('#advarselstekst').html('Ugyldig seteplassering! Ikkje nok sete tilgjengeleg på valgt plass!')
+          } else {
+            $('#advarselstekst').html('Ugyldig seteplassering!')
+          }
+          document.getElementById('advarsel').style.visibility = 'visible'
+          draw(_container)
+          return false
+        }
       }
+    }
+
+    function tryReversed (row, startX, endX) {
+      for (let i = 1; i <= numSeats; i++) {
+        if (parseInt(endX) - i === (settings.columns - 1) || (checkAvailable(row, (startX - i), (endX - i))) && checkBound(row, (startX - i), (endX - i))) {
+          let newId = row + '-' + (startX - i)
+          console.log('Prøvar å legge inn frå ' + newId)
+          return selectMultiple(newId)
+        }
+      }
+      return false
     }
 
     function checkAvailable (row, startX, endX) {
@@ -465,7 +461,10 @@ function mainFunction ($) {
       // Ved ulikt tal seter på ulike rader, kan på sikt row brukast her.
       for (let i = startX; i <= endX; i++) {
         if (i >= settings.columns) {
-          console.log('Setet er utanfor salkartet')
+          console.log('Setet er utanfor salkartet på hogre side')
+          return false
+        } else if (i < 0) {
+          console.log('Setet er utanfor salkartet på venstre side')
           return false
         } else {
           console.log('Setet ' + i + ' er innanfor')
@@ -476,8 +475,10 @@ function mainFunction ($) {
 
     function checkNoGaps (startId) {
       if (checkSeatGapsLeft(startId) && checkSeatGapsRight(startId)) {
+        document.getElementById('advarsel').style.visibility = 'hidden'
         return true
       } else {
+        $('#advarselstekst').html('Ugyldig seteplassering! Du kan ikke la enkeltseter stå igjen mellom reserverte og dine egne!')
         if (!checkSeatGapsLeft(startId)) {
           console.log('Gap til venstre')
         } else if (!checkSeatGapsRight(startId)) {
