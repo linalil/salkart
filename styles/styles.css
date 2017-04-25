@@ -1,3 +1,4 @@
+@media all and (max-width: 3000px) {
 /* Reset */
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -199,7 +200,7 @@ body {
 	border-radius: 10px;
 	background-color: #7ED321;
 	margin: 2px 1px;
-	visibility: hidden;
+	visibility: visible;
 }
 .dine_valgte_billetter{
 	width: 180px;
@@ -299,15 +300,9 @@ table {
   margin: 10px 0;
   color: #666;
 }
-
 .methods{
     margin: 10px 0;
 }
-
-.row .seat{
-
-}
-
 .row span.row-label {
     font-size: 14px;
     display: inline-block;
@@ -356,4 +351,8 @@ input[type=checkbox]:disabled[data-status=notavailable] + label:before{
 /*--------------FLEXBOX---------------*/
 .beholder{
 	display: flex;
+}
+}
+@media all and (max-width: 1000px) {
+
 }
