@@ -56,8 +56,8 @@ $(document).ready(function () {
     firebase.auth().signInAnonymously().catch(function(error) {
         // Handle Errors here.
         console.log('Signar-in anonymt')
-        var errorCode = error.code;
-        var errorMessage = error.message;
+        var errorCode = error.code
+        var errorMessage = error.message
         // ...
       });
 
@@ -75,7 +75,7 @@ $(document).ready(function () {
       // ...
     }
     // ...
-  });
+  })
 
     /* -------------- SESSION ------------------- */
 
@@ -126,12 +126,14 @@ function mainFunction ($) {
 
     // Sjekkar kor mange sete brukar ønskjer å velje, endrar seg i forhold til nedtrekkslista.
     let numSeats = $('#select').val()
+    updateTable(numSeats)
 
     $('#barn').change(function () {
       let barn = $(this).val()
       let voksen = $('#select').val()
       let honnor = $('#honnor').val()
       numSeats = parseInt(barn) + parseInt(voksen) + parseInt(honnor)
+      updateTable(numSeats)
       console.log('Verdi til saman: ' + numSeats)
       clearMySeats()
     })
@@ -141,6 +143,7 @@ function mainFunction ($) {
       let barn = $('#barn').val()
       let honnor = $('#honnor').val()
       numSeats = parseInt(barn) + parseInt(voksen) + parseInt(honnor)
+      updateTable(numSeats)
       console.log('Verdi til saman: ' + numSeats)
       clearMySeats()
     })
@@ -150,16 +153,10 @@ function mainFunction ($) {
       let barn = $('#barn').val()
       let voksen = $('#select').val()
       numSeats = parseInt(barn) + parseInt(voksen) + parseInt(honnor)
+      updateTable(numSeats)
       console.log('Verdi til saman: ' + numSeats)
       clearMySeats()
     })
-
-    /*
-    $('select').on('change', function (e) {
-      numSeats = this.value
-      console.log('Verdi, select:' + numSeats)
-      clearMySeats()
-    }) */
 
     var _container = this
 
@@ -190,6 +187,22 @@ function mainFunction ($) {
       }
     })
 
+    function updateTable (totalSeter) {
+      $('#voksen_antall').html($('#select').val())
+      $('#barn_antall').html($('#barn').val())
+      $('#honnor_antall').html($('#honnor').val())
+
+      let voksenPris = parseInt(110 * parseInt($('#select').val()))
+      let barnePris = parseInt(80 * parseInt($('#barn').val()))
+      let honnorPris = parseInt(80 * parseInt($('#honnor').val()))
+
+      $('#voksen_pris').html(voksenPris + ' kr')
+      $('#barn_pris').html(barnePris + ' kr')
+      $('#honnor_pris').html(honnorPris + ' kr')
+
+      $('#sum_antall').html(totalSeter)
+      $('#sum_pris').html(parseInt(voksenPris + barnePris + honnorPris) + ' kr')
+    }
 
   // Private Functions
     // Opnar databasetilkopling til 'Plassering'-greina.
@@ -405,12 +418,6 @@ function mainFunction ($) {
         return sete
       })
     }
-
-    /******************* */
-
-    /******************* */
-
-
 
     // Metode som slettar lokalt lagra sete
     function clearMySeats () {
