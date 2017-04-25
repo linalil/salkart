@@ -127,13 +127,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="dine_valgte_billetter">
+                    <div class="beskrivelse valgte_billetter">
                         <p>
                             Dine valgte billetter:
                         </p>
-                        <div id="valgte_billetter">
+                        <div id="valgte_billetter"></div>
 
-                        </div>
                     </div>
                 </div>
                 <div class="setekart">
@@ -175,16 +174,16 @@
                 </tr>
                 <tr class="sum">
                     <td>Sum</td>
-                    <td class="kort">4</td>
-                    <td class="kort">380 kr</td>
+                    <td class="kort" id="sum_antall">4</td>
+                    <td class="kort" id="sum_pris">380 kr</td>
                 </tr>
             </table>
             <br/><br/>
-            <button type="button" id="btnDefineGold">G&aring; til betaling</button>
+            <button type="button" class="neste_knapp" id="btnDefineGold">G&aring; til betaling</button>
             <button type="button" id="nullstill">Nullstill</button>
         </div>
 
-
+      </div>
         <!--container-fluid-->
 
         <script src="https://www.gstatic.com/firebasejs/3.7.3/firebase.js"></script>
