@@ -412,12 +412,29 @@ function mainFunction ($) {
           selectSeat(_i[0] + '-' + x)
         }
         console.log('Innhald i mine sete: ' + mySeats)
+        return true
       } else {
-        $('input:checkbox[id="seat' + start + '"]', scope).prop('checked', 'unchecked')
-        draw(_container)
-        document.getElementById('advarsel').style.visibility = 'visible'
-        return
+        if (tryReversed(_i[0], _i[1], endX)) {
+          console.log('Det gjekk an å legge inn lenger framme')
+          return true
+        } else {
+          $('input:checkbox[id="seat' + start + '"]', scope).prop('checked', 'unchecked')
+          draw(_container)
+          document.getElementById('advarsel').style.visibility = 'visible'
+          return false
+        }
       }
+    }
+
+    function tryReversed (row, startX, endX) {
+      for (let i = 1; i <= numSeats; i++) {
+        if (parseInt(endX) - i === (settings.columns - 1) || checkAvailable(row, (startX - i), (endX - i))) {
+          let newId = row + '-' + (startX - i)
+          console.log('Prøvar å legge inn frå ' + newId)
+          return selectMultiple(newId)
+        }
+      }
+      return false
     }
 
     function checkAvailable (row, startX, endX) {
