@@ -2,24 +2,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>Sete-reservasjon</title>
 
-    <link href="styles/styles.css" rel="stylesheet" />
-    <link href="styles/bootstrap.min.css" rel="stylesheet">
-    <link href="styles/tooltipster.css" rel="stylesheet" />
-    <link href="styles/tooltipster-shadow.css" rel="stylesheet" />
-    <link href="styles/font-awesome.min.css" rel="stylesheet" />
+    <link href="styles/styles.css" rel="stylesheet" type="text/css"/>
+    <link href="styles/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="styles/tooltipster.css" rel="stylesheet" type="text/css"/>
+    <link href="styles/tooltipster-shadow.css" rel="stylesheet" type="text/css"/>
+    <link href="styles/font-awesome.min.css" rel="stylesheet" type="text/css"/>
 
-    <link href="https://fonts.googleapis.com/css?family=Raleway:400,600" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,600" rel="stylesheet" type="text/css"/>
 
 
-    <script src="JS/jquery-2.1.4.min.js"></script>
-    <script src="JS/jquery.tooltipster.min.js"></script>
-    <script src="JS/main.js"></script>
+    <script src="JS/jquery-2.1.4.min.js" type="text/javascript"></script>
+    <script src="JS/jquery.tooltipster.min.js" type="text/javascript"></script>
+    <script src="JS/main.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -35,7 +34,7 @@
         <div class="reservasjonsinfo">
             <div class="event">
                 <div class="bilde">
-                    <img src="img/beauty.jpg" />
+                    <img src="img/beauty.jpg" alt="filmbilde"/>
                 </div>
                 <div class="eventinfo">
                     <div class="tittel">
@@ -83,7 +82,7 @@
                             </select>
                         </div>
                         <div class="beholder">
-                            <label id="valg_barn" for="barn">Barn (Under 15 &aring;r)</label>
+                            <label id="valg_barn" for="barn">Barn (Under 15 år)</label>
                             <select id="barn">
                               <option value="0">0</option>
                               <option value="1">1</option>
@@ -92,7 +91,7 @@
                             </select>
                         </div>
                         <div class="beholder">
-                            <label id="valg_honnor" for="honnor">Honn&#248;r</label>
+                            <label id="valg_honnor" for="honnor">Honnør</label>
                             <select id="honnor">
                               <option value="0">0</option>
                               <option value="1">1</option>
@@ -149,7 +148,7 @@
             PRIS
         </div>
         <div class="prisoversikt">
-            <table class="pristabell">
+            <table class="pristabell" summary="oversikt over priser">
                 <tr>
                     <th>Type billett</th>
                     <th>Antall</th>
@@ -166,7 +165,7 @@
                     <td class="kort" id="barn_pris"></td>
                 </tr>
                 <tr class="sum">
-                    <td>Honn&oslash;r</td>
+                    <td>Honnør</td>
                     <td class="kort" id="honnor_antall"></td>
                     <td class="kort" id="honnor_pris"></td>
                 </tr>
@@ -177,15 +176,15 @@
                 </tr>
             </table>
             <br/><br/>
-            <button type="button" class="neste_knapp" id="btnDefineGold">G&aring; til betaling</button>
+            <button type="button" class="neste_knapp" id="btnDefineGold">GÅ TIL BETALING</button>
             <!--<button type="button" id="nullstill">Nullstill</button>-->
         </div>
 
     </div>
     <!--container-fluid-->
 
-    <script src="https://www.gstatic.com/firebasejs/3.7.3/firebase.js"></script>
-    <script>
+    <script src="https://www.gstatic.com/firebasejs/3.7.3/firebase.js" type="text/javascript"></script>
+    <script type="text/javascript">
         // Initialize Firebase
         var config = {
             apiKey: "AIzaSyDCnkcV3PhN78bYV0tz3wWlalhLtGUd2sg",
@@ -197,9 +196,9 @@
         firebase.initializeApp(config);
     </script>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js" type="text/javascript"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="JS/bootstrap.min.js"></script>
+    <script src="JS/bootstrap.min.js" type="text/javascript"></script>
 
 </body>
 
