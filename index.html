@@ -73,126 +73,136 @@
                         <div class="beskrivelse">
                             Velg antall og type billetter:
                         </div>
-                        <div class="voksen beholder">
+                        <div class="beholder">
                             <label id="velg_seter" for="select">Voksen</label>
                             <select id="select">
-                    <option value="1">1</option>
+                              <option value="0">0</option>
+                    <option value="1" selected>1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
                   </select>
                         </div>
-                        <div class="barn beholder">
-                            <label id="valg_barn" for="barn">Barn (Under 15 aar)</label>
+                        <div class="beholder">
+                            <label id="valg_barn" for="barn">Barn (Under 15 &aring;r)</label>
                             <select id="barn">
+                              <option value="0">0</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
                   </select>
                         </div>
-                        <div class="honnor beholder">
+                        <div class="beholder">
                             <label id="valg_honnor" for="honnor">Honn&#248;r</label>
                             <select id="honnor">
+                              <option value="0">0</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
                   </select>
                         </div>
                     </div>
-                    <div
-                    <div class="seteinfo beholder">
-                        <div class="sirkel ledig_sete"></div>
-                        <div class="ledig">
-                            Ledige billetter
+                    <div class="seteinfo">
+                        <div class="beholder">
+                            <div class="sirkel ledig_sete"></div>
+                            <div class="ledig">
+                                Ledige billetter
+                            </div>
+                        </div>
+                        <div class="beholder">
+                            <div class="sirkel opptatt"></div>
+                            <div class="ledig">
+                                Opptatte billetter
+                            </div>
+                        </div>
+                        <div class="beholder">
+                            <div class="sirkel midlertidig"></div>
+                            <div class="ledig">
+                                Midlertidig valgt
+                            </div>
+                        </div>
+                        <div class="beholder">
+                            <div class="sirkel mine"></div>
+                            <div class="ledig">
+                                Dine valgte billetter
+                            </div>
                         </div>
                     </div>
-                    <div class="seteinfo beholder">
-                        <div class="sirkel opptatt"></div>
-                        <div class="ledig">
-                            Opptatte billetter
+                    <div class="dine_valgte_billetter">
+                        <p>
+                            Dine valgte billetter:
+                        </p>
+                        <div id="valgte_billetter">
+
                         </div>
                     </div>
-                    <div class="seteinfo beholder">
-                        <div class="sirkel midlertidig"></div>
-                        <div class="ledig">
-                            Midlertidig valgt
-                        </div>
-                    </div>
-                    <div class="seteinfo beholder">
-                        <div class="sirkel mine"></div>
-                        <div class="ledig">
-                            Mine valgte billetter
-                        </div>
-                    </div>
-                    <div class="valgte_billetter">
-                      <p>
-                        Dine valgte billetter:
+                </div>
+                <div class="setekart">
+                    <div id="seats" class="setekart"></div>
+
+                    <div id="advarsel" class="advarsel">
+                      <img src="img/Advarsel.png" alt="En advarsel "/>
+                      <p class="advarselstekst" id="advarselstekst">
+                        Du kan ikke plassere deg her!
                       </p>
-                      <div id="valgte_billetter"></div>
-                    </div>
-
-
-            </div>
-            <div class="setekart">
-              <div id="seats" class="setekart"></div>
-              <div id="advarsel" class="advarsel">Feil</div>
+                      </div>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="overskrift">
-        PRIS
-    </div>
-    <div class="prisoversikt">
-        <table class="pristabell">
-            <tr>
-                <th>Type billett</th>
-                <th>Antall</th>
-                <th>Pris</th>
-            </tr>
-            <tr>
-                <td>Voksen</td>
-                <td class="kort">2</td>
-                <td class="kort">220 kr</td>
-            </tr>
-            <tr>
-                <td>Barn</td>
-                <td class="kort">1</td>
-                <td class="kort">80 kr</td>
-            </tr>
-            <tr class="sum">
-                <td>Honn&oslash;r</td>
-                <td class="kort">1</td>
-                <td class="kort">80 kr</td>
-            </tr>
-            <tr class="sum">
-                <td>Sum</td>
-                <td class="kort">4</td>
-                <td class="kort">380 kr</td>
-            </tr>
-        </table>
-        <br/><br/>
-        <button type="button" id="btnDefineGold">G&aring; til betaling</button>
-        <button type="button" id="nullstill">Nullstill</button>
-    </div>
+        <div class="overskrift">
+            PRIS
+        </div>
+        <div class="prisoversikt">
+            <table class="pristabell">
+                <tr>
+                    <th>Type billett</th>
+                    <th>Antall</th>
+                    <th>Pris</th>
+                </tr>
+                <tr>
+                    <td>Voksen</td>
+                    <td class="kort" id="voksen_antall">2</td>
+                    <td class="kort" id="voksen_pris">220 kr</td>
+                </tr>
+                <tr>
+                    <td>Barn</td>
+                    <td class="kort" id="barn_antall">1</td>
+                    <td class="kort" id="barn_pris">80 kr</td>
+                </tr>
+                <tr class="sum">
+                    <td>Honn&oslash;r</td>
+                    <td class="kort" id="honnor_antall">1</td>
+                    <td class="kort" id="honnor_pris">80 kr</td>
+                </tr>
+                <tr class="sum">
+                    <td>Sum</td>
+                    <td class="kort">4</td>
+                    <td class="kort">380 kr</td>
+                </tr>
+            </table>
+            <br/><br/>
+            <button type="button" id="btnDefineGold">G&aring; til betaling</button>
+            <button type="button" id="nullstill">Nullstill</button>
+        </div>
 
-    </div>
-    <!--container-fluid-->
 
-    <script src="https://www.gstatic.com/firebasejs/3.7.3/firebase.js"></script>
-    <script>
-        // Initialize Firebase
-        var config = {
-            apiKey: "AIzaSyDCnkcV3PhN78bYV0tz3wWlalhLtGUd2sg",
-            authDomain: "salkart2017.firebaseapp.com",
-            databaseURL: "https://salkart2017.firebaseio.com",
-            storageBucket: "salkart2017.appspot.com",
-            messagingSenderId: "640284529620"
-        };
-        firebase.initializeApp(config);
-    </script>
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="JS/bootstrap.min.js"></script>
+        <!--container-fluid-->
+
+        <script src="https://www.gstatic.com/firebasejs/3.7.3/firebase.js"></script>
+        <script>
+            // Initialize Firebase
+            var config = {
+                apiKey: "AIzaSyDCnkcV3PhN78bYV0tz3wWlalhLtGUd2sg",
+                authDomain: "salkart2017.firebaseapp.com",
+                databaseURL: "https://salkart2017.firebaseio.com",
+                storageBucket: "salkart2017.appspot.com",
+                messagingSenderId: "640284529620"
+            };
+            firebase.initializeApp(config);
+        </script>
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="JS/bootstrap.min.js"></script>
 
 </body>
 

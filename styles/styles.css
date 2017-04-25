@@ -126,17 +126,31 @@ body {
 	font-family: 'Raleway', sans-serif;
 	font-size: 1em;
 	font-weight: bold;
+	order: 1;
 }
-.type_sete #select{
-
+.type_sete .beholder{
+	display: flex;
+	justify-content:space-between;
+	flex-wrap: wrap;
+	margin: 10px 0px;
+	width: 180px;
+	flex-direction: row-reverse;
+}
+.select, .barn, .honnor{
+	order: 2;
 }
 .setekart{
 	margin-left: 20px;
 	order: 2;
+	flex-basis: 20em;
 	/*border: 1px solid black;*/
 }
 .seat{
 	background-color: #F2F2F2;
+}
+.seteinfo{
+	margin: 30px 0px;
+	width: 180px;
 }
 .sirkel{
 	width: 10px;
@@ -169,8 +183,24 @@ body {
 	order: 1;
 	margin: 5px
 }
+.dine
 .advarsel{
-	visibility: hidden;
+	visibility:visible;
+	color: #D0011B;
+	font-family: 'Raleway', sans-serif;
+	font-size: 1.2em;
+	font-weight: bold;
+	margin: 20px 10px;
+	display: flex;
+}
+.advarsel img{
+	width: 40px;
+	height: 40px;
+	order:1;
+}
+.advarsel p{
+	order: 2;
+	margin-left: 10px;
 }
 
 /*-------------------------------------*/
