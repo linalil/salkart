@@ -275,23 +275,6 @@ function mainFunction ($) {
       draw(_container)
     })
 
-    function updateTable (totalSeter) {
-      $('#voksen_antall').html($('#select').val())
-      $('#barn_antall').html($('#barn').val())
-      $('#honnor_antall').html($('#honnor').val())
-
-      let voksenPris = parseInt(110 * parseInt($('#select').val()))
-      let barnePris = parseInt(80 * parseInt($('#barn').val()))
-      let honnorPris = parseInt(80 * parseInt($('#honnor').val()))
-
-      $('#voksen_pris').html(voksenPris + ' kr')
-      $('#barn_pris').html(barnePris + ' kr')
-      $('#honnor_pris').html(honnorPris + ' kr')
-
-      $('#sum_antall').html(totalSeter)
-      $('#sum_pris').html(parseInt(voksenPris + barnePris + honnorPris) + ' kr')
-    }
-
     // Draw layout - metoden som teiknar opp salkart
     function draw (container) {
       container.empty()
