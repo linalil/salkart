@@ -1,4 +1,4 @@
-@media all and (max-width: 3000px) {
+
 /* Reset */
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -29,9 +29,6 @@ body {
   margin: 0px;
 	line-height: 1;
   font-family: 'Raleway', sans-serif;
-}
-.container-fluid{
-
 }
 .nav{
 	background-color: #4990E2;
@@ -89,9 +86,6 @@ body {
 	justify-content: flex-end;
 }
 /*-------------------------------------*/
-.hovedinnhold{
-
-}
 .overskrift{
 	font-family: 'Raleway', sans-serif;
 	font-size: 1.5em;
@@ -355,7 +349,102 @@ input[type=checkbox]:disabled[data-status=notavailable] + label:before{
 .beholder{
 	display: flex;
 }
+
+@media all and (max-width: 1200px) {
+	.reservasjonsinfo{
+		width: 80%;
+	}
+	.overskrift{
+		width: 80%;
+	}
+	.billettvalg{
+		width: 80%;
+	}
+	.prisoversikt{
+		width: 80%;
+	}
 }
-@media all and (max-width: 1000px) {
+@media all and (max-width: 992px) {
+	.reservasjonsinfo{
+		width: 90%;
+		padding: 0px 30px;
+	}
+	.overskrift{
+		width: 90%;
+		padding: 0px 30px;
+	}
+	.billettvalg{
+		width: 90%;
+		padding: 0px 30px;
+	}
+	.prisoversikt{
+		width: 90%;
+		padding: 0px 30px;
+	}
+}
+@media all and (max-width: 768px) {
+	.reservasjonsinfo{
+		width: 100%;
+	}
+	.overskrift{
+		width: 100%;
+	}
+	.billettvalg{
+		width: 100%
+	}
+	.prisoversikt{
+		width: 100%;
+	}
+	.nav{
+		height: 50px;
+	}
+	.logo{
+		width: 40px;
+		height: 40px;
+		margin: 5px 15px;
+	}
+	/*--------------------------------------*/
+	.reservasjonsinfo{
+		flex-direction: column;
+	}
+	.tidspunkt{
+		margin: 20px 0px 0px;
+	}
+	/*--------------------------------------*/
+	.billettvalg{
+		display: flex;
+		flex-direction: column;
+		align-items:center;
+	}
+	.type_sete{
+		order: 2;
+		width: 260px;
+	}
+	.setekart{
+		order: 2;
+		min-width: 250px;
+		margin-left: 2px;
+	}
+	.seteinfo{
+		order: 1;
+		width: 260px;
+	}
+	.dine_valgte_billetter{
+		order: 4;
+		width: 260px;
+	}
+	.type_sete .beholder{
+		display: 0;
+		width: 260px;
+	}
+	.advarsel{
+		margin: auto;
+		display: flex;
+	}
+}
+@media all and (max-width: 480px) {
+
+}
+@media all and (max-width: 320px) {
 
 }
