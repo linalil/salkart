@@ -49,28 +49,25 @@ $(document).ready(function () {
   })
 
   /* -------------- SESSION ------------------- */
-
-    // Anonym sign-in
-  firebase.auth().signInAnonymously().catch(function (error) {
-    // Handle Errors here.
-    console.log('Signar-in anonymt')
-    var errorCode = error.code
-    var errorMessage = error.message
-  })
-
-    // Hentar anonyme brukardata
   firebase.auth().onAuthStateChanged(function (user) {
-    console.log('er inne i AuthStateChanged-funksjonen')
     if (user) {
     // User is signed in.
       var isAnonymous = user.isAnonymous
       var uid = user.uid
       console.log('Det eksisterer ein brukar')
+      console.log('Brukaren er anonym: ' + isAnonymous)
+      console.log('Brukaren har id' + uid)
     } else {
       // User is signed out.
+      firebase.auth().signInAnonymously().catch(function (error) {
+        // Handle Errors here.
+        var errorCode = error.code
+        var errorMessage = error.message
+        console.log('Feil med anonym innlogging: ' + errorCode + ' ' + errorMessage)
+      })
+      console.log('Brukaren er no logga inn')
     }
   })
-
   /* -------------- SESSION ------------------- */
 
   // Køyrer hovudfunksjonen under.
@@ -669,7 +666,6 @@ function mainFunction ($) {
           return item.label !== label
         })
       },
-
       // Metoden som "kjøper billettar" når vi trykker på knappen.
       defineBlock: function (label, seats) {
         // For kvart av seta som er selected...
