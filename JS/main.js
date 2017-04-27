@@ -48,28 +48,6 @@ $(document).ready(function () {
     })
   })
 
-  /* -------------- SESSION ------------------- */
-  firebase.auth().onAuthStateChanged(function (user) {
-    if (user) {
-    // User is signed in.
-      var isAnonymous = user.isAnonymous
-      var uid = user.uid
-      console.log('Det eksisterer ein brukar')
-      console.log('Brukaren er anonym: ' + isAnonymous)
-      console.log('Brukaren har id' + uid)
-    } else {
-      // User is signed out.
-      firebase.auth().signInAnonymously().catch(function (error) {
-        // Handle Errors here.
-        var errorCode = error.code
-        var errorMessage = error.message
-        console.log('Feil med anonym innlogging: ' + errorCode + ' ' + errorMessage)
-      })
-      console.log('Brukaren er no logga inn')
-    }
-  })
-  /* -------------- SESSION ------------------- */
-
   // Køyrer hovudfunksjonen under.
   mainFunction(jQuery)
 })
@@ -85,7 +63,8 @@ function mainFunction ($) {
       columns: 10,
       booked: [],
       notavailable: [],
-      multiple: false
+      multiple: false,
+      sessionId: 1
     }, options)
 
     // Local Variables
@@ -95,6 +74,8 @@ function mainFunction ($) {
     var _seats = []
     // var _available = []
     var _selected = []
+
+    let sessionId
 
     // Objects
     let block = function () {}
@@ -115,12 +96,48 @@ function mainFunction ($) {
       selected: false
     }
 
+    /* -------------- SESSION ------------------- */
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+      // User is signed in.
+        var isAnonymous = user.isAnonymous
+        var uid = user.uid
+        console.log('Det eksisterer ein brukar')
+        console.log('Brukaren er anonym: ' + isAnonymous)
+        console.log('Brukaren har id' + uid)
+        sessionId = uid
+
+        let dbInit = firebase.database().ref('/Personer/' + sessionId)
+        dbInit.once('value', function (snapshot) {
+          if (snapshot.child('seats')) {
+            let tempSeats = String(snapshot.child('seats').val())
+            mySeats = tempSeats.split(',')
+            console.log('Det eksisterar sete på brukaren:' + mySeats)
+          } else {
+            mySeats = []
+            console.log('Det fins ingen sete på brukaren')
+          }
+          initialize()
+        })
+      } else {
+        // User is signed out.
+        firebase.auth().signInAnonymously().catch(function (error) {
+          // Handle Errors here.
+          var errorCode = error.code
+          var errorMessage = error.message
+          console.log('Feil med anonym innlogging: ' + errorCode + ' ' + errorMessage)
+        })
+        console.log('Brukaren er no logga inn')
+      }
+    })
+    /* -------------- SESSION ------------------- */
+
     // Sjekkar kor mange sete brukar ønskjer å velje, endrar seg i forhold til nedtrekkslista.
     let numSeats = $('#select').val()
     updateTable(numSeats)
 
     $('#barn').change(function () {
-      document.getElementById('advarsel').style.visibility = 'hidden'
+      document.getElementById('advarsel').style.display = 'none'
       let barn = $(this).val()
       let voksen = $('#select').val()
       let honnor = $('#honnor').val()
@@ -129,9 +146,8 @@ function mainFunction ($) {
       console.log('Verdi til saman: ' + numSeats)
       clearMySeats()
     })
-
     $('#select').change(function () {
-      document.getElementById('advarsel').style.visibility = 'hidden'
+      document.getElementById('advarsel').style.display = 'none'
       let voksen = $(this).val()
       let barn = $('#barn').val()
       let honnor = $('#honnor').val()
@@ -140,9 +156,8 @@ function mainFunction ($) {
       console.log('Verdi til saman: ' + numSeats)
       clearMySeats()
     })
-
     $('#honnor').change(function () {
-      document.getElementById('advarsel').style.visibility = 'hidden'
+      document.getElementById('advarsel').style.display = 'none'
       let honnor = $(this).val()
       let barn = $('#barn').val()
       let voksen = $('#select').val()
@@ -165,6 +180,8 @@ function mainFunction ($) {
 
       // Viss ein skal bestille eit sete
       if (parseInt(numSeats) === 0) {
+        $('#advarselstekst').html('Husk å velge antall seter!')
+        document.getElementById('advarsel').style.display = 'unset'
         return false
       } else if (parseInt(numSeats) === 1) {
         if ($(this).prop('checked') === true) {
@@ -199,11 +216,12 @@ function mainFunction ($) {
     }
 
   // Private Functions
+  function initialize () {
     // Opnar databasetilkopling til 'Plassering'-greina.
-    var dbInitRef = firebase.database().ref('/Plassering')
+    var dbInitReference = firebase.database().ref('/Plassering')
 
     // Første gong når ein teknar opp salkartet.
-    dbInitRef.once('value', function (snapshot) {
+    dbInitReference.once('value', function (snapshot) {
       console.log('Initialisering av salkart... ')
 
       // Går gjennom seter og rader som satt i settings.
@@ -216,32 +234,46 @@ function mainFunction ($) {
           var _seatObject = new seat()
           _seatObject.id = _id
 
-          // Sjekkar om setet med gitt id har status booka i databasen.
-          if (snapshot.child(_id).child('booked').val() === true) {
-            // Set i så fall booked til true, slik at setet blir teikna opp grønt.
-            _seatObject.booked = true
-          }
-
-          // Sjekkar om setet med gitt id har status reservert i databasen.
-          if (snapshot.child(_id).child('reservert').val() === true) {
-            // Passar i så fall på at det ikkje skal vere tilgjengeleg.
-            _seatObject.available = false
+          if (($.inArray(_seatObject.id, mySeats)) === -1) {
+            console.log('Setet ' + _id + ' er ikkje i mine sete.')
+            // Dersom det er reservert (og ikkje ditt), sett status 'utilgjengeleg'
+            // Setet vil då bli farga mørkegrått.
+            if (snapshot.child(_id).child('reservert').val() === true) {
+              console.log('Setet er reservert')
+              _seatObject.available = false
+              _seatObject.notavailable = true
+            } else if (snapshot.child(_id).child('booked').val() === true) {
+              console.log('Setet er booka')
+              _seatObject.booked = true
+              _seatObject.available = false
+            } else if (snapshot.child(_id).child('reservert').val() === false && snapshot.child(_id).child('booked').val() === false) {
+              console.log('Setet er verken booka eller reservert')
+              _seatObject.available = true
+              _seatObject.notavailable = false
+            }
+          } else {
+            console.log('Setet ' + _id + ' er i mine sete')
+            _seatObject.selected = true
             _seatObject.notavailable = true
+            makeGreenBox(_id)
           }
 
           _seats.push(_seatObject)
         }
       }
-
+      console.log('Seta mine er: ' + mySeats)
       // Teiknar opp salkartet
+
       draw(_container)
     })
+  }
 
     // Dersom eit av borna under 'Plassering' endrar seg, så vil callbackmetoden under køyrast.
+    var dbInitRef = firebase.database().ref('/Plassering')
     dbInitRef.on('child_changed', function (snapshot) {
       // c er bornet der det har skjedd ei endring, altså det setet som har endra status.
       var c = snapshot.val()
-      console.log(c.id + ' was changed, reservert:' + c.reservert + ', og booked:' + c.booked)
+      console.log(getVisualId(c.id) + ' was changed, reservert:' + c.reservert + ', og booked:' + c.booked)
 
       // Hentar ut dette setet frå lista over alle ved hjelp av id-en.
       var _seatObj = _seats.filter(function (seat) {
@@ -264,6 +296,7 @@ function mainFunction ($) {
         }
       } else {
         _seatObj[0].reservert = true
+        // Oppdaterar status til reservert.
       }
 
       // Teikn salkartet på nytt.
@@ -314,7 +347,9 @@ function mainFunction ($) {
           } else if (_seatObject.notavailable) {
             _checkbox.prop('disabled', 'disabled')
             _checkbox.attr('data-status', 'notavailable')
-          } else {}
+          } else {
+            _checkbox.attr('data-status', 'available')
+          }
 
           _row.append(_checkbox)
           _row.append(_seat)
@@ -326,7 +361,9 @@ function mainFunction ($) {
     // Select a single seat
     function selectSeat (id) {
       if ($.inArray(id, _selected) === -1) {
+        console.log('Verdi numSeats i select er ' + numSeats)
         if (parseInt(numSeats) === 1) {
+          console.log('Slettar tidlegare enkeltsete...')
           clearMySeats()
           if (checkNoGaps(id)) {
             _selected.push(id)
@@ -340,21 +377,30 @@ function mainFunction ($) {
 
             // Lagrar setet i lista over mine sete, mySeats
             mySeats.push(id)
-            $('#valgte_billetter').append('<div class="valgte_billetter">' + getVisualId(id) + '</div>')
-            document.getElementById('valgte_billetter_beskrivelse').style.visibility = 'visible'
-            document.getElementById('dine_valgte_billetter').style.visibility = 'visible'
+            console.log(sessionId + ' har reservert ' + id)
+            makeGreenBox(id)
+
+            // Oppdaterar brukar i databasen med dette eine setet
+            let dbRef = firebase.database().ref('/Personer/' + sessionId)
+            console.log('Opnar kopling: ' + dbRef)
+            dbRef.set({
+              sessionId: sessionId,
+              seats: id
+            })
           } else {
             $('input:checkbox[id="seat' + id + '"]', scope).prop('checked', 'unchecked')
             draw(_container)
-            document.getElementById('advarsel').style.visibility = 'visible'
+            document.getElementById('advarsel').style.display = 'unset'
 
             return
           }
         } else {
+          console.log('numseats er' + numSeats + ' og vi skal legge til nytt sete')
           _selected.push(id)
           _seatObj = _seats.filter(function (seat) {
             return seat.id === id
           })
+          console.log(sessionId + ' har reservert ' + getVisualId(id))
 
           // Oppdaterar status til reservert.
           _seatObj[0].selected = true
@@ -362,9 +408,7 @@ function mainFunction ($) {
 
           // Lagrar setet i lista over mine sete, mySeats
           mySeats.push(id)
-          $('#valgte_billetter').append('<div class="valgte_billetter">' + getVisualId(id) + '</div>')
-          document.getElementById('valgte_billetter_beskrivelse').style.visibility = 'visible'
-          document.getElementById('dine_valgte_billetter').style.visibility = 'visible'
+          makeGreenBox(id)
         }
 
         // Oppdaterar databasen.
@@ -390,6 +434,7 @@ function mainFunction ($) {
     // Deselect a single seat
     function deselectSeat (id) {
       if (parseInt(numSeats) === 1) {
+        firebase.database().ref('/Personer/' + sessionId).remove()
         removeGreenBoxes()
       }
       _selected = $.grep(_selected, function (item) {
@@ -420,15 +465,31 @@ function mainFunction ($) {
 
     // Metode som slettar lokalt lagra sete
     function clearMySeats () {
-      for (let i = 0; i < mySeats.length; i++) {
-        let tempId = mySeats[i]
-        console.log('Deselect ' + tempId)
-        deselectSeat(tempId)
+      if (mySeats != 'null') {
+        console.log('Lista har innhald')
+        console.log('Forste element: ' + mySeats[0])
+        for (let i = 0; i < mySeats.length; i++) {
+          let tempId = mySeats[i]
+          console.log('Deselect ' + tempId)
+          deselectSeat(tempId)
+        }
+        mySeats.length = 0
+        removeGreenBoxes()
+        console.log('Sletting utfort, noverande innhald: ' + mySeats)
+      } else {
+        mySeats.length = 0
+        console.log('Det er ikkje innhald i denne. undefined')
       }
-      mySeats.length = 0
-      removeGreenBoxes()
+      if (parseInt(numSeats) !== 1) {
+        console.log('Fjerna heile greina i clearMySeats')
+        firebase.database().ref('/Personer/' + sessionId).remove()
+      }
+    }
 
-      console.log('Sletting utfort')
+    function makeGreenBox (id) {
+      $('#valgte_billetter').append('<div class="valgte_billetter">' + getVisualId(id) + '</div>')
+      document.getElementById('valgte_billetter_beskrivelse').style.visibility = 'visible'
+      document.getElementById('dine_valgte_billetter').style.visibility = 'visible'
     }
 
     function removeGreenBoxes () {
@@ -456,6 +517,12 @@ function mainFunction ($) {
           $('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).prop('checked', 'checked')
           selectSeat(_i[0] + '-' + x)
         }
+        // Oppdaterar databasen med liste over valgte sete
+        let dbRef = firebase.database().ref('/Personer/' + sessionId)
+        dbRef.set({
+          sessionId: sessionId,
+          seats: mySeats
+        })
         return true
       } else {
         if (tryReversed(_i[0], _i[1], endX)) {
@@ -471,7 +538,7 @@ function mainFunction ($) {
           } else {
             $('#advarselstekst').html('Ugyldig seteplassering!')
           }
-          document.getElementById('advarsel').style.visibility = 'visible'
+          document.getElementById('advarsel').style.display = 'unset'
           draw(_container)
           return false
         }
@@ -517,7 +584,7 @@ function mainFunction ($) {
 
     function checkNoGaps (startId) {
       if (checkSeatGapsLeft(startId) && checkSeatGapsRight(startId)) {
-        document.getElementById('advarsel').style.visibility = 'hidden'
+        document.getElementById('advarsel').style.display = 'none'
         return true
       } else {
         $('#advarselstekst').html('Ugyldig seteplassering! Du kan ikke la enkeltseter stå igjen mellom reserverte og dine egne!')
