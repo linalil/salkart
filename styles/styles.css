@@ -163,7 +163,6 @@ body {
 	margin: 30px 0px;
 	width: 180px;
 	order: 3;
-	width: 50%
 }
 .sirkel{
 	width: 10px;
@@ -461,6 +460,7 @@ input[type=checkbox]:disabled[data-status=notavailable] + label:before{
 		order: 2;
 		min-width: 250px;
 		margin-left: 2px;
+		flex-basis: 0em;
 	}
 	.sidepanel{
 		display: contents;
@@ -472,6 +472,7 @@ input[type=checkbox]:disabled[data-status=notavailable] + label:before{
 	.seteinfo .under_setekart{
 		order: 2;
 		width: 260px;
+		margin: 0px 0px;
 	}
 	.dine_valgte_billetter{
 		order: 3;
@@ -482,14 +483,19 @@ input[type=checkbox]:disabled[data-status=notavailable] + label:before{
 		width: 260px;
 	}
 	.advarsel{
-		margin: auto;
+		margin: 15px auto 0px;
 		display: none;
 		order:1;
+		width: 60%;
 	}
 }
 @media all and (max-width: 480px) {
-
+	.advarsel{
+		width: 80%;
+	}
 }
 @media all and (max-width: 320px) {
-
+	.advarsel{
+		width: 100%;
+	}
 }
