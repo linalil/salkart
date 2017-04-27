@@ -757,7 +757,7 @@ function mainFunction ($) {
           _seat[0].available = false
 
           // ..og oppdaterar databasen.
-          var dbRef = firebase.database().ref('/Plassering/' + _seat[0].id)
+          var dbRef = firebase.database().ref('/Saler/Sal1/Plassering/' + _seat[0].id)
           dbRef.transaction(function (sete) {
             if (sete) {
               sete.id = _seat[0].id
@@ -773,8 +773,9 @@ function mainFunction ($) {
         // Nullstiller eigne sete.
         mySeats.length = 0
         removeGreenBoxes()
+        clearMySeats()
+        firebase.database().ref('/Saler/Sal1/Personer/' + sessionId).remove()
         document.getElementById('valgte_billetter_beskrivelse').style.visibility = 'hidden'
-
         // Teikn opp på nytt når alle sete er gjennomgått.
         draw(_container)
       }
