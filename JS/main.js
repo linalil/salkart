@@ -307,14 +307,6 @@ function mainFunction ($) {
     function draw (container) {
       container.empty()
 
-      // Providing Column labels
-      var _rowLabel = $('<div class="row"><span class="row-label"></span></div>')
-      for (var c = 0; c < settings.columns; c++) {
-        _rowLabel.append('<span class="col-label">' + (c + 1) + '</span>')
-      }
-
-      container.append(_rowLabel)
-
       for (var i = 0; i < settings.rows; i++) {
         // Providing Row label
         var _row = $('<div class="row"></div>')
@@ -356,6 +348,13 @@ function mainFunction ($) {
         }
         container.append(_row)
       }
+      // Providing Column labels
+      var _rowLabel = $('<div class="row"><span class="row-label"></span></div>')
+      for (var c = 0; c < settings.columns; c++) {
+        _rowLabel.append('<span class="col-label">' + (c + 1) + '</span>')
+      }
+
+      container.append(_rowLabel)
     }
 
     // Select a single seat
@@ -667,10 +666,9 @@ function mainFunction ($) {
         var _seat = _seats.filter(function (seat) {
           return seat.id === _this.id
         })
-
+        _seat[0].available = true
         _seat[0].booked = false
         _seat[0].selected = false
-        _seat[0].available = true
         _seat[0].notavailable = false
 
         var dbRef = firebase.database().ref('/Plassering/' + _seat[0].id)
@@ -686,6 +684,7 @@ function mainFunction ($) {
         })
       })
       removeGreenBoxes()
+      clearMySeats()
       updateTable()
       draw(_container)
     })
