@@ -3,17 +3,17 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Sete-reservasjon</title>
 
-    <link href="styles/styles.css" rel="stylesheet" type="text/css"/>
-    <link href="styles/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-    <link href="styles/tooltipster.css" rel="stylesheet" type="text/css"/>
-    <link href="styles/tooltipster-shadow.css" rel="stylesheet" type="text/css"/>
-    <link href="styles/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link href="styles/styles.css" rel="stylesheet" type="text/css" />
+    <link href="styles/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="styles/tooltipster.css" rel="stylesheet" type="text/css" />
+    <link href="styles/tooltipster-shadow.css" rel="stylesheet" type="text/css" />
+    <link href="styles/font-awesome.min.css" rel="stylesheet" type="text/css" />
 
-    <link href="https://fonts.googleapis.com/css?family=Raleway:400,600" rel="stylesheet" type="text/css"/>
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,600" rel="stylesheet" type="text/css" />
 
 
     <script src="JS/jquery-2.1.4.min.js" type="text/javascript"></script>
@@ -34,7 +34,7 @@
         <div class="reservasjonsinfo">
             <div class="event">
                 <div class="bilde">
-                    <img src="img/beauty.jpg" alt="filmbilde"/>
+                    <img src="img/beauty.jpg" alt="filmbilde" />
                 </div>
                 <div class="eventinfo">
                     <div class="tittel">
@@ -62,6 +62,7 @@
             </div>
 
         </div>
+
         <div class="billettbakgrunn">
             <div class="overskrift">
                 VALG AV BILLETTER
@@ -75,32 +76,32 @@
                         <div class="beholder">
                             <label id="velg_seter" for="select">Voksen</label>
                             <select id="select">
-                              <option value="0">0</option>
-                              <option value="1" selected>1</option>
-                              <option value="2">2</option>
-                              <option value="3">3</option>
-                            </select>
+                            <option value="0">0</option>
+                            <option value="1" selected>1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                          </select>
                         </div>
                         <div class="beholder">
                             <label id="valg_barn" for="barn">Barn (Under 15 år)</label>
                             <select id="barn">
-                              <option value="0">0</option>
-                              <option value="1">1</option>
-                              <option value="2">2</option>
-                              <option value="3">3</option>
-                            </select>
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                          </select>
                         </div>
                         <div class="beholder">
                             <label id="valg_honnor" for="honnor">Honnør</label>
                             <select id="honnor">
-                              <option value="0">0</option>
-                              <option value="1">1</option>
-                              <option value="2">2</option>
-                              <option value="3">3</option>
-                            </select>
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                          </select>
                         </div>
                     </div>
-                    <div class="seteinfo">
+                    <div class="seteinfo over_setekart">
                         <div class="beholder">
                             <div class="sirkel ledig_sete"></div>
                             <div class="ledig">
@@ -126,20 +127,48 @@
                             </div>
                         </div>
                     </div>
-                    <div class="beskrivelse dine_valgte_billetter" id="dine_valgte_billetter">
-                        <p id="valgte_billetter_beskrivelse">
-                            Dine valgte billetter:
-                        </p>
-                        <div id="valgte_billetter"></div>
-                    </div>
                 </div>
                 <div class="setekart">
                     <div id="seats" class="setekart"></div>
+                </div>
+            </div>
 
-                    <div id="advarsel" class="advarsel">
-                        <img src="img/Advarsel.png" alt="En advarsel " />
-                        <p class="advarselstekst" id="advarselstekst"></p>
+            <div class="tilleggsinfo">
+                <div class="seteinfo under_setekart">
+                    <div class="beholder">
+                        <div class="sirkel ledig_sete"></div>
+                        <div class="ledig">
+                            Ledige billetter
+                        </div>
                     </div>
+                    <div class="beholder">
+                        <div class="sirkel opptatt"></div>
+                        <div class="ledig">
+                            Opptatte billetter
+                        </div>
+                    </div>
+                    <div class="beholder">
+                        <div class="sirkel midlertidig"></div>
+                        <div class="ledig">
+                            Midlertidig valgt
+                        </div>
+                    </div>
+                    <div class="beholder">
+                        <div class="sirkel mine"></div>
+                        <div class="ledig">
+                            Dine valgte billetter
+                        </div>
+                    </div>
+                </div>
+                <div class="beskrivelse dine_valgte_billetter" id="dine_valgte_billetter">
+                    <p id="valgte_billetter_beskrivelse">
+                        Dine valgte billetter:
+                    </p>
+                    <div id="valgte_billetter"></div>
+                </div>
+                <div class="advarsel beholder" id="advarsel">
+                    <img src="img/Advarsel.png" alt="En advarsel " />
+                    <p class="advarselstekst" id="advarselstekst"></p>
                 </div>
             </div>
         </div>
