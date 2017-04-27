@@ -1,5 +1,6 @@
 $(document).ready(function () {
   let reserved
+  let sessionId
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       // User is signed in.
@@ -8,7 +9,7 @@ $(document).ready(function () {
       console.log('Det eksisterer ein brukar')
       console.log('Brukaren er anonym: ' + isAnonymous)
       console.log('Brukaren har id' + uid)
-      let sessionId = uid
+      sessionId = uid
 
       let dbInit = firebase.database().ref('/Saler/Sal1/Personer/' + sessionId)
       dbInit.once('value', function (snapshot) {
@@ -55,5 +56,6 @@ $(document).ready(function () {
         return sete
       })
     })
+    firebase.database().ref('/Saler/Sal1/Personer/' + sessionId).remove()
   })
 })
