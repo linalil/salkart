@@ -40,6 +40,9 @@ $(document).ready(function () {
   }
 
   $('#kjop').click(function () {
+    // TODO: Fiks inputvalidering
+    // if(alle tekstfelt fylt ut){ kjøp billett(ar) }
+
     $.each(reserved, function (i, v) {
       let reservertSete = String(this)
       console.log('Reservert sete: ' + reservertSete)

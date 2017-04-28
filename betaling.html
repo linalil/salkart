@@ -28,10 +28,18 @@
         </div>
     </div>
     <div id="test" class="test">
-      <p class="beskrivelse" id="test_tekst"></p>
+      <p class="sjanger" id="test_tekst"></p>
     </div>
-    <button type="button" class="neste_knapp" id="testkjop"><a href="index.html">HJEM</a></button>
-    <button type="button" class="neste_knapp" id="kjop">KJØP VALGTE</button>
+
+    <form>
+      <p class="beskrivelse">Navn: <input type="text" name="name" required="true"/></p>
+      <p class="beskrivelse">E-post: <input type="email" name="email" required="true"/></p>
+      <p class="beskrivelse">Tlf: <input type="text" name="tlf" required="true"/></p>
+
+      <button type="button" class="neste_knapp" id="testkjop"><a href="index.html">HJEM</a></button>
+      <button type="button" class="neste_knapp" id="kjop">KJØP VALGTE</button>
+    </form>
+
 
     <script src="https://www.gstatic.com/firebasejs/3.7.3/firebase.js" type="text/javascript"></script>
     <script type="text/javascript">
