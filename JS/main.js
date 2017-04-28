@@ -393,10 +393,14 @@ function mainFunction ($) {
               let split = id.split('-')
               let newId = split[0] + '-' + (parseInt(split[1]) - 1)
               console.log('Burde prøve å booke sete ' + newId)
+              $('input:checkbox[id="seat' + id + '"]', scope).prop('checked', 'unchecked')
+              document.getElementById('advarsel').style.display = 'unset'
             } else if (!checkSeatGapsRight(id)) {
               let split = id.split('-')
               let newId = split[0] + '-' + (parseInt(split[1]) + 1)
               console.log('Burde prøve å booke sete ' + newId)
+              $('input:checkbox[id="seat' + id + '"]', scope).prop('checked', 'unchecked')
+              document.getElementById('advarsel').style.display = 'unset'
             } else {
               $('input:checkbox[id="seat' + id + '"]', scope).prop('checked', 'unchecked')
               document.getElementById('advarsel').style.display = 'unset'
