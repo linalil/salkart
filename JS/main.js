@@ -388,7 +388,6 @@ function mainFunction ($) {
               sessionId: sessionId,
               seats: id
             })
-            return true
           } else {
             if (!checkSeatGapsLeft(id)) {
               let split = id.split('-')
@@ -403,7 +402,7 @@ function mainFunction ($) {
               document.getElementById('advarsel').style.display = 'unset'
             }
             draw(_container)
-            return true
+            return
           }
         } else {
           console.log('numseats er' + numSeats + ' og vi skal legge til nytt sete')
