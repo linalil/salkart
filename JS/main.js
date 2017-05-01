@@ -317,6 +317,7 @@ function mainFunction ($) {
         var _colLabel = $('<span class="row-label">' + (i + 1) + '</span>')
         _row.append(_colLabel)
 
+        let labNum = 0
         for (var j = 0; j < settings.columns; j++) {
           var _id = i + '-' + j
 
@@ -333,21 +334,29 @@ function mainFunction ($) {
             })[0].color
           }
           var _checkbox = $('<input id="seat' + _seatObject.id + '" data-block="' + _seatObject.block + '" type="checkbox" />')
-          var _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '"  title="' + (i + 1) + '-' + (j + 1) + '"></label>')
-
+          var _seat
           if(_seatObject.utilgjengelig) {
             _checkbox.prop('disabled', 'disabled')
             _checkbox.attr('data-status', 'utilgjengelig')
+            _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '"></label>')
           } else if (_seatObject.booked) {
             _checkbox.prop('disabled', 'disabled')
             _checkbox.attr('data-status', 'booked')
+            labNum++
+            _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '" title="' + (i + 1) + '-' + labNum + '"></label>')
           } else if (_seatObject.selected) {
             _checkbox.prop('checked', 'checked')
+            labNum++
+            _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '" title="' + (i + 1) + '-' + labNum + '"></label>')
           } else if (_seatObject.notavailable) {
             _checkbox.prop('disabled', 'disabled')
             _checkbox.attr('data-status', 'notavailable')
+            labNum++
+            _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '" title="' + (i + 1) + '-' + labNum + '"></label>')
           } else {
             _checkbox.attr('data-status', 'available')
+            labNum++
+            _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '" title="' + (i + 1) + '-' + labNum + '"></label>')
           }
 
           _row.append(_checkbox)
@@ -362,8 +371,7 @@ function mainFunction ($) {
         var _s = _seats.filter(function (seat) {
           return seat.id === ('1-' + c)
         })[0]
-        _seatObject.utilgjengelig
-        if(_s.utilgjengelig) {
+        if (_s.utilgjengelig) {
           _rowLabel.append('<span class="col-label"></span>')
         } else {
           lab++
@@ -525,9 +533,9 @@ function mainFunction ($) {
           if (!checkNoGaps(start)) {
             $('#advarselstekst').html('Ugyldig seteplassering! Du kan ikke la enkeltseter stå igjen mellom reserverte og dine egne!')
           } else if (!checkBound(_i[0], _i[1], endX)) {
-            $('#advarselstekst').html('Ugyldig seteplassering! Out of bound')
+            $('#advarselstekst').html('Ugyldig seteplassering!')
           } else if (!checkAvailable(_i[0], _i[1], endX)) {
-            $('#advarselstekst').html('Ugyldig seteplassering! Ikkje nok sete tilgjengeleg på valgt plass!')
+            $('#advarselstekst').html('Ikke nok seter tilgjengelig på valgt plass!')
           } else {
             $('#advarselstekst').html('Ugyldig seteplassering!')
           }
