@@ -268,7 +268,6 @@ function mainFunction ($) {
             _seats.push(_seatObject)
           }
         }
-        console.log('Seta mine er: ' + mySeats)
         // Teiknar opp salkartet
         draw(_container)
       })
@@ -279,7 +278,6 @@ function mainFunction ($) {
     dbInitRef.on('child_changed', function (snapshot) {
       // c er bornet der det har skjedd ei endring, altså det setet som har endra status.
       var c = snapshot.val()
-      console.log(getVisualId(c.id) + ' was changed, reservert:' + c.reservert + ', og booked:' + c.booked)
 
       // Hentar ut dette setet frå lista over alle ved hjelp av id-en.
       var _seatObj = _seats.filter(function (seat) {
@@ -379,7 +377,6 @@ function mainFunction ($) {
     // Select a single seat
     function selectSeat (id) {
       if ($.inArray(id, _selected) === -1) {
-        console.log('Verdi numSeats i select er ' + numSeats)
         if (parseInt(numSeats) === 1) {
           console.log('Slettar tidlegare enkeltsete...')
           clearMySeats()
@@ -392,11 +389,10 @@ function mainFunction ($) {
             // Oppdaterar status til reservert.
             _seatObj[0].selected = true
             _seatObj[0].notavailable = true
-            console.log('Label for setet er: ' + _seatObj[0].label)
 
             // Lagrar setet i lista over mine sete, mySeats
             mySeats.push(id)
-            console.log(sessionId + ' har reservert ' + id)
+            console.log('Reserverar ' + _seatObj[0].label)
             makeGreenBox(_seatObj[0].label)
 
             // Oppdaterar brukar i databasen med dette eine setet
@@ -436,16 +432,15 @@ function mainFunction ($) {
             return
           }
         } else {
-          console.log('numseats er' + numSeats + ' og vi skal legge til nytt sete')
           _selected.push(id)
           _seatObj = _seats.filter(function (seat) {
             return seat.id === id
           })
-          console.log(sessionId + ' har reservert ' + getVisualId(id))
 
           // Oppdaterar status til reservert.
           _seatObj[0].selected = true
           _seatObj[0].notavailable = true
+          console.log('Reserverar ' + _seatObj[0].label)
 
           // Lagrar setet i lista over mine sete, mySeats
           mySeats.push(id)
@@ -511,7 +506,6 @@ function mainFunction ($) {
       }
 
       if (checkNoGaps(start) && checkBound(_i[0], _i[1], endX) && checkAvailable(_i[0], _i[1], endX)) {
-        console.log('Skal no lese fra sete: ' + _i[1] + ' til sete ' + endX + ' paa rad ' + _i[0])
         for (let x = parseInt(_i[1]); x <= parseInt(endX); x++) {
           $('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).prop('checked', 'checked')
           selectSeat(_i[0] + '-' + x)
@@ -558,30 +552,18 @@ function mainFunction ($) {
     // Metode som slettar lokalt lagra sete.
     function clearMySeats () {
       if (mySeats != 'null') {
-        console.log('Lista har innhald')
-        console.log('Forste element: ' + mySeats[0])
         for (let i = 0; i < mySeats.length; i++) {
           let tempId = mySeats[i]
-          console.log('Deselect ' + tempId)
           deselectSeat(tempId)
         }
         mySeats.length = 0
         removeGreenBoxes()
-        console.log('Sletting utfort, noverande innhald: ' + mySeats)
       } else {
         mySeats.length = 0
-        console.log('Det er ikkje innhald i denne. undefined')
       }
       if (parseInt(numSeats) !== 1) {
-        console.log('Fjerna heile greina i clearMySeats')
         firebase.database().ref('/Saler/Sal3/Personer/' + sessionId).remove()
       }
-    }
-
-    //Hentar den id'en som skal vise på skjerm.
-    function getVisualId (id) {
-      let _i = id.split('-')
-      return (parseInt(_i[0]) + 1) + '-' + (parseInt(_i[1]) + 1)
     }
 
 /* --------------------------------------------------------------------- */
@@ -627,7 +609,6 @@ function mainFunction ($) {
           console.log('Setet er utanfor salkartet på venstre side')
           return false
         } else {
-          console.log('Setet ' + i + ' er innanfor')
         }
       }
       return true
