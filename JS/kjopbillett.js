@@ -59,6 +59,6 @@ $(document).ready(function () {
         return sete
       })
     })
-    firebase.database().ref('/Saler/Sal1/Personer/' + sessionId).remove()
+    firebase.database().ref('/Saler/Sal2/Personer/' + sessionId).remove()
   })
 })
