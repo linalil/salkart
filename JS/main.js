@@ -339,22 +339,18 @@ function mainFunction ($) {
             _checkbox.prop('disabled', 'disabled')
             _checkbox.attr('data-status', 'utilgjengelig')
             _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '"></label>')
-          } else if (_seatObject.booked) {
-            _checkbox.prop('disabled', 'disabled')
-            _checkbox.attr('data-status', 'booked')
-            labNum++
-            _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '" title="' + (i + 1) + '-' + labNum + '"></label>')
-          } else if (_seatObject.selected) {
-            _checkbox.prop('checked', 'checked')
-            labNum++
-            _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '" title="' + (i + 1) + '-' + labNum + '"></label>')
-          } else if (_seatObject.notavailable) {
-            _checkbox.prop('disabled', 'disabled')
-            _checkbox.attr('data-status', 'notavailable')
-            labNum++
-            _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '" title="' + (i + 1) + '-' + labNum + '"></label>')
           } else {
-            _checkbox.attr('data-status', 'available')
+            if (_seatObject.booked) {
+              _checkbox.prop('disabled', 'disabled')
+              _checkbox.attr('data-status', 'booked')
+            } else if (_seatObject.selected) {
+              _checkbox.prop('checked', 'checked')
+            } else if (_seatObject.notavailable) {
+              _checkbox.prop('disabled', 'disabled')
+              _checkbox.attr('data-status', 'notavailable')
+            } else {
+              _checkbox.attr('data-status', 'available')
+            }
             labNum++
             _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '" title="' + (i + 1) + '-' + labNum + '"></label>')
           }
