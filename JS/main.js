@@ -72,7 +72,6 @@ function mainFunction ($) {
     let mySeats = []
     var _blocks = []
     var _seats = []
-    // var _available = []
     var _selected = []
 
     let sessionId
@@ -89,6 +88,7 @@ function mainFunction ($) {
     let seat = function () {}
     seat.prototype = {
       id: null,
+      label: null,
       block: null,
       booked: false,
       available: true,
@@ -225,8 +225,10 @@ function mainFunction ($) {
       dbInitReference.once('value', function (snapshot) {
         console.log('Initialisering av salkart... ')
 
+
         // Går gjennom seter og rader som satt i settings.
         for (var i = 0; i < settings.rows; i++) {
+          let visualSeatNumber = 0
           for (var j = 0; j < settings.columns; j++) {
             // Defining ID
             let _id = i + '-' + j
@@ -247,28 +249,35 @@ function mainFunction ($) {
                 console.log('Setet er reservert')
                 _seatObject.available = false
                 _seatObject.notavailable = true
+                visualSeatNumber++
               } else if (snapshot.child(_id).child('booked').val() === true) {
                 console.log('Setet er booka')
                 _seatObject.booked = true
                 _seatObject.available = false
+                visualSeatNumber++
               } else if (snapshot.child(_id).child('reservert').val() === false && snapshot.child(_id).child('booked').val() === false) {
                 console.log('Setet er verken booka eller reservert')
                 _seatObject.available = true
                 _seatObject.notavailable = false
+                visualSeatNumber++
               }
             } else {
               console.log('Setet ' + _id + ' er i mine sete')
               _seatObject.selected = true
               _seatObject.notavailable = true
-              makeGreenBox(_id)
+              visualSeatNumber++
+              let label = (i + 1) + '-' + visualSeatNumber
+              _seatObject.label = label
+              makeGreenBox(_seatObject.label)
             }
 
+            let label = (i + 1) + '-' + visualSeatNumber
+            _seatObject.label = label
             _seats.push(_seatObject)
           }
         }
         console.log('Seta mine er: ' + mySeats)
         // Teiknar opp salkartet
-
         draw(_container)
       })
     }
@@ -358,8 +367,18 @@ function mainFunction ($) {
       }
       // Providing Column labels
       var _rowLabel = $('<div class="row"><span class="row-label"></span></div>')
+      let lab = 0
       for (var c = 0; c < settings.columns; c++) {
-        _rowLabel.append('<span class="col-label">' + (c + 1) + '</span>')
+        var _s = _seats.filter(function (seat) {
+          return seat.id === ('1-' + c)
+        })[0]
+        _seatObject.utilgjengelig
+        if(_s.utilgjengelig) {
+          _rowLabel.append('<span class="col-label"></span>')
+        } else {
+          lab++
+          _rowLabel.append('<span class="col-label">' + lab + '</span>')
+        }
       }
 
       container.append(_rowLabel)
@@ -381,11 +400,12 @@ function mainFunction ($) {
             // Oppdaterar status til reservert.
             _seatObj[0].selected = true
             _seatObj[0].notavailable = true
+            console.log('Label for setet er: ' + _seatObj[0].label)
 
             // Lagrar setet i lista over mine sete, mySeats
             mySeats.push(id)
             console.log(sessionId + ' har reservert ' + id)
-            makeGreenBox(id)
+            makeGreenBox(_seatObj[0].label)
 
             // Oppdaterar brukar i databasen med dette eine setet
             let dbRef = firebase.database().ref('/Saler/Sal2/Personer/' + sessionId)
@@ -438,7 +458,7 @@ function mainFunction ($) {
 
           // Lagrar setet i lista over mine sete, mySeats
           mySeats.push(id)
-          makeGreenBox(id)
+          makeGreenBox(_seatObj[0].label)
         }
 
         // Oppdaterar databasen.
@@ -575,8 +595,8 @@ function mainFunction ($) {
 
 /* --------------------------------------------------------------------- */
     // Lagar grøn boks for gitt id.
-    function makeGreenBox (id) {
-      $('#valgte_billetter').append('<div class="valgte_billetter">' + getVisualId(id) + '</div>')
+    function makeGreenBox (label) {
+      $('#valgte_billetter').append('<div class="valgte_billetter">' + label + '</div>')
       document.getElementById('valgte_billetter_beskrivelse').style.visibility = 'visible'
       document.getElementById('dine_valgte_billetter').style.visibility = 'visible'
     }
@@ -709,17 +729,20 @@ function mainFunction ($) {
         var _seat = _seats.filter(function (seat) {
           return seat.id === _this.id
         })
-        _seat[0].available = true
-        _seat[0].booked = false
-        _seat[0].selected = false
-        _seat[0].notavailable = false
 
-        var dbRef = firebase.database().ref('/Saler/Sal2/Plassering/' + _seat[0].id)
-        dbRef.set({
-          id: _seat[0].id,
-          reservert: false,
-          booked: false
-        })
+        if (!_seat[0].utilgjengelig) {
+          _seat[0].available = true
+          _seat[0].booked = false
+          _seat[0].selected = false
+          _seat[0].notavailable = false
+
+          var dbRef = firebase.database().ref('/Saler/Sal2/Plassering/' + _seat[0].id)
+          dbRef.set({
+            id: _seat[0].id,
+            reservert: false,
+            booked: false
+          })
+        }
       })
       removeGreenBoxes()
       clearMySeats()
