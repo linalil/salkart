@@ -99,7 +99,6 @@ body {
 	background-color: #F2F2F2;
 	padding-top: 10px;
 	padding-bottom: 10px;
-	height: 460px;
 }
 .billettvalg{
 	margin: auto;
@@ -154,7 +153,6 @@ body {
 	font-family: 'Raleway', sans-serif;
 	margin-left: 20px;
 	order: 2;
-	flex-basis: 20em;
 	/*border: 1px solid black;*/
 }
 .skjerm{
