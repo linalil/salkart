@@ -370,6 +370,10 @@ input[type=checkbox]:disabled[data-status=notavailable] + label:before{
   content: "\f007";
 	color: #4990E2;
 }
+input[type=checkbox]:disabled[data-status=utilgjengelig] + label:before{
+  content: "\f007";
+	visibility: hidden;
+}
 /*--------------FLEXBOX---------------*/
 .beholder{
 	display: flex;
