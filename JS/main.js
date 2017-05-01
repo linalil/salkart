@@ -1,7 +1,7 @@
 $(document).ready(function () {
   /* Opnar kopling til databasen og hentar inn tal rader og seter.
     Lagrar denne informasjonen i eit seteobjekt. */
-  firebase.database().ref('/Saler/Sal2/').once('value', function (snapshot) {
+  firebase.database().ref('/Saler/Sal3/').once('value', function (snapshot) {
     var talRader = snapshot.child('Rad').val()
     var talSeter = snapshot.child('Seter').val()
 
@@ -105,15 +105,14 @@ function mainFunction ($) {
         var uid = user.uid
         console.log('Det eksisterer ein brukar')
         console.log('Brukaren er anonym: ' + isAnonymous)
-        console.log('Brukaren har id' + uid)
+        console.log('Brukaren har sesjonsid: ' + uid)
         sessionId = uid
 
-        let dbInit = firebase.database().ref('/Saler/Sal2/Personer/' + sessionId)
+        let dbInit = firebase.database().ref('/Saler/Sal3/Personer/' + sessionId)
         dbInit.once('value', function (snapshot) {
           if (snapshot.child('seats')) {
             let tempSeats = String(snapshot.child('seats').val())
             mySeats = tempSeats.split(',')
-            console.log('Det eksisterar sete på brukaren:' + mySeats)
           } else {
             mySeats = []
             console.log('Det fins ingen sete på brukaren')
@@ -219,7 +218,7 @@ function mainFunction ($) {
 /* --------------------------------------------------------------------- */
     function initialize () {
       // Opnar databasetilkopling til 'Plassering'-greina.
-      var dbInitReference = firebase.database().ref('Saler/Sal2/Plassering')
+      var dbInitReference = firebase.database().ref('Saler/Sal3/Plassering')
 
       // Første gong når ein teknar opp salkartet.
       dbInitReference.once('value', function (snapshot) {
@@ -238,31 +237,24 @@ function mainFunction ($) {
             _seatObject.id = _id
 
             if (($.inArray(_seatObject.id, mySeats)) === -1) {
-              console.log('Setet ' + _id + ' er ikkje i mine sete.')
               // Dersom det er reservert (og ikkje ditt), sett status 'utilgjengeleg'
               // Setet vil då bli farga mørkegrått.
               if (snapshot.child(_id).child('utilgjengelig').val() === true) {
                 _seatObject.utilgjengelig = true
-                console.log('I initialisering er den satt til utilgjengeleg')
-                console.log(_seatObject.utilgjengelig)
               } else if (snapshot.child(_id).child('reservert').val() === true) {
-                console.log('Setet er reservert')
                 _seatObject.available = false
                 _seatObject.notavailable = true
                 visualSeatNumber++
               } else if (snapshot.child(_id).child('booked').val() === true) {
-                console.log('Setet er booka')
                 _seatObject.booked = true
                 _seatObject.available = false
                 visualSeatNumber++
               } else if (snapshot.child(_id).child('reservert').val() === false && snapshot.child(_id).child('booked').val() === false) {
-                console.log('Setet er verken booka eller reservert')
                 _seatObject.available = true
                 _seatObject.notavailable = false
                 visualSeatNumber++
               }
             } else {
-              console.log('Setet ' + _id + ' er i mine sete')
               _seatObject.selected = true
               _seatObject.notavailable = true
               visualSeatNumber++
@@ -283,7 +275,7 @@ function mainFunction ($) {
     }
 
     // Dersom eit av borna under 'Plassering' endrar seg, så vil callbackmetoden under køyrast.
-    var dbInitRef = firebase.database().ref('/Saler/Sal2/Plassering')
+    var dbInitRef = firebase.database().ref('/Saler/Sal3/Plassering')
     dbInitRef.on('child_changed', function (snapshot) {
       // c er bornet der det har skjedd ei endring, altså det setet som har endra status.
       var c = snapshot.val()
@@ -408,8 +400,7 @@ function mainFunction ($) {
             makeGreenBox(_seatObj[0].label)
 
             // Oppdaterar brukar i databasen med dette eine setet
-            let dbRef = firebase.database().ref('/Saler/Sal2/Personer/' + sessionId)
-            console.log('Opnar kopling: ' + dbRef)
+            let dbRef = firebase.database().ref('/Saler/Sal3/Personer/' + sessionId)
             dbRef.set({
               sessionId: sessionId,
               seats: id
@@ -462,7 +453,7 @@ function mainFunction ($) {
         }
 
         // Oppdaterar databasen.
-        let dbRef = firebase.database().ref('/Saler/Sal2/Plassering/' + _seatObj[0].id)
+        let dbRef = firebase.database().ref('/Saler/Sal3/Plassering/' + _seatObj[0].id)
         dbRef.transaction(function (sete) {
           if (sete) {
             sete.id = _seatObj[0].id
@@ -479,7 +470,7 @@ function mainFunction ($) {
     // Deselect a single seat
     function deselectSeat (id) {
       if (parseInt(numSeats) === 1) {
-        firebase.database().ref('/Saler/Sal2/Personer/' + sessionId).remove()
+        firebase.database().ref('/Saler/Sal3/Personer/' + sessionId).remove()
         removeGreenBoxes()
       }
       _selected = $.grep(_selected, function (item) {
@@ -495,7 +486,7 @@ function mainFunction ($) {
       _seatObj[0].notavailable = false
 
       // Oppdaterar databasen.
-      var dbRef = firebase.database().ref('/Saler/Sal2/Plassering/' + _seatObj[0].id)
+      var dbRef = firebase.database().ref('/Saler/Sal3/Plassering/' + _seatObj[0].id)
       dbRef.transaction(function (sete) {
         if (sete) {
           sete.id = _seatObj[0].id
@@ -526,7 +517,7 @@ function mainFunction ($) {
           selectSeat(_i[0] + '-' + x)
         }
         // Oppdaterar databasen med liste over valgte sete
-        let dbRef = firebase.database().ref('/Saler/Sal2/Personer/' + sessionId)
+        let dbRef = firebase.database().ref('/Saler/Sal3/Personer/' + sessionId)
         dbRef.set({
           sessionId: sessionId,
           seats: mySeats
@@ -583,7 +574,7 @@ function mainFunction ($) {
       }
       if (parseInt(numSeats) !== 1) {
         console.log('Fjerna heile greina i clearMySeats')
-        firebase.database().ref('/Saler/Sal2/Personer/' + sessionId).remove()
+        firebase.database().ref('/Saler/Sal3/Personer/' + sessionId).remove()
       }
     }
 
@@ -736,7 +727,7 @@ function mainFunction ($) {
           _seat[0].selected = false
           _seat[0].notavailable = false
 
-          var dbRef = firebase.database().ref('/Saler/Sal2/Plassering/' + _seat[0].id)
+          var dbRef = firebase.database().ref('/Saler/Sal3/Plassering/' + _seat[0].id)
           dbRef.set({
             id: _seat[0].id,
             reservert: false,
@@ -810,7 +801,7 @@ function mainFunction ($) {
           _seat[0].available = false
 
           // ..og oppdaterar databasen.
-          var dbRef = firebase.database().ref('/Saler/Sal2/Plassering/' + _seat[0].id)
+          var dbRef = firebase.database().ref('/Saler/Sal3/Plassering/' + _seat[0].id)
           dbRef.transaction(function (sete) {
             if (sete) {
               sete.id = _seat[0].id
@@ -827,7 +818,7 @@ function mainFunction ($) {
         mySeats.length = 0
         removeGreenBoxes()
         clearMySeats()
-        firebase.database().ref('/Saler/Sal2/Personer/' + sessionId).remove()
+        firebase.database().ref('/Saler/Sal3/Personer/' + sessionId).remove()
         document.getElementById('valgte_billetter_beskrivelse').style.visibility = 'hidden'
         // Teikn opp på nytt når alle sete er gjennomgått.
         draw(_container)
