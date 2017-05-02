@@ -1,6 +1,7 @@
 $(document).ready(function () {
   let reserved
   let sessionId
+  let sal = 'Sal3'
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       // User is signed in.
@@ -11,7 +12,7 @@ $(document).ready(function () {
       console.log('Brukaren har id' + uid)
       sessionId = uid
 
-      let dbInit = firebase.database().ref('/Saler/Sal2/Personer/' + sessionId)
+      let dbInit = firebase.database().ref('/Saler/' + sal + '/Personer/' + sessionId)
       dbInit.once('value', function (snapshot) {
         if (snapshot.child('seats')) {
           console.log('Sete som er reservert er: ' + snapshot.child('seats').val())
@@ -46,7 +47,7 @@ $(document).ready(function () {
     $.each(reserved, function (i, v) {
       let reservertSete = String(this)
       console.log('Reservert sete: ' + reservertSete)
-      var dbRef = firebase.database().ref('/Saler/Sal2/Plassering/' + reservertSete)
+      var dbRef = firebase.database().ref('/Saler/' + sal + '/Plassering/' + reservertSete)
       console.log(dbRef)
       dbRef.transaction(function (sete) {
         if (sete) {
@@ -59,6 +60,6 @@ $(document).ready(function () {
         return sete
       })
     })
-    firebase.database().ref('/Saler/Sal2/Personer/' + sessionId).remove()
+    firebase.database().ref('/Saler/' + sal + '/Personer/' + sessionId).remove()
   })
 })
