@@ -106,9 +106,6 @@ body {
 	text-align: center;
 	justify-content: flex-end;
 }
-.hover:hover{
-	background-color: #F2F2F2;
-}
 .hover:focus{
 	background-color: #F2F2F2;
 }
