@@ -109,6 +109,9 @@ body {
 .hover:hover{
 	background-color: #F2F2F2;
 }
+.hover:focus{
+	background-color: #F2F2F2;
+}
 /*-------------------------------------*/
 .overskrift{
 	font-family: 'Raleway', sans-serif;
