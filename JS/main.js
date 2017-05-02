@@ -3,10 +3,12 @@ $(document).ready(function () {
      Lagrar denne informasjonen i eit seteobjekt. */
 
   let sal = null
-  if (sessionStorage.sal === null) {
+  let arr = null
+  if (sessionStorage.sal === null || sessionStorage.arr === null) {
     window.location.href = 'index.html'
   } else {
     sal = sessionStorage.sal
+    arr = sessionStorage.arr
   }
 
   firebase.database().ref('/Saler/' + sal + '/Sal_Info').once('value', function (snapshot) {
@@ -58,6 +60,20 @@ $(document).ready(function () {
       seats.defineBlock(_label, seats.getSelected())
     })
   })
+
+  firebase.database().ref('/Arrangement/' + arr).once('value', function (snapshot) {
+    let arrangement = snapshot.val()
+    console.log(arrangement.sal)
+    let arrInfo = '<div class="reservasjonsinfo" id="' + arrangement.sal +
+    '"><div class="event"><div class="bilde"><img src="img/' +
+    arrangement.bilde + '" alt="konsertbilde"/></div><div class="eventinfo"><div class="tittel">' +
+    arrangement.title + '</div><div class="sjanger">' + arrangement.sjanger + '</div><div class="lengde">' +
+    arrangement.lengde + '</div></div></div><div class="tidspunkt"><div class="dato">' +
+    arrangement.dato + '</div><div class="tid">' + arrangement.tid + '</div><div class="sal">' +
+    arrangement.sal + '</div></div></div>'
+    $('#valgt_arrangement').append(arrInfo)
+  })
+
 
   // Køyrer hovudfunksjonen under.
   mainFunction(jQuery)
