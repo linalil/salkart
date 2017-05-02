@@ -24,36 +24,28 @@
 <body>
     <div class="nav">
       <img src="img/logo.png" alt="logo" class="logo" />
-        <div class="navigering">
-            <ul >
-              <li id="sal1">Sal 1</li>
-              <li id="sal2">Sal 2</li>
-              <li id="sal3">Sal 3</li>
-            </ul>
-        </div>
     </div>
     <div class="hovedinnhold">
         <div class="overskrift">
             VALGT KONSERT
         </div>
-        <div class="reservasjonsinfo">
+        <div class="reservasjonsinfo hover" id="sal1">
             <div class="event">
                 <div class="bilde">
-                    <img src="img/beauty.jpg" alt="filmbilde" />
+                    <img src="img/1.jpg" alt="filmbilde" />
                 </div>
                 <div class="eventinfo">
                     <div class="tittel">
-                        Skjønnheten og udyret
+                        Kronstad Korps
                     </div>
                     <div class="sjanger">
-                        Familie/eventyr
+                        Konsert
                     </div>
                     <div class="lengde">
                         2 T. 9 Min
                     </div>
                 </div>
             </div>
-
             <div class="tidspunkt">
                 <div class="dato">
                     FREDAG 1. JANUAR
@@ -62,157 +54,69 @@
                     18:30
                 </div>
                 <div class="sal">
-                    MB 4
-                </div>
-            </div>
-
-        </div>
-
-        <div class="billettbakgrunn">
-            <div class="overskrift">
-                VALG AV BILLETTER
-            </div>
-            <div class="billettvalg">
-                <div class="sidepanel">
-                    <div class="type_sete">
-                        <div class="beskrivelse">
-                            Velg antall og type billetter:
-                        </div>
-                        <div class="beholder">
-                            <label id="velg_seter" for="select">Voksen</label>
-                            <select id="select">
-                            <option value="0">0</option>
-                            <option value="1" selected>1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                          </select>
-                        </div>
-                        <div class="beholder">
-                            <label id="valg_barn" for="barn">Barn (Under 15 år)</label>
-                            <select id="barn">
-                            <option value="0">0</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                          </select>
-                        </div>
-                        <div class="beholder">
-                            <label id="valg_honnor" for="honnor">Honnør</label>
-                            <select id="honnor">
-                            <option value="0">0</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                          </select>
-                        </div>
-                    </div>
-                    <div class="seteinfo over_setekart">
-                        <div class="beholder">
-                            <div class="sirkel ledig_sete"></div>
-                            <div class="ledig">
-                                Ledige billetter
-                            </div>
-                        </div>
-                        <div class="beholder">
-                            <div class="sirkel opptatt"></div>
-                            <div class="ledig">
-                                Opptatte billetter
-                            </div>
-                        </div>
-                        <div class="beholder">
-                            <div class="sirkel midlertidig"></div>
-                            <div class="ledig">
-                                Midlertidig valgt
-                            </div>
-                        </div>
-                        <div class="beholder">
-                            <div class="sirkel mine" id="nullstill"></div>
-                            <div class="ledig">
-                                Dine valgte billetter
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="setekart ">
-                    <div class="skjerm">SKJERM/SCENE</div>
-                    <div id="seats" class="setekart"></div>
-                </div>
-            </div>
-
-            <div class="tilleggsinfo">
-                <div class="seteinfo under_setekart">
-                    <div class="beholder">
-                        <div class="sirkel ledig_sete"></div>
-                        <div class="ledig">
-                            Ledige billetter
-                        </div>
-                    </div>
-                    <div class="beholder">
-                        <div class="sirkel opptatt"></div>
-                        <div class="ledig">
-                            Opptatte billetter
-                        </div>
-                    </div>
-                    <div class="beholder">
-                        <div class="sirkel midlertidig"></div>
-                        <div class="ledig">
-                            Midlertidig valgt
-                        </div>
-                    </div>
-                    <div class="beholder">
-                        <div class="sirkel mine"></div>
-                        <div class="ledig">
-                            Dine valgte billetter
-                        </div>
-                    </div>
-                </div>
-                <div class="beskrivelse dine_valgte_billetter" id="dine_valgte_billetter">
-                    <p id="valgte_billetter_beskrivelse">
-                        Dine valgte billetter:
-                    </p>
-                    <div id="valgte_billetter"></div>
-                </div>
-                <div class="advarsel" id="advarsel">
-                  <div class="beholder" >
-                      <img src="img/Advarsel.png" alt="En advarsel " />
-                      <p class="advarselstekst" id="advarselstekst"></p>
-                  </div>
+                    Sal 1
                 </div>
             </div>
         </div>
-        <div class="overskrift">
-            PRIS
+        <div class="reservasjonsinfo hover" id="sal2">
+            <div class="event">
+                <div class="bilde">
+                    <img src="img/2.jpg" alt="filmbilde" />
+                </div>
+                <div class="eventinfo">
+                    <div class="tittel">
+                        Dragefjellets Musikkorps
+                    </div>
+                    <div class="sjanger">
+                        Konsert
+                    </div>
+                    <div class="lengde">
+                        2 T. 30 Min
+                    </div>
+                </div>
+            </div>
+            <div class="tidspunkt">
+                <div class="dato">
+                    LØRDAG 4. FEBRUAR
+                </div>
+                <div class="tid">
+                    19:20
+                </div>
+                <div class="sal">
+                    Sal 2
+                </div>
+            </div>
+        </div>
+        <div class="reservasjonsinfo hover" id="sal3">
+            <div class="event">
+                <div class="bilde">
+                    <img src="img/3.jpg" alt="filmbilde" />
+                </div>
+                <div class="eventinfo">
+                    <div class="tittel">
+                        Fana Musikklag
+                    </div>
+                    <div class="sjanger">
+                        Konsert
+                    </div>
+                    <div class="lengde">
+                        1 T. 45 Min
+                    </div>
+                </div>
+            </div>
+            <div class="tidspunkt">
+                <div class="dato">
+                    TIRSDAG 17. APRIL
+                </div>
+                <div class="tid">
+                    14:34
+                </div>
+                <div class="sal">
+                    Sal 3
+                </div>
+            </div>
         </div>
         <div class="prisoversikt">
-            <table class="pristabell" summary="oversikt over priser">
-                <tr>
-                    <th>Type billett</th>
-                    <th>Antall</th>
-                    <th>Pris</th>
-                </tr>
-                <tr>
-                    <td>Voksen</td>
-                    <td class="kort" id="voksen_antall"></td>
-                    <td class="kort" id="voksen_pris"></td>
-                </tr>
-                <tr>
-                    <td>Barn</td>
-                    <td class="kort" id="barn_antall"></td>
-                    <td class="kort" id="barn_pris"></td>
-                </tr>
-                <tr class="sum">
-                    <td>Honnør</td>
-                    <td class="kort" id="honnor_antall"></td>
-                    <td class="kort" id="honnor_pris"></td>
-                </tr>
-                <tr class="sum">
-                    <td>Sum</td>
-                    <td class="kort" id="sum_antall"></td>
-                    <td class="kort" id="sum_pris"></td>
-                </tr>
-            </table>
-            <br/><br/>
-            <button type="button" class="neste_knapp" id="btnDefineGold">GÅ TIL BETALING</button>
             <button type="button" class="neste_knapp" id="testkjop"><a href="betaling.html">NESTE</a></button>
             <!--<button type="button" id="nullstill">Nullstill</button>-->
         </div>

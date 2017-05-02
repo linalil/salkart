@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sete-reservasjon</title>
+
+    <link href="styles/styles.css" rel="stylesheet" type="text/css" />
+    <link href="styles/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="styles/tooltipster.css" rel="stylesheet" type="text/css" />
+    <link href="styles/tooltipster-shadow.css" rel="stylesheet" type="text/css" />
+    <link href="styles/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,600" rel="stylesheet" type="text/css" />
+
+
+    <script src="/JS/jquery-2.1.4.min.js" type="text/javascript"></script>
+    <script src="/JS/jquery.tooltipster.min.js" type="text/javascript"></script>
+    <script src="/JS/main.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <div class="nav">
+        <div class="navigering">
+            <img src="img/logo.png" alt="logo" class="logo" />
+        </div>
+    </div>
+    <div class="hovedinnhold">
+        <div class="overskrift">
+            VALGT FILM
+        </div>
+        <div class="reservasjonsinfo">
+            <div class="event">
+                <div class="bilde">
+                    <img src="img/beauty.jpg" alt="filmbilde" />
+                </div>
+                <div class="eventinfo">
+                    <div class="tittel">
+                        Skjønnheten og udyret
+                    </div>
+                    <div class="sjanger">
+                        Familie/eventyr
+                    </div>
+                    <div class="lengde">
+                        2 T. 9 Min
+                    </div>
+                </div>
+            </div>
+
+            <div class="tidspunkt">
+                <div class="dato">
+                    FREDAG 1. JANUAR
+                </div>
+                <div class="tid">
+                    18:30
+                </div>
+                <div class="sal">
+                    MB 4
+                </div>
+            </div>
+
+        </div>
+
+        <div class="billettbakgrunn">
+            <div class="overskrift">
+                VALG AV BILLETTER
+            </div>
+            <div class="billettvalg">
+                <div class="sidepanel">
+                    <div class="type_sete">
+                        <div class="beskrivelse">
+                            Velg antall og type billetter:
+                        </div>
+                        <div class="beholder">
+                            <label id="velg_seter" for="select">Voksen</label>
+                            <select id="select">
+                            <option value="0">0</option>
+                            <option value="1" selected>1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                          </select>
+                        </div>
+                        <div class="beholder">
+                            <label id="valg_barn" for="barn">Barn (Under 15 år)</label>
+                            <select id="barn">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                          </select>
+                        </div>
+                        <div class="beholder">
+                            <label id="valg_honnor" for="honnor">Honnør</label>
+                            <select id="honnor">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                          </select>
+                        </div>
+                    </div>
+                    <div class="seteinfo over_setekart">
+                        <div class="beholder">
+                            <div class="sirkel ledig_sete"></div>
+                            <div class="ledig">
+                                Ledige billetter
+                            </div>
+                        </div>
+                        <div class="beholder">
+                            <div class="sirkel opptatt"></div>
+                            <div class="ledig">
+                                Opptatte billetter
+                            </div>
+                        </div>
+                        <div class="beholder">
+                            <div class="sirkel midlertidig"></div>
+                            <div class="ledig">
+                                Midlertidig valgt
+                            </div>
+                        </div>
+                        <div class="beholder">
+                            <div class="sirkel mine" id="nullstill"></div>
+                            <div class="ledig">
+                                Dine valgte billetter
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="setekart ">
+                    <div class="skjerm">SKJERM/SCENE</div>
+                    <div id="seats" class="setekart"></div>
+                </div>
+            </div>
+
+            <div class="tilleggsinfo">
+                <div class="seteinfo under_setekart">
+                    <div class="beholder">
+                        <div class="sirkel ledig_sete"></div>
+                        <div class="ledig">
+                            Ledige billetter
+                        </div>
+                    </div>
+                    <div class="beholder">
+                        <div class="sirkel opptatt"></div>
+                        <div class="ledig">
+                            Opptatte billetter
+                        </div>
+                    </div>
+                    <div class="beholder">
+                        <div class="sirkel midlertidig"></div>
+                        <div class="ledig">
+                            Midlertidig valgt
+                        </div>
+                    </div>
+                    <div class="beholder">
+                        <div class="sirkel mine"></div>
+                        <div class="ledig">
+                            Dine valgte billetter
+                        </div>
+                    </div>
+                </div>
+                <div class="beskrivelse dine_valgte_billetter" id="dine_valgte_billetter">
+                    <p id="valgte_billetter_beskrivelse">
+                        Dine valgte billetter:
+                    </p>
+                    <div id="valgte_billetter"></div>
+                </div>
+                <div class="advarsel" id="advarsel">
+                  <div class="beholder" >
+                      <img src="img/Advarsel.png" alt="En advarsel " />
+                      <p class="advarselstekst" id="advarselstekst"></p>
+                  </div>
+                </div>
+            </div>
+        </div>
+        <div class="overskrift">
+            PRIS
+        </div>
+        <div class="prisoversikt">
+            <table class="pristabell" summary="oversikt over priser">
+                <tr>
+                    <th>Type billett</th>
+                    <th>Antall</th>
+                    <th>Pris</th>
+                </tr>
+                <tr>
+                    <td>Voksen</td>
+                    <td class="kort" id="voksen_antall"></td>
+                    <td class="kort" id="voksen_pris"></td>
+                </tr>
+                <tr>
+                    <td>Barn</td>
+                    <td class="kort" id="barn_antall"></td>
+                    <td class="kort" id="barn_pris"></td>
+                </tr>
+                <tr class="sum">
+                    <td>Honnør</td>
+                    <td class="kort" id="honnor_antall"></td>
+                    <td class="kort" id="honnor_pris"></td>
+                </tr>
+                <tr class="sum">
+                    <td>Sum</td>
+                    <td class="kort" id="sum_antall"></td>
+                    <td class="kort" id="sum_pris"></td>
+                </tr>
+            </table>
+            <br/><br/>
+            <button type="button" class="neste_knapp" id="btnDefineGold">GÅ TIL BETALING</button>
+            <button type="button" class="neste_knapp" id="testkjop"><a href="betaling.html">NESTE</a></button>
+            <!--<button type="button" id="nullstill">Nullstill</button>-->
+        </div>
+
+    </div>
+    <!--container-fluid-->
+
+    <script src="https://www.gstatic.com/firebasejs/3.7.3/firebase.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyDCnkcV3PhN78bYV0tz3wWlalhLtGUd2sg",
+            authDomain: "salkart2017.firebaseapp.com",
+            databaseURL: "https://salkart2017.firebaseio.com",
+            storageBucket: "salkart2017.appspot.com",
+            messagingSenderId: "640284529620"
+        };
+        firebase.initializeApp(config);
+    </script>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js" type="text/javascript"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="JS/bootstrap.min.js" type="text/javascript"></script>
+
+</body>
+
+</html>
