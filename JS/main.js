@@ -1,7 +1,7 @@
 $(document).ready(function () {
   /* Opnar kopling til databasen og hentar inn tal rader og seter.
     Lagrar denne informasjonen i eit seteobjekt. */
-  firebase.database().ref('/Saler/Sal3/').once('value', function (snapshot) {
+  firebase.database().ref('/Saler/Sal3/Sal_Info').once('value', function (snapshot) {
     var talRader = snapshot.child('Rad').val()
     var talSeter = snapshot.child('Seter').val()
 
@@ -458,6 +458,7 @@ function mainFunction ($) {
             sete.id = _seatObj[0].id
             sete.reservert = true
             sete.booked = false
+            sete.label = _seatObj[0].label
           } else {
             console.log('Feilmelding for transaksjon')
           }
@@ -491,6 +492,7 @@ function mainFunction ($) {
           sete.id = _seatObj[0].id
           sete.reservert = false
           sete.booked = false
+          sete.label = _seatObj[0].label
         } else {
           console.log('Feilmelding for transaksjon')
         }
@@ -716,7 +718,8 @@ function mainFunction ($) {
           dbRef.set({
             id: _seat[0].id,
             reservert: false,
-            booked: false
+            booked: false,
+            label: _seat[0].label
           })
         }
       })
@@ -792,6 +795,7 @@ function mainFunction ($) {
               sete.id = _seat[0].id
               sete.reservert = false
               sete.booked = true
+              sete.label = _seat[0].label
             } else {
               console.log('Feilmelding for transaksjon')
             }
