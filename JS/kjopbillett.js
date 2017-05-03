@@ -89,22 +89,22 @@ $(document).ready(function () {
         console.log('Skal lagre: id=' + _sete.id + ', reservert = false, booked = true og label=' + _sete.label)
         var dbRef = firebase.database().ref('/Saler/' + sal + '/Plassering/' + _sete.id)
         dbRef.update({
-            id: _sete.id,
-            reservert: false,
-            booked: true,
-            label: _sete.label
+          id: _sete.id,
+          reservert: false,
+          booked: true,
+          label: _sete.label
         })
       })
 
       console.log('Skal no lagre seta på personen!')
-      let dbRefPerson = firebase.database().ref('/Saler/' + sal + '/Personer/' + sessionId)
-      dbRefPerson.update({
-          name: name,
-          email: email,
-          tlf: tlf,
-          seats: reserved,
-          sessionId: sessionId
-        })
+      let dbRefPerson = firebase.database().ref('/Saler/' + sal + '/Personer/' + sessionId).remove()
+      firebase.database().ref('/Saler/' + sal + '/Personer/').set({
+        name: name,
+        email: email,
+        tlf: tlf,
+        seats: reserved,
+        sessionId: sessionId
+      })
       purchaseFinished = true
 
       window.location.href = 'index.html'

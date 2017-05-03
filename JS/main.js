@@ -64,6 +64,7 @@ $(document).ready(function () {
 
   firebase.database().ref('/Arrangement/' + arr).once('value', function (snapshot) {
     let arrangement = snapshot.val()
+    console.log('Er inne i arrangement')
     let arrInfo = '<div class="reservasjonsinfo" id="' + arrangement.sal +
     '"><div class="event"><div class="bilde"><img src="img/' +
     arrangement.bilde + '" alt="konsertbilde"/></div><div class="eventinfo"><div class="tittel">' +
@@ -282,7 +283,7 @@ function mainFunction ($) {
                 visualSeatNumber++
               }
             } else {
-              if (snapshot.child(_id).child('booked').val() === true){
+              if (snapshot.child(_id).child('booked').val() === true) {
                 console.log('Setet er i mine sete, men er booka')
                 _seatObject.booked = true
                 _seatObject.available = false
