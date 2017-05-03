@@ -3,6 +3,19 @@ $(document).ready(function () {
   let sessionId
   let sal = sessionStorage.sal
   let arr = sessionStorage.arr
+  let purchaseFinished = false
+  let seat = function () {}
+  seat.prototype = {
+    id: null,
+    label: null,
+    block: null,
+    booked: false,
+    available: true,
+    notavailable: false,
+    selected: false,
+    utilgjengelig: false
+  }
+  let mySeats = []
 
   firebase.database().ref('/Arrangement/' + arr).once('value', function (snapshot) {
     let arrangement = snapshot.val()
@@ -20,25 +33,20 @@ $(document).ready(function () {
     if (user) {
       // User is signed in.
       var isAnonymous = user.isAnonymous
-      var uid = user.uid
-      console.log('Det eksisterer ein brukar')
-      console.log('Brukaren er anonym: ' + isAnonymous)
-      console.log('Brukaren har id' + uid)
-      sessionId = uid
+      sessionId = user.uid
 
       firebase.database().ref('/Saler/' + sal + '/Personer/' + sessionId).once('value', function (snapshot) {
-        if (snapshot.child('seats')) {
+        if (snapshot.child('seats').val() != null) {
           console.log('Sete som er reservert er: ' + snapshot.child('seats').val())
-          let booka = String(snapshot.child('seats').val())
-          reserved = booka.split(',')
-          console.log('reservert sin size' + reserved.length)
+          reserved = String(snapshot.child('seats').val()).split(',')
 
           for (let i = 0; i < reserved.length; i++) {
-            let id = reserved[i]
-            console.log('Er inne i forløkka')
-            firebase.database().ref('/Saler/' + sal + '/Plassering/' + id).once('value', function (snapshot) {
+            let _seat = new seat()
+            _seat.id = reserved[i]
+            firebase.database().ref('/Saler/' + sal + '/Plassering/' + _seat.id).once('value', function (snapshot) {
               let seat = snapshot.val()
-              console.log(snapshot.val())
+              _seat.label = seat.label
+              mySeats.push(_seat)
               $('#valgte_billettbokser').append('<div class="valgte_billetter">' + seat.label + '</div>')
             })
           }
@@ -54,32 +62,55 @@ $(document).ready(function () {
   })
 
 
+  function validateFields () {
+    let name = $('#navn').val()
+    let email = $('#e-mail').val()
+    let tlf = $('#tlf').val()
 
-  function getVisualId (id) {
-    let _i = id.split('-')
-    return (parseInt(_i[0]) + 1) + '-' + (parseInt(_i[1]) + 1)
+    if (name != '' && email != '' && tlf != '') {
+      console.log('Inputfelt godkjent')
+      return true
+    } else {
+      console.log('Inputfelt ikkje godkjent!!')
+      return false
+    }
   }
 
   $('#kjop').click(function () {
     // TODO: Fiks inputvalidering
-    // if(alle tekstfelt fylt ut){ kjøp billett(ar) }
+    if (!purchaseFinished && mySeats != 'null' && validateFields()) {
+      let name = $('#navn').val()
+      let email = $('#e-mail').val()
+      let tlf = $('#tlf').val()
 
-    $.each(reserved, function (i, v) {
-      let reservertSete = String(this)
-      console.log('Reservert sete: ' + reservertSete)
-
-      var dbRef = firebase.database().ref('/Saler/' + sal + '/Plassering/' + reservertSete)
-      dbRef.transaction(function (sete) {
-        if (sete) {
-          sete.id = reservertSete
-          sete.reservert = false
-          sete.booked = true
-        } else {
-          console.log('Feilmelding for transaksjon')
-        }
-        return sete
+      console.log('Tektstfelt sin verdi: ' + name + email + tlf)
+      $.each(mySeats, function (i, v) {
+        let _sete = this
+        console.log('Skal lagre: id=' + _sete.id + ', reservert = false, booked = true og label=' + _sete.label)
+        var dbRef = firebase.database().ref('/Saler/' + sal + '/Plassering/' + _sete.id)
+        dbRef.update({
+            id: _sete.id,
+            reservert: false,
+            booked: true,
+            label: _sete.label
+        })
       })
-    })
-    firebase.database().ref('/Saler/' + sal + '/Personer/' + sessionId).remove()
+
+      console.log('Skal no lagre seta på personen!')
+      let dbRefPerson = firebase.database().ref('/Saler/' + sal + '/Personer/' + sessionId)
+      dbRefPerson.update({
+          name: name,
+          email: email,
+          tlf: tlf,
+          seats: reserved,
+          sessionId: sessionId
+        })
+      purchaseFinished = true
+
+      window.location.href = 'index.html'
+    } else {
+      console.log('Feilmelding for kjøp!')
+      return
+    }
   })
 })

@@ -280,12 +280,20 @@ function mainFunction ($) {
                 visualSeatNumber++
               }
             } else {
-              _seatObject.selected = true
-              _seatObject.notavailable = true
-              visualSeatNumber++
-              let label = (i + 1) + '-' + visualSeatNumber
-              _seatObject.label = label
-              makeGreenBox(_seatObject.label)
+              if (snapshot.child(_id).child('booked').val() === true){
+                console.log('Setet er i mine sete, men er booka')
+                _seatObject.booked = true
+                _seatObject.available = false
+                visualSeatNumber++
+              } else {
+                console.log('Setet er i mine sete og er ikkje kjøpt endå')
+                _seatObject.selected = true
+                _seatObject.notavailable = true
+                visualSeatNumber++
+                let label = (i + 1) + '-' + visualSeatNumber
+                _seatObject.label = label
+                makeGreenBox(_seatObject.label)
+              }
             }
 
             let label = (i + 1) + '-' + visualSeatNumber
