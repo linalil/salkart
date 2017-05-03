@@ -7,7 +7,9 @@ $(document).ready(function () {
     window.location.href = 'index.html'
   } else {
     sal = sessionStorage.sal
+    console.log(sal)
     arr = sessionStorage.arr
+    console.log(sal)
   }
 
   firebase.database().ref('/Saler/' + sal + '/Sal_Info').once('value', function (snapshot) {
