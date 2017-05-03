@@ -29,23 +29,26 @@
   </div>
   <div id="valgt_arrangement"></div>
 
-    <div class="betalingsinfo">
-      <div id="test" class="valgte_billetter">
-        <p id="valgte_billetter_beskrivelse">
-            Dine valgte billetter:
-        </p>
-        <p class="sjanger" id="valgte_billettbokser"></p>
+    <div class="billettbakgrunn">
+      <div class="betalingsinfo">
+        <div id="test" class="valgte_billetter_boks">
+          <p id="valgte_billetter_beskrivelse">
+              Dine valgte billetter:
+          </p>
+          <p class="sjanger" id="valgte_billettbokser"></p>
+        </div>
+
+        <form>
+          <div class="beskrivelse beholder"><p>Navn: </p><input type="text" name="name" required="true" id="navn"/></div>
+          <div class="beskrivelse beholder"><p>E-post: </p><input type="email" name="email" required="true" id="e-mail"/></div>
+          <div class="beskrivelse beholder"><p>Tlf: </p><input type="text" name="tlf" required="true" id="tlf"/></div>
+
+          <button type="button" class="neste_knapp" id="testkjop"><a href="billettvalg.html">TILBAKE</a></button>
+          <button type="button" class="neste_knapp" id="kjop">KJØP VALGTE</button>
+        </form>
       </div>
-
-      <form>
-        <div class="beskrivelse beholder"><p>Navn: </p><input type="text" name="name" required="true" id="navn"/></div>
-        <div class="beskrivelse beholder"><p>E-post: </p><input type="email" name="email" required="true" id="e-mail"/></div>
-        <div class="beskrivelse beholder"><p>Tlf: </p><input type="text" name="tlf" required="true" id="tlf"/></div>
-
-        <button type="button" class="neste_knapp" id="testkjop"><a href="billettvalg.html">TILBAKE</a></button>
-        <button type="button" class="neste_knapp" id="kjop">KJØP VALGTE</button>
-      </form>
     </div>
+
 
     <div id="billett_tilbakemelding"></div>
 

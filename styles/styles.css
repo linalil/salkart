@@ -268,11 +268,18 @@ body {
 	order: 2;
 	margin-left: 10px;
 }
+#valgt_arrangement{
+	width: 80%;
+	margin: 20px auto;
+	height: 100px;
+}
 .betalingsinfo {
-	width: 300px;
+	width: 50%;
 	margin: auto;
-	border: 1px solid black;
-
+	font-family: 'Raleway', sans-serif;
+	font-size: 1.2em;
+	font-weight: bold;
+	height: 300px;
 }
 .betalingsinfo .beholder{
 	display: flex;
@@ -284,6 +291,7 @@ body {
 }
 .betalingsinfo form{
 	margin: 20px;
+	width: 300px;
 }
 .betalingsinfo p {
 	order: 1;
@@ -294,6 +302,9 @@ body {
 }
 .betalingsinfo button{
 	margin: 5px;
+}
+.valgte_billetter_boks{
+	margin: 20px;
 }
 
 /*-------------------------------------*/
