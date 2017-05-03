@@ -28,18 +28,25 @@
       </div>
   </div>
   <div id="valgt_arrangement"></div>
-    <div id="test" class="test">
-      <p class="sjanger" id="test_tekst"></p>
+
+    <div class="betalingsinfo">
+      <div id="test" class="test">
+        <p id="valgte_billetter_beskrivelse">
+            Dine valgte billetter:
+        </p>
+        <p class="sjanger" id="valgte_billettbokser"></p>
+      </div>
+
+      <form>
+        <p class="beskrivelse">Navn: </p><input type="text" name="name" required="true"/>
+        <p class="beskrivelse">E-post: </p><input type="email" name="email" required="true"/>
+        <p class="beskrivelse">Tlf: </p><input type="text" name="tlf" required="true"/>
+
+        <button type="button" class="neste_knapp" id="testkjop"><a href="billettvalg.html">TILBAKE</a></button>
+        <button type="button" class="neste_knapp" id="kjop">KJØP VALGTE</button>
+      </form>
     </div>
 
-    <form class="prisoversikt">
-      <p class="beskrivelse">Navn: <input type="text" name="name" required="true"/></p>
-      <p class="beskrivelse">E-post: <input type="email" name="email" required="true"/></p>
-      <p class="beskrivelse">Tlf: <input type="text" name="tlf" required="true"/></p>
-
-      <button type="button" class="neste_knapp" id="testkjop"><a href="billettvalg.html">TILBAKE</a></button>
-      <button type="button" class="neste_knapp" id="kjop">KJØP VALGTE</button>
-    </form>
 
 
     <script src="https://www.gstatic.com/firebasejs/3.7.3/firebase.js" type="text/javascript"></script>
