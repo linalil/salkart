@@ -185,9 +185,8 @@ body {
 	background-color: #B9B9B9;
 	border-radius: 15px;
 	text-align: center;
-	margin: 10px;
 	padding: 2px;
-	margin-left: 30px;
+	margin: 0px 0px 10px 30px;
 }
 .seat{
 	background-color: #F2F2F2;
