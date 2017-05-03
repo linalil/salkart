@@ -30,7 +30,7 @@
   <div id="valgt_arrangement"></div>
 
     <div class="betalingsinfo">
-      <div id="test" class="test">
+      <div id="test" class="valgte_billetter">
         <p id="valgte_billetter_beskrivelse">
             Dine valgte billetter:
         </p>
@@ -38,14 +38,16 @@
       </div>
 
       <form>
-        <p class="beskrivelse">Navn: </p><input type="text" name="name" required="true"/>
-        <p class="beskrivelse">E-post: </p><input type="email" name="email" required="true"/>
-        <p class="beskrivelse">Tlf: </p><input type="text" name="tlf" required="true"/>
+        <div class="beskrivelse beholder"><p>Navn: </p><input type="text" name="name" required="true" id="navn"/></div>
+        <div class="beskrivelse beholder"><p>E-post: </p><input type="email" name="email" required="true" id="e-mail"/></div>
+        <div class="beskrivelse beholder"><p>Tlf: </p><input type="text" name="tlf" required="true" id="tlf"/></div>
 
         <button type="button" class="neste_knapp" id="testkjop"><a href="billettvalg.html">TILBAKE</a></button>
         <button type="button" class="neste_knapp" id="kjop">KJØP VALGTE</button>
       </form>
     </div>
+
+    <div id="billett_tilbakemelding"></div>
 
 
 

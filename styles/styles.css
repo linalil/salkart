@@ -268,18 +268,32 @@ body {
 	order: 2;
 	margin-left: 10px;
 }
-.betalingsinfo{
-	width: 250px;
+.betalingsinfo {
+	width: 300px;
 	margin: auto;
 	border: 1px solid black;
+
+}
+.betalingsinfo .beholder{
 	display: flex;
 	flex-direction: row;
 	-webkit-flex-wrap: wrap;
   flex-wrap: wrap;
 	justify-content: space-between;
+	margin: 10px 0px;
 }
-.betalingsinfo p{
-	width: 100%;
+.betalingsinfo form{
+	margin: 20px;
+}
+.betalingsinfo p {
+	order: 1;
+}
+.betalingsinfo input{
+	order: 2;
+	width: 200px;
+}
+.betalingsinfo button{
+	margin: 5px;
 }
 
 /*-------------------------------------*/
