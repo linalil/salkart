@@ -23,17 +23,9 @@ $(document).ready(function () {
         sessionStorage.clear()
         sessionStorage.setItem('sal', sal)
         sessionStorage.setItem('arr', arr)
+        window.location.href = 'billettvalg.html'
         console.log(sessionStorage.sal)
       })
-    })
-
-    $('#til_billett').click(function () {
-      if (sessionStorage.sal != null) {
-        console.log('Du har valt eit arrangement, lov til å gå vidare')
-        window.location.href = 'billettvalg.html'
-      } else {
-        console.log('Ingen arr, ikkje gå vidare')
-      }
     })
   })
 })
