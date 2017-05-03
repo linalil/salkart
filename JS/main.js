@@ -757,9 +757,11 @@ function mainFunction ($) {
     $('#til_betaling').click(function () {
       if (sessionStorage.sal && mySeats != 'null') {
         // sessionStorage.setItem('sal', settings.salNummer)
+        console.log('MySeats' + mySeats)
         console.log('Går til betaling')
         window.location.href = 'betaling.html'
       } else {
+        console.log('MySeats' + mySeats)
         console.log('Du må velge billetter først!')
       }
     })

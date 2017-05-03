@@ -2,7 +2,20 @@ $(document).ready(function () {
   let reserved
   let sessionId
   let sal = sessionStorage.sal
-  
+  let arr = sessionStorage.arr
+
+  firebase.database().ref('/Arrangement/' + arr).once('value', function (snapshot) {
+    let arrangement = snapshot.val()
+    let arrInfo = '<div class="reservasjonsinfo" id="' + arrangement.sal +
+    '"><div class="event"><div class="bilde"><img src="img/' +
+    arrangement.bilde + '" alt="konsertbilde"/></div><div class="eventinfo"><div class="tittel">' +
+    arrangement.title + '</div><div class="sjanger">' + arrangement.sjanger + '</div><div class="lengde">' +
+    arrangement.lengde + '</div></div></div><div class="tidspunkt"><div class="dato">' +
+    arrangement.dato + '</div><div class="tid">' + arrangement.tid + '</div><div class="sal">' +
+    arrangement.sal + '</div></div></div>'
+    $('#valgt_arrangement').append(arrInfo)
+  })
+
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       // User is signed in.
@@ -13,19 +26,23 @@ $(document).ready(function () {
       console.log('Brukaren har id' + uid)
       sessionId = uid
 
-      let dbInit = firebase.database().ref('/Saler/' + sal + '/Personer/' + sessionId)
-      dbInit.once('value', function (snapshot) {
+      firebase.database().ref('/Saler/' + sal + '/Personer/' + sessionId).once('value', function (snapshot) {
         if (snapshot.child('seats')) {
           console.log('Sete som er reservert er: ' + snapshot.child('seats').val())
-          console.log(sessionId + ' er lik ' + snapshot.child('sessionId').val())
           let booka = String(snapshot.child('seats').val())
           reserved = booka.split(',')
-          let outText = ''
+          console.log('reservert sin size' + reserved.length)
+
           for (let i = 0; i < reserved.length; i++) {
-            console.log(getVisualId(reserved[i]))
-            outText += getVisualId(reserved[i]) + ' '
+            let id = reserved[i]
+            console.log('Er inne i forløkka')
+            firebase.database().ref('/Saler/' + sal + '/Plassering/' + id).once('value', function (snapshot) {
+              let seat = snapshot.val()
+              console.log(snapshot.val())
+              $('#test_tekst').append('<div class="valgte_billetter">' + seat.label + '</div>')
+            })
           }
-          $('#test_tekst').html('<p>Dine valgte billetter: ' + outText + '</p')
+
         } else {
           console.log('Det fins ingen sete på brukaren')
         }
@@ -35,6 +52,8 @@ $(document).ready(function () {
       console.log('Brukaren er ikkje logga inn med nokon sesjon')
     }
   })
+
+
 
   function getVisualId (id) {
     let _i = id.split('-')
