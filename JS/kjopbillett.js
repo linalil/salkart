@@ -98,7 +98,7 @@ $(document).ready(function () {
 
       console.log('Skal no lagre seta på personen!')
       let dbRefPerson = firebase.database().ref('/Saler/' + sal + '/Personer/' + sessionId).remove()
-      firebase.database().ref('/Saler/' + sal + '/Personer/').set({
+      firebase.database().ref('/Saler/' + sal + '/Personer/' + name).set({
         name: name,
         email: email,
         tlf: tlf,
