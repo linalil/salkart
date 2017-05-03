@@ -1,7 +1,8 @@
 $(document).ready(function () {
   let reserved
   let sessionId
-  let sal = 'Sal3'
+  let sal = sessionStorage.sal
+  
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       // User is signed in.
@@ -47,8 +48,8 @@ $(document).ready(function () {
     $.each(reserved, function (i, v) {
       let reservertSete = String(this)
       console.log('Reservert sete: ' + reservertSete)
+
       var dbRef = firebase.database().ref('/Saler/' + sal + '/Plassering/' + reservertSete)
-      console.log(dbRef)
       dbRef.transaction(function (sete) {
         if (sete) {
           sete.id = reservertSete

@@ -1,10 +1,9 @@
 $(document).ready(function () {
   /* Opnar kopling til databasen og hentar inn tal rader og seter.
-     Lagrar denne informasjonen i eit seteobjekt. */
-
+  Lagrar denne informasjonen i eit seteobjekt. */
   let sal = null
   let arr = null
-  if (sessionStorage.sal === null || sessionStorage.arr === null) {
+  if (sessionStorage.sal === null || sessionStorage.arr === null) {
     window.location.href = 'index.html'
   } else {
     sal = sessionStorage.sal
@@ -63,7 +62,6 @@ $(document).ready(function () {
 
   firebase.database().ref('/Arrangement/' + arr).once('value', function (snapshot) {
     let arrangement = snapshot.val()
-    console.log(arrangement.sal)
     let arrInfo = '<div class="reservasjonsinfo" id="' + arrangement.sal +
     '"><div class="event"><div class="bilde"><img src="img/' +
     arrangement.bilde + '" alt="konsertbilde"/></div><div class="eventinfo"><div class="tittel">' +
@@ -73,7 +71,6 @@ $(document).ready(function () {
     arrangement.sal + '</div></div></div>'
     $('#valgt_arrangement').append(arrInfo)
   })
-
 
   // Køyrer hovudfunksjonen under.
   mainFunction(jQuery)
@@ -102,7 +99,6 @@ function mainFunction ($) {
     var _blocks = []
     var _seats = []
     var _selected = []
-
     let sessionId
 
     // Objects
@@ -756,6 +752,16 @@ function mainFunction ($) {
       clearMySeats()
       updateTable()
       draw(_container)
+    })
+
+    $('#til_betaling').click(function () {
+      if (sessionStorage.sal && mySeats != 'null') {
+        // sessionStorage.setItem('sal', settings.salNummer)
+        console.log('Går til betaling')
+        window.location.href = 'betaling.html'
+      } else {
+        console.log('Du må velge billetter først!')
+      }
     })
 
 /* --------------------------------------------------------------------- */
