@@ -39,7 +39,7 @@ $(document).ready(function () {
             firebase.database().ref('/Saler/' + sal + '/Plassering/' + id).once('value', function (snapshot) {
               let seat = snapshot.val()
               console.log(snapshot.val())
-              $('#test_tekst').append('<div class="valgte_billetter">' + seat.label + '</div>')
+              $('#valgte_billettbokser').append('<div class="valgte_billetter">' + seat.label + '</div>')
             })
           }
 
