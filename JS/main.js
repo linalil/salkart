@@ -174,6 +174,7 @@ function mainFunction ($) {
       updateTable(numSeats)
       console.log('Verdi til saman: ' + numSeats)
       clearMySeats()
+      recursiveSeats()
     })
     $('#select').change(function () {
       document.getElementById('advarsel').style.display = 'none'
@@ -184,6 +185,7 @@ function mainFunction ($) {
       updateTable(numSeats)
       console.log('Verdi til saman: ' + numSeats)
       clearMySeats()
+      recursiveSeats()
     })
     $('#honnor').change(function () {
       document.getElementById('advarsel').style.display = 'none'
@@ -194,6 +196,7 @@ function mainFunction ($) {
       updateTable(numSeats)
       console.log('Verdi til saman: ' + numSeats)
       clearMySeats()
+      recursiveSeats()
     })
 
     var _container = this
@@ -304,8 +307,13 @@ function mainFunction ($) {
             _seats.push(_seatObject)
           }
         }
+
         // Teiknar opp salkartet
         draw(_container)
+        if (sessionStorage.initSeats === 'false') {
+          recursiveSeats()
+          sessionStorage.setItem('initSeats', true)
+        }
       })
     }
 
@@ -606,6 +614,91 @@ function mainFunction ($) {
       if (parseInt(numSeats) !== 1) {
         firebase.database().ref('/Saler/' + settings.salNummer + '/Personer/' + sessionId).remove()
       }
+    }
+
+
+    function recursiveSeats () {
+      let iMaks = 3
+      let numberOfSeats = 3
+      let finished = false
+      while (iMaks <= settings.rows && numberOfSeats <= settings.columns && !finished) {
+        if (!findBestSeats(iMaks, numberOfSeats)) {
+          iMaks++
+          numberOfSeats++
+          console.log('Aukar firkanten, iMaks=' + iMaks + ', numberOfSeats=' + numberOfSeats)
+          findBestSeats(iMaks, numberOfSeats)
+        } else {
+          console.log('Har funne beste sete')
+          finished = true
+        }
+      }
+    }
+
+    // Metode som skal finne beste sete i salen.
+    function findBestSeats (iMaks, numberOfSeats) {
+      let midtRad
+      let tempRad
+      let finished = false
+      // let iMaks = settings.rows
+      if (settings.rows % 2 === 0) {
+        midtRad = (parseInt(settings.rows / 2)) - 1
+        tempRad = midtRad
+      } else if (settings.rows % 2 !== null) {
+        midtRad = (parseInt(settings.rows / 2))
+        tempRad = midtRad
+      }
+      for(let i = 0; i <= iMaks - 1 && !finished; i++) {
+        if(i % 2 === 0) {
+          tempRad -= i
+          if (findBestSeatsRow(tempRad, numberOfSeats)) {
+            finished = true
+            return true
+          }
+        } else if (i % 2 !== 0) {
+          tempRad += i
+          if (findBestSeatsRow(tempRad, numberOfSeats)) {
+            finished = true
+            return true
+          }
+        }
+      }
+      return false
+    }
+
+    // Metode som sjekkar etter beste sete på ei gitt rad.
+    function findBestSeatsRow (tempRad, numberOfSeats) {
+      let iMaks = 0
+      let midtsete = (parseInt(settings.columns / 2)) - 1
+      let tempSeatStart = midtsete
+      if (settings.columns % 2 === 0) {
+        iMaks = numberOfSeats
+      } else if (settings.columns % 2 !== null) {
+        iMaks = numberOfSeats - 2
+      }
+
+      let finished = false
+      for (let i = 0; i < iMaks && !finished; i++) {
+        if (i % 2 === 0) {
+          tempSeatStart -= i
+        } else if (i % 2 !== 0) {
+          tempSeatStart += i
+        }
+        let endX = tempSeatStart + (numSeats - 1)
+        if (checkAvailable(parseInt(tempRad), parseInt(tempSeatStart), parseInt(endX))) {
+          if(checkNoGaps(tempRad + '-' + tempSeatStart) && checkBound(parseInt(tempRad), parseInt(tempSeatStart), parseInt(endX))) {
+            if (parseInt(numSeats) === 1) {
+              console.log('Det beste enkeltsetet er ' + (tempRad + 1) + '-' + (tempSeatStart + 1))
+              selectSeat(tempRad + '-' + tempSeatStart)
+            } else {
+              console.log('Dei beste seta er ' + (tempRad + 1) + '-' + (tempSeatStart + 1) + ' til ' + (tempRad + 1) + '-' + (endX + 1))
+              selectMultiple(tempRad + '-' + tempSeatStart)
+            }
+            finished = true
+            return true
+          }
+        }
+      }
+      return false
     }
 
 /* --------------------------------------------------------------------- */

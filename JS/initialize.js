@@ -23,6 +23,7 @@ $(document).ready(function () {
         sessionStorage.clear()
         sessionStorage.setItem('sal', sal)
         sessionStorage.setItem('arr', arr)
+        sessionStorage.setItem('initSeats', false)
         window.location.href = 'billettvalg.html'
         console.log(sessionStorage.sal)
       })
