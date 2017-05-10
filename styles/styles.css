@@ -148,7 +148,7 @@ body {
 .type_sete{
 	order:1;
 	width: 50%;
-	height: 150px;
+	height: 200px;
 }
 .type_sete label{
 	font-family: 'Raleway', sans-serif;
@@ -169,6 +169,12 @@ body {
 }
 .select, .barn, .honnor{
 	order: 2;
+}
+.mode{
+	font-family: 'Raleway', sans-serif;
+	font-weight: bold;
+	font-size: 1em;
+	margin: 20px 0px;
 }
 .under_setekart{
 	display: none;
@@ -314,6 +320,13 @@ body {
 	width: 60%;
 	margin: 20px auto;
 }
+#billett_tilbakemelding{
+	font-family: 'Raleway', sans-serif;
+	font-size: 2em;
+	font-weight: bold;
+	margin: 10px auto;
+	text-align: center;
+}
 
 /*-------------------------------------*/
 .prisoversikt{
@@ -442,6 +455,10 @@ input[type=checkbox]:disabled[data-status=utilgjengelig] + label:before{
   content: "\f007";
 	visibility: hidden;
 }
+input[type=checkbox]:disabled[data-status=pillar] + label:before{
+  content: "\f10c";
+	color: #747474
+}
 /*--------------FLEXBOX---------------*/
 .beholder{
 	display: flex;
@@ -521,7 +538,7 @@ input[type=checkbox]:disabled[data-status=utilgjengelig] + label:before{
 	}
 	/*--------------------------------------*/
 	.reservasjonsinfo{
-		flex-direction: column;
+		flex-direction: row;
 	}
 	.tidspunkt{
 		margin: 20px 0px 0px;
@@ -573,7 +590,31 @@ input[type=checkbox]:disabled[data-status=utilgjengelig] + label:before{
 		width: 60%;
 	}
 }
-@media all and (max-width: 480px) {
+@media all and (max-width: 500px) {
+	#valgt_arrangement{
+		height: auto;
+	}
+	.overskrift {
+    font-size: 1em;
+    font-weight: bold;
+    margin: 5px auto;
+		padding: 0px 20px;
+		text-decoration: underline;
+}
+.tittel, .tid {
+    font-size: 1.2em;
+}
+.dato {
+    font-size: 1em;
+    font-weight: bold;
+}
+	.reservasjonsinfo{
+		flex-direction: column;
+		margin-bottom: 5px;
+	}
+	.seteinfo{
+		margin: 5px 0px 8px;
+	}
 	.advarsel{
 		width: 80%;
 	}
