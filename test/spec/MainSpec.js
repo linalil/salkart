@@ -1,22 +1,35 @@
+describe("Setesjekking", function() {
 
+    var sete1
+    var sete2
 
-// Sjekke om det fins eit seteobjekt
-describe("Sjekke om det fins eit seteobjekt", function(){
-  it("Om det kan hentas ut", function(){
+    beforeEach(function(){
+      sete1 = {
+      id: 1-1,
+      booked: true,
+      available: false,
+      }
 
-  })
-})
+      sete1 = {
+      id: 1-2,
+      booked: false,
+      available: true,
+      }
+    })
 
+    // Sjekke at det eksisterer eit sete
+    it("setet eksisterer", function(){
+      expect(sete1).not.toBe(null)
+    })
 
-  describe("Testing Jasmine", function() {
-    it("can run a test", function() {
-      expect(true).toBe(true);
-    });
-  });
+    // Setet er ikkje det samme
+    it("Seteobjekta er ikkje like", function(){
+      expect(sete1).not.toEqual(sete2)
+    })
 
+});
 
-
-
+//})
 
  // Velge billett – barn
  // Velge billett – voksen
@@ -26,6 +39,3 @@ describe("Sjekke om det fins eit seteobjekt", function(){
  // Ikkje sette att enkeltsete
  // Ikkje kunne booke/reservere sete som er reservert
  // Ikkje kunne booke/reservere sete som er booka
-
-
- /*-------------- UI --------------------*/
