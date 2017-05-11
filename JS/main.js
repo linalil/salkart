@@ -78,7 +78,6 @@ $(document).ready(function () {
     $('#valgt_arrangement').append(arrInfo)
   })
 
-
   // Køyrer hovudfunksjonen under.
   mainFunction(jQuery)
 })
