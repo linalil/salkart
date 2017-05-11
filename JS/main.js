@@ -98,7 +98,8 @@ function mainFunction ($) {
       sessionId: 1,
       salNummer: 'Sal1',
       seterTotal: 0,
-      seterReservert: 0
+      seterReservert: 0,
+      singleMode: false
     }, options)
 
     // Local Variables
@@ -205,6 +206,19 @@ function mainFunction ($) {
       recursiveSeats()
     })
 
+    // Handterar klikk på radioknapp og stiller inn i single/multimode
+    $('input[type="radio"]').on('click', function (e) {
+      if (e.currentTarget.value === 'singlemode') {
+        settings.singleMode = true
+        console.log('Singlemode aktivert' + settings.singleMode)
+        clearMySeats()
+      } else {
+        settings.singleMode = false
+        console.log('Singlemode deaktivert' + settings.singleMode)
+        clearMySeats()
+      }
+    })
+
     var _container = this
 
     // Metode som køyrer når ein klikkar på ein checkbox.
@@ -227,10 +241,18 @@ function mainFunction ($) {
           // deselectSeat(_id)
         }
       } else {
-        if ($(this).prop('checked') === true) {
+        if ($(this).prop('checked') === true && !settings.singleMode) {
           selectMultiple(_id, numSeats)
-        } else {
+        } else if ($(this).prop('checked') === true && settings.singleMode && mySeats.length < numSeats) {
+          console.log('No skal ein velje i single-mode')
+          selectSeat(_id)
+          console.log('myseats i select: ' + mySeats.length)
+        } /*else if ($(this).prop('checked') === false && settings.singleMode && mySeats.length <= numSeats) {
+          deselectSeat(_id)
+          console.log('myseats i deselect: ' + mySeats.length)
+        } */else {
           clearMySeats()
+          console.log('myseats: ' + mySeats.length)
         }
       }
     })
@@ -448,10 +470,12 @@ function mainFunction ($) {
     function selectSeat (id) {
       if ($.inArray(id, _selected) === -1) {
         console.log('Reserverte sete før clearMySeats ' + settings.seterReservert)
-        if (parseInt(numSeats) === 1 && (settings.seterReservert <= settings.seterTotal)) {
+        if ((parseInt(numSeats) === 1 || settings.singleMode) && (settings.seterReservert <= settings.seterTotal)) {
           console.log('Er kome inn i løkka med numSeats1 og mindre enn 70%')
           console.log('Slettar tidlegare enkeltsete...')
-          clearMySeats()
+          if (!settings.singleMode) {
+            clearMySeats()
+          }
           if (checkNoGaps(id)) {
             _selected.push(id)
             var _seatObj = _seats.filter(function (seat) {
@@ -476,7 +500,7 @@ function mainFunction ($) {
             let dbRef = firebase.database().ref('/Saler/' + settings.salNummer + '/Personer/' + sessionId)
             dbRef.set({
               sessionId: sessionId,
-              seats: id
+              seats: mySeats
             })
           } else {
             if (!checkSeatGapsLeft(id)) {
@@ -508,9 +532,11 @@ function mainFunction ($) {
             draw(_container)
             return
           }
-        } else if (parseInt(numSeats) === 1 && (settings.seterReservert > settings.seterTotal)) {
+        } else if ((parseInt(numSeats) === 1 || settings.singleMode) && (settings.seterReservert > settings.seterTotal)) {
           console.log('Er kome inn i blokk med numSeats1 og res > total')
-          clearMySeats()
+          if (!settings.singleMode) {
+            clearMySeats()
+          }
           _selected.push(id)
           var _seatObj = _seats.filter(function (seat) {
             return seat.id === id
@@ -534,7 +560,7 @@ function mainFunction ($) {
           let dbRef = firebase.database().ref('/Saler/' + settings.salNummer + '/Personer/' + sessionId)
           dbRef.set({
             sessionId: sessionId,
-            seats: id
+            seats: mySeats
           })
         } else {
           _selected.push(id)
@@ -669,6 +695,7 @@ function mainFunction ($) {
     // Prøvar å reservere sete i reversert rekkefølgje.
     function tryReversed (row, startX, endX) {
       for (let i = 1; i <= numSeats; i++) {
+        console.log('Prøvar å reversere og booke ' + (startX - i) + (endX - i))
         if (parseInt(endX) - i === (settings.columns - 1) || (checkAvailable(row, (startX - i), (endX - i))) && checkBound(row, (startX - i), (endX - i))) {
           let newId = row + '-' + (startX - i)
           return selectMultiple(newId)
@@ -712,6 +739,12 @@ function mainFunction ($) {
         }
       }
       console.log('Det fins ikkje nok sete til at alle kan sitte i lag..')
+      $('#advarselstekst').html('Ikke nok seter samlet! Prøv å velge enkeltvis!')
+      document.getElementById('advarsel').style.display = 'unset'
+
+      $('input[name=mode][value=multimode]').prop('checked', false)
+      $('input[name=mode][value=singlemode]').prop('checked', true)
+
       return false
     }
 
@@ -888,16 +921,23 @@ function mainFunction ($) {
     function checkSeatGapsRight (startId) {
       let _i = startId.split('-')
       let endSeat = parseInt(_i[1]) + parseInt(numSeats - 1)
+      console.log('Setet vi sjekkar i forhold til er ' + _i + ' og ' + endSeat)
       let doubleRight = parseInt(endSeat + 2)
+      console.log('Setet to hakk til høgre er ' + doubleRight)
       let right = parseInt(endSeat + 1)
+      console.log('Setet til høgre er: ' + right)
 
       if (doubleRight <= (settings.columns - 1)) {
+        console.log('Dobbelhøgre er innanfor salkartet')
         if (checkBooked(_i[0] + '-' + doubleRight) || checkReserved(_i[0] + '-' + doubleRight)) {
+           console.log('Setet dobbelhøgre er booka eller reservert')
           if (!checkBooked(_i[0] + '-' + right) && !checkReserved(_i[0] + '-' + right)) {
+            console.log('Får inneklemt sete')
             return false
           }
         }
       }
+      console.log('Ingenting er feil på høgre side. ')
       return true
     }
 
