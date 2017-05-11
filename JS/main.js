@@ -13,18 +13,21 @@ $(document).ready(function () {
   }
 
   firebase.database().ref('/Saler/' + sal + '/Sal_Info').once('value', function (snapshot) {
-    var talRader = snapshot.child('Rad').val()
-    var talSeter = snapshot.child('Seter').val()
+    let talRader = snapshot.child('Rad').val()
+    let talSeter = snapshot.child('Seter').val()
     let maksSeter = parseInt(snapshot.child('SeterTotal').val())
+    let resSeter = parseInt(snapshot.child('SeterReservert').val())
 
     console.log('Rader: ' + talRader + ', Seter: ' + talSeter)
+    console.log('Tal reserverte: ' + resSeter + ', av maks: ' + maksSeter)
 
     let seats = $('#seats').flexiSeats({
       rows: talRader,
       columns: talSeter,
       multiple: false,
       salNummer: sal,
-      seterTotal: maksSeter
+      seterTotal: maksSeter,
+      seterReservert: resSeter
     })
 
     getBlocks()
@@ -75,6 +78,7 @@ $(document).ready(function () {
     $('#valgt_arrangement').append(arrInfo)
   })
 
+
   // Køyrer hovudfunksjonen under.
   mainFunction(jQuery)
 })
@@ -93,7 +97,8 @@ function mainFunction ($) {
       multiple: false,
       sessionId: 1,
       salNummer: 'Sal1',
-      seterTotal: 0
+      seterTotal: 0,
+      seterReservert: 0
     }, options)
 
     // Local Variables
@@ -217,7 +222,8 @@ function mainFunction ($) {
         if ($(this).prop('checked') === true) {
           selectSeat(_id)
         } else {
-          deselectSeat(_id)
+          clearMySeats()
+          // deselectSeat(_id)
         }
       } else {
         if ($(this).prop('checked') === true) {
@@ -251,6 +257,7 @@ function mainFunction ($) {
       // Opnar databasetilkopling til 'Plassering'-greina.
       var dbInitReference = firebase.database().ref('Saler/' + settings.salNummer + '/Plassering')
       console.log('Totalt tal seter i salen:' + settings.seterTotal)
+      console.log('Antall reserverte: ' + settings.seterReservert)
 
       // Første gong når ein teknar opp salkartet.
       dbInitReference.once('value', function (snapshot) {
@@ -351,6 +358,13 @@ function mainFunction ($) {
       draw(_container)
     })
 
+    let dbResRef = firebase.database().ref('/Saler/' + settings.salNummer + '/Sal_Info')
+    dbResRef.on('child_changed', function (snapshot) {
+      var changedPost = snapshot.val()
+      console.log('Endring i db, no er ' + changedPost + ' reservert')
+      settings.seterReservert = changedPost
+    })
+
     // Draw layout - metoden som teiknar opp salkart
     function draw (container) {
       container.empty()
@@ -425,6 +439,7 @@ function mainFunction ($) {
     // Select a single seat
     function selectSeat (id) {
       if ($.inArray(id, _selected) === -1) {
+        console.log('Reserverte sete før clearMySeats ' + settings.seterReservert)
         if (parseInt(numSeats) === 1) {
           console.log('Slettar tidlegare enkeltsete...')
           clearMySeats()
@@ -442,6 +457,11 @@ function mainFunction ($) {
             mySeats.push(id)
             console.log('Reserverar ' + _seatObj[0].label)
             makeGreenBox(_seatObj[0].label)
+
+            settings.seterReservert ++
+            console.log('Lokalt lagra reserverte sete: ' + settings.seterReservert)
+            let resSeterRef = firebase.database().ref('/Saler/' + settings.salNummer + '/Sal_Info/')
+            resSeterRef.child('SeterReservert').set(settings.seterReservert)
 
             // Oppdaterar brukar i databasen med dette eine setet
             let dbRef = firebase.database().ref('/Saler/' + settings.salNummer + '/Personer/' + sessionId)
@@ -542,6 +562,11 @@ function mainFunction ($) {
         }
         return sete
       })
+
+      settings.seterReservert--
+      console.log('Lokalt lagra reserverte sete etter deselect: ' + settings.seterReservert)
+      let resSeterRef = firebase.database().ref('/Saler/' + settings.salNummer + '/Sal_Info/')
+      resSeterRef.child('SeterReservert').set(settings.seterReservert)
     }
 
     // Select multiple seats
@@ -566,6 +591,12 @@ function mainFunction ($) {
           sessionId: sessionId,
           seats: mySeats
         })
+
+        settings.seterReservert += numSeats
+        console.log('Lokalt lagra reserverte sete: ' + settings.seterReservert)
+        let resSeterRef = firebase.database().ref('/Saler/' + settings.salNummer + '/Sal_Info/')
+        resSeterRef.child('SeterReservert').set(settings.seterReservert)
+
         return true
       } else {
         if (tryReversed(_i[0], _i[1], endX)) {
@@ -604,6 +635,7 @@ function mainFunction ($) {
       if (mySeats != 'null') {
         for (let i = 0; i < mySeats.length; i++) {
           let tempId = mySeats[i]
+          console.log('Slettar eit sete: ' + tempId)
           deselectSeat(tempId)
         }
         mySeats.length = 0
@@ -626,7 +658,6 @@ function mainFunction ($) {
           iMaks++
           numberOfSeats++
           console.log('Aukar firkanten, iMaks=' + iMaks + ', numberOfSeats=' + numberOfSeats)
-          findBestSeats(iMaks, numberOfSeats)
         } else {
           console.log('Har funne beste sete')
           finished = true
@@ -648,14 +679,17 @@ function mainFunction ($) {
         tempRad = midtRad
       }
       for(let i = 0; i <= iMaks - 1 && !finished; i++) {
+        console.log('i = ' + i + ' og i%2 = ' + (i % 2))
         if(i % 2 === 0) {
           tempRad -= i
+          console.log('Sjekkar på rad' + (tempRad + 1))
           if (findBestSeatsRow(tempRad, numberOfSeats)) {
             finished = true
             return true
           }
         } else if (i % 2 !== 0) {
           tempRad += i
+          console.log('Sjekkar på rad ' + (tempRad + 1))
           if (findBestSeatsRow(tempRad, numberOfSeats)) {
             finished = true
             return true
@@ -684,6 +718,7 @@ function mainFunction ($) {
           tempSeatStart += i
         }
         let endX = tempSeatStart + (numSeats - 1)
+        console.log('Sjekkar seta:' + (tempSeatStart + 1) + '-' + (endX + 1))
         if (checkAvailable(parseInt(tempRad), parseInt(tempSeatStart), parseInt(endX))) {
           if(checkNoGaps(tempRad + '-' + tempSeatStart) && checkBound(parseInt(tempRad), parseInt(tempSeatStart), parseInt(endX))) {
             if (parseInt(numSeats) === 1) {
@@ -852,9 +887,13 @@ function mainFunction ($) {
           })
         }
       })
+
       removeGreenBoxes()
       clearMySeats()
       updateTable()
+
+      let resSeterRef = firebase.database().ref('/Saler/' + settings.salNummer + '/Sal_Info/')
+      resSeterRef.child('SeterReservert').set(0)
       draw(_container)
     })
 
