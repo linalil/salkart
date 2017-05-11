@@ -127,7 +127,8 @@ function mainFunction ($) {
       available: true,
       notavailable: false,
       selected: false,
-      utilgjengelig: false
+      utilgjengelig: false,
+      soyle: false
     }
 
     /* ----------------------------- SESSION ------------------------------- */
@@ -279,6 +280,8 @@ function mainFunction ($) {
               // Setet vil då bli farga mørkegrått.
               if (snapshot.child(_id).child('utilgjengelig').val() === true) {
                 _seatObject.utilgjengelig = true
+              } else if (snapshot.child(_id).child('soyle').val() === true) {
+                _seatObject.soyle = true
               } else if (snapshot.child(_id).child('reservert').val() === true) {
                 _seatObject.available = false
                 _seatObject.notavailable = true
@@ -397,6 +400,11 @@ function mainFunction ($) {
             _checkbox.prop('disabled', 'disabled')
             _checkbox.attr('data-status', 'utilgjengelig')
             _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '"></label>')
+          } else if (_seatObject.soyle) {
+            _checkbox.prop('disabled', 'disabled')
+            _checkbox.attr('data-status', 'pillar')
+            labNum++
+            _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '"></label>')
           } else {
             if (_seatObject.booked) {
               _checkbox.prop('disabled', 'disabled')
@@ -440,7 +448,8 @@ function mainFunction ($) {
     function selectSeat (id) {
       if ($.inArray(id, _selected) === -1) {
         console.log('Reserverte sete før clearMySeats ' + settings.seterReservert)
-        if (parseInt(numSeats) === 1) {
+        if (parseInt(numSeats) === 1 && (settings.seterReservert <= settings.seterTotal)) {
+          console.log('Er kome inn i løkka med numSeats1 og mindre enn 70%')
           console.log('Slettar tidlegare enkeltsete...')
           clearMySeats()
           if (checkNoGaps(id)) {
@@ -499,6 +508,34 @@ function mainFunction ($) {
             draw(_container)
             return
           }
+        } else if (parseInt(numSeats) === 1 && (settings.seterReservert > settings.seterTotal)) {
+          console.log('Er kome inn i blokk med numSeats1 og res > total')
+          clearMySeats()
+          _selected.push(id)
+          var _seatObj = _seats.filter(function (seat) {
+            return seat.id === id
+          })
+
+          // Oppdaterar status til reservert.
+          _seatObj[0].selected = true
+          _seatObj[0].notavailable = true
+
+          // Lagrar setet i lista over mine sete, mySeats
+          mySeats.push(id)
+          console.log('Reserverar ' + _seatObj[0].label)
+          makeGreenBox(_seatObj[0].label)
+
+          settings.seterReservert ++
+          console.log('Lokalt lagra reserverte sete: ' + settings.seterReservert)
+          let resSeterRef = firebase.database().ref('/Saler/' + settings.salNummer + '/Sal_Info/')
+          resSeterRef.child('SeterReservert').set(settings.seterReservert)
+
+          // Oppdaterar brukar i databasen med dette eine setet
+          let dbRef = firebase.database().ref('/Saler/' + settings.salNummer + '/Personer/' + sessionId)
+          dbRef.set({
+            sessionId: sessionId,
+            seats: id
+          })
         } else {
           _selected.push(id)
           _seatObj = _seats.filter(function (seat) {
@@ -580,7 +617,17 @@ function mainFunction ($) {
         clearMySeats()
       }
 
-      if (checkNoGaps(start) && checkBound(_i[0], _i[1], endX) && checkAvailable(_i[0], _i[1], endX)) {
+      let noGaps
+      if (settings.seterReservert <= settings.seterTotal) {
+        noGaps = checkNoGaps(start)
+      } else {
+        noGaps = true
+      }
+
+      let inside = checkBound(_i[0], _i[1], endX)
+      let available = checkAvailable(_i[0], _i[1], endX)
+
+      if (noGaps && inside && available) {
         for (let x = parseInt(_i[1]); x <= parseInt(endX); x++) {
           $('input:checkbox[id="seat' + _i[0] + '-' + x + '"]', scope).prop('checked', 'checked')
           selectSeat(_i[0] + '-' + x)
@@ -603,11 +650,11 @@ function mainFunction ($) {
           return true
         } else {
           $('input:checkbox[id="seat' + start + '"]', scope).prop('checked', 'unchecked')
-          if (!checkNoGaps(start)) {
+          if (!noGaps) {
             $('#advarselstekst').html('Ugyldig seteplassering! Du kan ikke la enkeltseter stå igjen mellom reserverte og dine egne!')
-          } else if (!checkBound(_i[0], _i[1], endX)) {
+          } else if (!inside) {
             $('#advarselstekst').html('Ugyldig seteplassering!')
-          } else if (!checkAvailable(_i[0], _i[1], endX)) {
+          } else if (!available) {
             $('#advarselstekst').html('Ikke nok seter tilgjengelig på valgt plass!')
           } else {
             $('#advarselstekst').html('Ugyldig seteplassering!')
@@ -648,7 +695,7 @@ function mainFunction ($) {
       }
     }
 
-
+    // Rekursiv metode som finn beste sete i salen.
     function recursiveSeats () {
       let iMaks = 3
       let numberOfSeats = 3
@@ -661,8 +708,11 @@ function mainFunction ($) {
         } else {
           console.log('Har funne beste sete')
           finished = true
+          return true
         }
       }
+      console.log('Det fins ikkje nok sete til at alle kan sitte i lag..')
+      return false
     }
 
     // Metode som skal finne beste sete i salen.
@@ -702,12 +752,16 @@ function mainFunction ($) {
     // Metode som sjekkar etter beste sete på ei gitt rad.
     function findBestSeatsRow (tempRad, numberOfSeats) {
       let iMaks = 0
-      let midtsete = (parseInt(settings.columns / 2)) - 1
-      let tempSeatStart = midtsete
+      let midtsete
+      let tempSeatStart
       if (settings.columns % 2 === 0) {
-        iMaks = numberOfSeats
+        iMaks = numberOfSeats + 3
+        midtsete = (parseInt(settings.columns / 2)) - 1
+        tempSeatStart = midtsete
       } else if (settings.columns % 2 !== null) {
-        iMaks = numberOfSeats - 2
+        iMaks = numberOfSeats - 1
+        midtsete = (parseInt(settings.columns / 2)) - 2
+        tempSeatStart = midtsete
       }
 
       let finished = false
@@ -720,16 +774,30 @@ function mainFunction ($) {
         let endX = tempSeatStart + (numSeats - 1)
         console.log('Sjekkar seta:' + (tempSeatStart + 1) + '-' + (endX + 1))
         if (checkAvailable(parseInt(tempRad), parseInt(tempSeatStart), parseInt(endX))) {
-          if(checkNoGaps(tempRad + '-' + tempSeatStart) && checkBound(parseInt(tempRad), parseInt(tempSeatStart), parseInt(endX))) {
-            if (parseInt(numSeats) === 1) {
-              console.log('Det beste enkeltsetet er ' + (tempRad + 1) + '-' + (tempSeatStart + 1))
-              selectSeat(tempRad + '-' + tempSeatStart)
-            } else {
-              console.log('Dei beste seta er ' + (tempRad + 1) + '-' + (tempSeatStart + 1) + ' til ' + (tempRad + 1) + '-' + (endX + 1))
-              selectMultiple(tempRad + '-' + tempSeatStart)
+          if(settings.seterReservert <= settings.seterTotal) {
+            if(checkNoGaps(tempRad + '-' + tempSeatStart) && checkBound(parseInt(tempRad), parseInt(tempSeatStart), parseInt(endX))) {
+              if (parseInt(numSeats) === 1) {
+                console.log('Det beste enkeltsetet er ' + (tempRad + 1) + '-' + (tempSeatStart + 1))
+                selectSeat(tempRad + '-' + tempSeatStart)
+              } else {
+                console.log('Dei beste seta er ' + (tempRad + 1) + '-' + (tempSeatStart + 1) + ' til ' + (tempRad + 1) + '-' + (endX + 1))
+                selectMultiple(tempRad + '-' + tempSeatStart)
+              }
+              finished = true
+              return true
             }
-            finished = true
-            return true
+          } else {
+            if(checkBound(parseInt(tempRad), parseInt(tempSeatStart), parseInt(endX))) {
+              if (parseInt(numSeats) === 1) {
+                console.log('Det beste enkeltsetet er ' + (tempRad + 1) + '-' + (tempSeatStart + 1))
+                selectSeat(tempRad + '-' + tempSeatStart)
+              } else {
+                console.log('Dei beste seta er ' + (tempRad + 1) + '-' + (tempSeatStart + 1) + ' til ' + (tempRad + 1) + '-' + (endX + 1))
+                selectMultiple(tempRad + '-' + tempSeatStart)
+              }
+              finished = true
+              return true
+            }
           }
         }
       }
@@ -872,7 +940,7 @@ function mainFunction ($) {
           return seat.id === _this.id
         })
 
-        if (!_seat[0].utilgjengelig) {
+        if (!_seat[0].utilgjengelig && !_seat[0].soyle) {
           _seat[0].available = true
           _seat[0].booked = false
           _seat[0].selected = false
