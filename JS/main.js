@@ -176,33 +176,52 @@ function mainFunction ($) {
       let barn = $(this).val()
       let voksen = $('#select').val()
       let honnor = $('#honnor').val()
-      numSeats = parseInt(barn) + parseInt(voksen) + parseInt(honnor)
-      updateTable(numSeats)
-      console.log('Verdi til saman: ' + numSeats)
-      clearMySeats()
-      recursiveSeats()
+      if(parseInt(barn) + parseInt(voksen) + parseInt(honnor) <= settings.maksBillett) {
+        numSeats = parseInt(barn) + parseInt(voksen) + parseInt(honnor)
+        updateTable(numSeats)
+        console.log('Verdi til saman: ' + numSeats)
+        clearMySeats()
+        recursiveSeats()
+      } else {
+        $('#barn').val(0)
+        $('#advarselstekst').html('Maks antall seter er ' + settings.maksBillett + '!')
+        document.getElementById('advarsel').style.display = 'unset'
+      }
+
     })
     $('#select').change(function () {
       document.getElementById('advarsel').style.display = 'none'
       let voksen = $(this).val()
       let barn = $('#barn').val()
       let honnor = $('#honnor').val()
-      numSeats = parseInt(barn) + parseInt(voksen) + parseInt(honnor)
-      updateTable(numSeats)
-      console.log('Verdi til saman: ' + numSeats)
-      clearMySeats()
-      recursiveSeats()
+      if(parseInt(barn) + parseInt(voksen) + parseInt(honnor) <= settings.maksBillett) {
+        numSeats = parseInt(barn) + parseInt(voksen) + parseInt(honnor)
+        updateTable(numSeats)
+        console.log('Verdi til saman: ' + numSeats)
+        clearMySeats()
+        recursiveSeats()
+      } else {
+        $('#select').val(0)
+        $('#advarselstekst').html('Maks antall seter er ' + settings.maksBillett + '!')
+        document.getElementById('advarsel').style.display = 'unset'
+      }
     })
     $('#honnor').change(function () {
       document.getElementById('advarsel').style.display = 'none'
       let honnor = $(this).val()
       let barn = $('#barn').val()
       let voksen = $('#select').val()
-      numSeats = parseInt(barn) + parseInt(voksen) + parseInt(honnor)
-      updateTable(numSeats)
-      console.log('Verdi til saman: ' + numSeats)
-      clearMySeats()
-      recursiveSeats()
+      if(parseInt(barn) + parseInt(voksen) + parseInt(honnor) <= settings.maksBillett) {
+        numSeats = parseInt(barn) + parseInt(voksen) + parseInt(honnor)
+        updateTable(numSeats)
+        console.log('Verdi til saman: ' + numSeats)
+        clearMySeats()
+        recursiveSeats()
+      } else {
+        $('#honnor').val(0)
+        $('#advarselstekst').html('Maks antall seter er ' + settings.maksBillett + '!')
+        document.getElementById('advarsel').style.display = 'unset'
+      }
     })
 
     // Handterar klikk på radioknapp og stiller inn i single/multimode
@@ -998,9 +1017,9 @@ function mainFunction ($) {
       removeGreenBoxes()
       clearMySeats()
       updateTable()
-
       let resSeterRef = firebase.database().ref('/Saler/' + settings.salNummer + '/Sal_Info/')
       resSeterRef.child('SeterReservert').set(0)
+      firebase.database().ref('/Saler/' + settings.salNummer + '/Personer/').remove()
       draw(_container)
     })
 
