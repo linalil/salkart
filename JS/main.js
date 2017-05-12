@@ -17,6 +17,7 @@ $(document).ready(function () {
     let talSeter = snapshot.child('Seter').val()
     let maksSeter = parseInt(snapshot.child('SeterTotal').val())
     let resSeter = parseInt(snapshot.child('SeterReservert').val())
+    let maksBilletter = parseInt(snapshot.child('MaksBilletter').val())
 
     console.log('Rader: ' + talRader + ', Seter: ' + talSeter)
     console.log('Tal reserverte: ' + resSeter + ', av maks: ' + maksSeter)
@@ -27,7 +28,8 @@ $(document).ready(function () {
       multiple: false,
       salNummer: sal,
       seterTotal: maksSeter,
-      seterReservert: resSeter
+      seterReservert: resSeter,
+      maksBillett: maksBilletter
     })
 
     getBlocks()
@@ -98,7 +100,8 @@ function mainFunction ($) {
       salNummer: 'Sal1',
       seterTotal: 0,
       seterReservert: 0,
-      singleMode: false
+      singleMode: false,
+      maksBillett: 0
     }, options)
 
     // Local Variables
@@ -276,10 +279,21 @@ function mainFunction ($) {
 
 /* --------------------------------------------------------------------- */
     function initialize () {
+      //Legger inn antall billetter som kan bli valgt
+      for (let i = 0 ; i < settings.maksBillett+1; i++){
+        if(i === 1){
+          $('#select').append('<option value="' + i + '" selected>' + i + '</option>')
+        }
+        $('#select').append('<option value="' + i + '">' + i + '</option>')
+        $('#barn').append('<option value="' + i + '">' + i + '</option>')
+        $('#honnor').append('<option value="' + i + '">' + i + '</option>')
+      }
+
       // Opnar databasetilkopling til 'Plassering'-greina.
       var dbInitReference = firebase.database().ref('Saler/' + settings.salNummer + '/Plassering')
       console.log('Totalt tal seter i salen:' + settings.seterTotal)
       console.log('Antall reserverte: ' + settings.seterReservert)
+      console.log('Maks antall billetter: ' + settings.maksBillett)
 
       // Første gong når ein teknar opp salkartet.
       dbInitReference.once('value', function (snapshot) {
