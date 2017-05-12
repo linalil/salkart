@@ -302,8 +302,9 @@ function mainFunction ($) {
       for (let i = 0 ; i < settings.maksBillett+1; i++){
         if(i === 1){
           $('#select').append('<option value="' + i + '" selected>' + i + '</option>')
-        }
+        }else{
         $('#select').append('<option value="' + i + '">' + i + '</option>')
+      }
         $('#barn').append('<option value="' + i + '">' + i + '</option>')
         $('#honnor').append('<option value="' + i + '">' + i + '</option>')
       }
