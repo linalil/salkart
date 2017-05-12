@@ -253,10 +253,12 @@ function mainFunction ($) {
         $('#advarselstekst').html('Husk å velge antall seter!')
         document.getElementById('advarsel').style.display = 'unset'
         return false
-      } else if (parseInt(numSeats) === 1) {
+      } else if (parseInt(numSeats) === 1 && (settings.singleMode || !settings.singleMode)) {
         if ($(this).prop('checked') === true) {
+          console.log('Vel enkeltsete i numseats === 1')
           selectSeat(_id)
         } else {
+          console.log('Clearar sete i numseats === 1')
           clearMySeats()
           // deselectSeat(_id)
         }
@@ -506,10 +508,10 @@ function mainFunction ($) {
         console.log('Reserverte sete før clearMySeats ' + settings.seterReservert)
         if ((parseInt(numSeats) === 1 || settings.singleMode) && (settings.seterReservert <= settings.seterTotal)) {
           console.log('Er kome inn i løkka med numSeats1 og mindre enn 70%')
-          console.log('Slettar tidlegare enkeltsete...')
-          if (!settings.singleMode) {
+          if (!settings.singleMode || (parseInt(numSeats) === 1)) {
             clearMySeats()
           }
+
           if (checkNoGaps(id)) {
             _selected.push(id)
             var _seatObj = _seats.filter(function (seat) {
@@ -568,7 +570,7 @@ function mainFunction ($) {
           }
         } else if ((parseInt(numSeats) === 1 || settings.singleMode) && (settings.seterReservert > settings.seterTotal)) {
           console.log('Er kome inn i blokk med numSeats1 og res > total')
-          if (!settings.singleMode) {
+          if (!settings.singleMode || (parseInt(numSeats) === 1)) {
             clearMySeats()
           }
           _selected.push(id)
