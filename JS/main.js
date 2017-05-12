@@ -170,8 +170,7 @@ function mainFunction ($) {
     /* -------------------------------------------------------------------- */
 
     // Sjekkar kor mange sete brukar ønskjer å velje og oppdaterar pristabell.
-    let numSeats = $('#select').val()
-    updateTable(numSeats)
+    let numSeats
 
     // Metodar som køyrer når select for ulike billett-typar endrar seg.
     $('#barn').change(function () {
@@ -308,6 +307,8 @@ function mainFunction ($) {
         $('#barn').append('<option value="' + i + '">' + i + '</option>')
         $('#honnor').append('<option value="' + i + '">' + i + '</option>')
       }
+      numSeats = $('#select').val()
+      updateTable(numSeats)
 
       // Opnar databasetilkopling til 'Plassering'-greina.
       var dbInitReference = firebase.database().ref('Saler/' + settings.salNummer + '/Plassering')
