@@ -178,7 +178,7 @@ function mainFunction ($) {
       let barn = $(this).val()
       let voksen = $('#select').val()
       let honnor = $('#honnor').val()
-      if(parseInt(barn) + parseInt(voksen) + parseInt(honnor) <= settings.maksBillett) {
+      if (parseInt(barn) + parseInt(voksen) + parseInt(honnor) <= settings.maksBillett) {
         numSeats = parseInt(barn) + parseInt(voksen) + parseInt(honnor)
         updateTable(numSeats)
         console.log('Verdi til saman: ' + numSeats)
@@ -189,14 +189,13 @@ function mainFunction ($) {
         $('#advarselstekst').html('Maks antall seter er ' + settings.maksBillett + '!')
         document.getElementById('advarsel').style.display = 'unset'
       }
-
     })
     $('#select').change(function () {
       document.getElementById('advarsel').style.display = 'none'
       let voksen = $(this).val()
       let barn = $('#barn').val()
       let honnor = $('#honnor').val()
-      if(parseInt(barn) + parseInt(voksen) + parseInt(honnor) <= settings.maksBillett) {
+      if (parseInt(barn) + parseInt(voksen) + parseInt(honnor) <= settings.maksBillett) {
         numSeats = parseInt(barn) + parseInt(voksen) + parseInt(honnor)
         updateTable(numSeats)
         console.log('Verdi til saman: ' + numSeats)
@@ -213,7 +212,7 @@ function mainFunction ($) {
       let honnor = $(this).val()
       let barn = $('#barn').val()
       let voksen = $('#select').val()
-      if(parseInt(barn) + parseInt(voksen) + parseInt(honnor) <= settings.maksBillett) {
+      if (parseInt(barn) + parseInt(voksen) + parseInt(honnor) <= settings.maksBillett) {
         numSeats = parseInt(barn) + parseInt(voksen) + parseInt(honnor)
         updateTable(numSeats)
         console.log('Verdi til saman: ' + numSeats)
@@ -269,10 +268,7 @@ function mainFunction ($) {
           console.log('No skal ein velje i single-mode')
           selectSeat(_id)
           console.log('myseats i select: ' + mySeats.length)
-        } /*else if ($(this).prop('checked') === false && settings.singleMode && mySeats.length <= numSeats) {
-          deselectSeat(_id)
-          console.log('myseats i deselect: ' + mySeats.length)
-        } */else {
+        } else {
           clearMySeats()
           console.log('myseats: ' + mySeats.length)
         }
@@ -299,13 +295,13 @@ function mainFunction ($) {
 
 /* --------------------------------------------------------------------- */
     function initialize () {
-      //Legger inn antall billetter som kan bli valgt
-      for (let i = 0 ; i < settings.maksBillett+1; i++){
-        if(i === 1){
+      // Legger inn antall billetter som kan bli valgt
+      for (let i = 0; i < settings.maksBillett + 1; i++) {
+        if (i === 1) {
           $('#select').append('<option value="' + i + '" selected>' + i + '</option>')
-        }else{
-        $('#select').append('<option value="' + i + '">' + i + '</option>')
-      }
+        } else {
+          $('#select').append('<option value="' + i + '">' + i + '</option>')
+        }
         $('#barn').append('<option value="' + i + '">' + i + '</option>')
         $('#honnor').append('<option value="' + i + '">' + i + '</option>')
       }
@@ -797,9 +793,9 @@ function mainFunction ($) {
         midtRad = (parseInt(settings.rows / 2))
         tempRad = midtRad
       }
-      for(let i = 0; i <= iMaks - 1 && !finished; i++) {
+      for (let i = 0; i <= iMaks - 1 && !finished; i++) {
         console.log('i = ' + i + ' og i%2 = ' + (i % 2))
-        if(i % 2 === 0) {
+        if (i % 2 === 0) {
           tempRad -= i
           console.log('Sjekkar på rad' + (tempRad + 1))
           if (findBestSeatsRow(tempRad, numberOfSeats)) {
@@ -843,8 +839,8 @@ function mainFunction ($) {
         let endX = tempSeatStart + (numSeats - 1)
         console.log('Sjekkar seta:' + (tempSeatStart + 1) + '-' + (endX + 1))
         if (checkAvailable(parseInt(tempRad), parseInt(tempSeatStart), parseInt(endX))) {
-          if(settings.seterReservert <= settings.seterTotal) {
-            if(checkNoGaps(tempRad + '-' + tempSeatStart) && checkBound(parseInt(tempRad), parseInt(tempSeatStart), parseInt(endX))) {
+          if (settings.seterReservert <= settings.seterTotal) {
+            if (checkNoGaps(tempRad + '-' + tempSeatStart) && checkBound(parseInt(tempRad), parseInt(tempSeatStart), parseInt(endX))) {
               if (parseInt(numSeats) === 1) {
                 console.log('Det beste enkeltsetet er ' + (tempRad + 1) + '-' + (tempSeatStart + 1))
                 selectSeat(tempRad + '-' + tempSeatStart)
@@ -856,7 +852,7 @@ function mainFunction ($) {
               return true
             }
           } else {
-            if(checkBound(parseInt(tempRad), parseInt(tempSeatStart), parseInt(endX))) {
+            if (checkBound(parseInt(tempRad), parseInt(tempSeatStart), parseInt(endX))) {
               if (parseInt(numSeats) === 1) {
                 console.log('Det beste enkeltsetet er ' + (tempRad + 1) + '-' + (tempSeatStart + 1))
                 selectSeat(tempRad + '-' + tempSeatStart)
@@ -966,7 +962,7 @@ function mainFunction ($) {
       if (doubleRight <= (settings.columns - 1)) {
         console.log('Dobbelhøgre er innanfor salkartet')
         if (checkBooked(_i[0] + '-' + doubleRight) || checkReserved(_i[0] + '-' + doubleRight)) {
-           console.log('Setet dobbelhøgre er booka eller reservert')
+          console.log('Setet dobbelhøgre er booka eller reservert')
           if (!checkBooked(_i[0] + '-' + right) && !checkReserved(_i[0] + '-' + right)) {
             console.log('Får inneklemt sete')
             return false
