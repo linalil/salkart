@@ -83,13 +83,13 @@ $(document).ready(function () {
       let email = $('#e-mail').val()
       let tlf = $('#tlf').val()
 
-      var credential = firebase.auth.EmailAuthProvider.credential(email, tlf)
+      // var credential = firebase.auth.EmailAuthProvider.credential(email, tlf)
 
-      auth.currentUser.link(credential).then(function(user) {
+      /*auth.currentUser.link(credential).then(function(user) {
         console.log('Anonymous account successfully upgraded', user)
       }, function (error) {
         console.log('Error upgrading anonymous account', error)
-      })
+      })*/
 
       console.log('Tektstfelt sin verdi: ' + name + email + tlf)
       $.each(mySeats, function (i, v) {

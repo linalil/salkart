@@ -501,6 +501,7 @@ function mainFunction ($) {
     // Select a single seat
     function selectSeat (id) {
       if ($.inArray(id, _selected) === -1) {
+        document.getElementById('advarsel').style.display = 'none'
         console.log('Reserverte sete før clearMySeats ' + settings.seterReservert)
         if ((parseInt(numSeats) === 1 || settings.singleMode) && (settings.seterReservert <= settings.seterTotal)) {
           console.log('Er kome inn i løkka med numSeats1 og mindre enn 70%')
@@ -570,7 +571,7 @@ function mainFunction ($) {
             clearMySeats()
           }
           _selected.push(id)
-          var _seatObj = _seats.filter(function (seat) {
+          _seatObj = _seats.filter(function (seat) {
             return seat.id === id
           })
 
@@ -776,6 +777,7 @@ function mainFunction ($) {
 
       $('input[name=mode][value=multimode]').prop('checked', false)
       $('input[name=mode][value=singlemode]').prop('checked', true)
+      settings.singleMode = true
 
       return false
     }
