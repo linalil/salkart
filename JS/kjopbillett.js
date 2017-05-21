@@ -1,3 +1,4 @@
+import * as firebase from 'firebase'
 $(document).ready(function () {
   let reserved
   let sessionId
@@ -32,7 +33,6 @@ $(document).ready(function () {
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       // User is signed in.
-      var isAnonymous = user.isAnonymous
       sessionId = user.uid
 
       firebase.database().ref('/Saler/' + sal + '/Personer/' + sessionId).once('value', function (snapshot) {
@@ -105,16 +105,16 @@ $(document).ready(function () {
       })
 
       console.log('Skal no lagre seta på personen!')
-      let dbRefPerson = firebase.database().ref('/Saler/' + sal + '/Personer/' + sessionId).remove()
-      firebase.database().ref('/Saler/' + sal + '/Personer/' + name).set({
-        name: name,
-        email: email,
-        tlf: tlf,
-        seats: reserved,
-        sessionId: sessionId
+      firebase.database().ref('/Saler/' + sal + '/Personer/' + sessionId).remove()
+      firebase.database().ref('/Saler/' + sal + '/Personer/').push({
+          name: name,
+          email: email,
+          tlf: tlf,
+          seats: reserved,
+          sessionId: sessionId
       })
-      purchaseFinished = true
 
+      purchaseFinished = true
       window.location.href = 'index.html'
     } else {
       console.log('Feilmelding for kjøp!')

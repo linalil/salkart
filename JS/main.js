@@ -1,3 +1,4 @@
+import * as firebase from 'firebase'
 $(document).ready(function () {
   /* Opnar kopling til databasen og hentar inn tal rader og seter.
   Lagrar denne informasjonen i eit seteobjekt. */
