@@ -1,9 +1,8 @@
-import * as firebase from 'firebase'
 $(document).ready(function () {
   let reserved
   let sessionId
-  let sal = sessionStorage.sal
-  let arr = sessionStorage.arr
+  let sal = window.sessionStorage.sal
+  let arr = window.sessionStorage.arr
   let purchaseFinished = false
   let seat = function () {}
   seat.prototype = {

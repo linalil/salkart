@@ -1,15 +1,14 @@
-import * as firebase from 'firebase'
 $(document).ready(function () {
   /* Opnar kopling til databasen og hentar inn tal rader og seter.
   Lagrar denne informasjonen i eit seteobjekt. */
   let sal = null
   let arr = null
-  if (sessionStorage.sal === null || sessionStorage.arr === null) {
+  if (window.sessionStorage.sal === null || window.sessionStorage.arr === null) {
     window.location.href = 'index.html'
   } else {
-    sal = sessionStorage.sal
+    sal = window.sessionStorage.sal
     console.log(sal)
-    arr = sessionStorage.arr
+    arr = window.sessionStorage.arr
     console.log(sal)
   }
 
@@ -375,9 +374,9 @@ function mainFunction ($) {
 
         // Teiknar opp salkartet
         draw(_container)
-        if (sessionStorage.initSeats === 'false') {
+        if (window.sessionStorage.initSeats === 'false') {
           recursiveSeats()
-          sessionStorage.setItem('initSeats', true)
+          window.sessionStorage.setItem('initSeats', true)
         }
       })
     }
@@ -531,6 +530,8 @@ function mainFunction ($) {
             resSeterRef.child('SeterReservert').set(settings.seterReservert)
 
             // Oppdaterar brukar i databasen med dette eine setet
+            let timestamp = firebase.database.ServerValue.TIMESTAMP
+            console.log(timestamp)
             let dbRef = firebase.database().ref('/Saler/' + settings.salNummer + '/Personer/' + sessionId)
             dbRef.set({
               sessionId: sessionId,
@@ -1050,7 +1051,7 @@ function mainFunction ($) {
     })
 
     $('#til_betaling').click(function () {
-      if (sessionStorage.sal && mySeats != 'null') {
+      if (window.sessionStorage.sal && mySeats != 'null') {
         // sessionStorage.setItem('sal', settings.salNummer)
         console.log('MySeats' + mySeats)
         console.log('Går til betaling')

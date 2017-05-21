@@ -1,6 +1,4 @@
-
 $(document).ready(function () {
-
   var dbInitRef = firebase.database().ref('/Arrangement/').once('value').then(function (snapshot) {
     let arr = snapshot.val()
     let tabIndex = 0
@@ -20,12 +18,12 @@ $(document).ready(function () {
       let sal = arrangement.sal
       let arr = 'Arrangement' + tabIndex
       $('#' + sal).click(function () {
-        sessionStorage.clear()
-        sessionStorage.setItem('sal', sal)
-        sessionStorage.setItem('arr', arr)
-        sessionStorage.setItem('initSeats', false)
+        window.sessionStorage.clear()
+        window.sessionStorage.setItem('sal', sal)
+        window.sessionStorage.setItem('arr', arr)
+        window.sessionStorage.setItem('initSeats', false)
         window.location.href = 'billettvalg.html'
-        console.log(sessionStorage.sal)
+        console.log(window.sessionStorage.sal)
       })
     })
   })
