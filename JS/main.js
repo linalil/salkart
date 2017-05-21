@@ -12,6 +12,8 @@ $(document).ready(function () {
     console.log(sal)
   }
 
+  document.getElementById('advarsel').style.display = 'none'
+
   firebase.database().ref('/Saler/' + sal + '/Sal_Info').once('value', function (snapshot) {
     let talRader = snapshot.child('Rad').val()
     let talSeter = snapshot.child('Seter').val()
@@ -111,6 +113,7 @@ function mainFunction ($) {
     var _seats = []
     var _selected = []
     let sessionId
+    let timestamp = 0
 
     // Objects
     let block = function () {}
@@ -145,11 +148,16 @@ function mainFunction ($) {
         console.log('Brukaren har sesjonsid: ' + uid)
         sessionId = uid
 
-        let dbInit = firebase.database().ref('/Saler/' + settings.salNummer + '/Personer/' + sessionId)
-        dbInit.once('value', function (snapshot) {
+        firebase.database().ref('/Saler/' + settings.salNummer + '/Personer/' + sessionId).on('value', function (snapshot) {
+          console.log('Endra verdi på timestamp: ' + parseInt(snapshot.child('timestamp').val()))
+          timestamp = parseInt(snapshot.child('timestamp').val())
+        })
+
+        firebase.database().ref('/Saler/' + settings.salNummer + '/Personer/' + sessionId).once('value', function (snapshot) {
           if (snapshot.child('seats')) {
             let tempSeats = String(snapshot.child('seats').val())
             mySeats = tempSeats.split(',')
+            timestamp = parseInt(snapshot.child('timestamp').val())
           } else {
             mySeats = []
             console.log('Det fins ingen sete på brukaren')
@@ -415,11 +423,26 @@ function mainFunction ($) {
       draw(_container)
     })
 
-    let dbResRef = firebase.database().ref('/Saler/' + settings.salNummer + '/Sal_Info')
-    dbResRef.on('child_changed', function (snapshot) {
+    firebase.database().ref('/Saler/' + settings.salNummer + '/Sal_Info/SeterReservert').on('value', function (snapshot) {
       var changedPost = snapshot.val()
       console.log('Endring i db, no er ' + changedPost + ' reservert')
       settings.seterReservert = changedPost
+    })
+
+    firebase.database().ref('/Saler/' + settings.salNummer + '/Sal_Info/SisteOppdatering').on('value', function (snapshot) {
+      let newTimestamp = parseInt(snapshot.val())
+      console.log('Ny timestamp satt i db: ' + newTimestamp)
+      console.log('Noverande timestamp på brukar: ' + timestamp)
+      console.log('Skilnad mellom dei to er' + (newTimestamp - timestamp))
+
+      if ((newTimestamp - timestamp) > 60000) {
+        console.log('Session timeout - billettane skal slettast!')
+        $('#advarselstekst').html('Tiden løp ut! Vær vennlig å velge billetter på nytt!')
+        document.getElementById('advarsel').style.display = 'unset'
+        firebase.database().ref('/Saler/' + settings.salNummer + '/Personer/' + sessionId).remove()
+        clearMySeats()
+        draw(_container)
+      }
     })
 
     // Draw layout - metoden som teiknar opp salkart
@@ -528,14 +551,14 @@ function mainFunction ($) {
             console.log('Lokalt lagra reserverte sete: ' + settings.seterReservert)
             let resSeterRef = firebase.database().ref('/Saler/' + settings.salNummer + '/Sal_Info/')
             resSeterRef.child('SeterReservert').set(settings.seterReservert)
+            resSeterRef.child('SisteOppdatering').set(firebase.database.ServerValue.TIMESTAMP)
 
             // Oppdaterar brukar i databasen med dette eine setet
-            let timestamp = firebase.database.ServerValue.TIMESTAMP
-            console.log(timestamp)
             let dbRef = firebase.database().ref('/Saler/' + settings.salNummer + '/Personer/' + sessionId)
             dbRef.set({
               sessionId: sessionId,
-              seats: mySeats
+              seats: mySeats,
+              timestamp: firebase.database.ServerValue.TIMESTAMP
             })
           } else {
             if (!checkSeatGapsLeft(id)) {
@@ -590,12 +613,14 @@ function mainFunction ($) {
           console.log('Lokalt lagra reserverte sete: ' + settings.seterReservert)
           let resSeterRef = firebase.database().ref('/Saler/' + settings.salNummer + '/Sal_Info/')
           resSeterRef.child('SeterReservert').set(settings.seterReservert)
+          resSeterRef.child('SisteOppdatering').set(firebase.database.ServerValue.TIMESTAMP)
 
           // Oppdaterar brukar i databasen med dette eine setet
           let dbRef = firebase.database().ref('/Saler/' + settings.salNummer + '/Personer/' + sessionId)
           dbRef.set({
             sessionId: sessionId,
-            seats: mySeats
+            seats: mySeats,
+            timestamp: firebase.database.ServerValue.TIMESTAMP
           })
         } else {
           _selected.push(id)
@@ -665,6 +690,7 @@ function mainFunction ($) {
       console.log('Lokalt lagra reserverte sete etter deselect: ' + settings.seterReservert)
       let resSeterRef = firebase.database().ref('/Saler/' + settings.salNummer + '/Sal_Info/')
       resSeterRef.child('SeterReservert').set(settings.seterReservert)
+      resSeterRef.child('SisteOppdatering').set(firebase.database.ServerValue.TIMESTAMP)
     }
 
     // Select multiple seats
@@ -697,13 +723,15 @@ function mainFunction ($) {
         let dbRef = firebase.database().ref('/Saler/' + settings.salNummer + '/Personer/' + sessionId)
         dbRef.set({
           sessionId: sessionId,
-          seats: mySeats
+          seats: mySeats,
+          timestamp: firebase.database.ServerValue.TIMESTAMP
         })
 
         settings.seterReservert += numSeats
         console.log('Lokalt lagra reserverte sete: ' + settings.seterReservert)
         let resSeterRef = firebase.database().ref('/Saler/' + settings.salNummer + '/Sal_Info/')
         resSeterRef.child('SeterReservert').set(settings.seterReservert)
+        resSeterRef.child('SisteOppdatering').set(firebase.database.ServerValue.TIMESTAMP)
 
         return true
       } else {
