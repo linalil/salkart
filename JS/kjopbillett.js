@@ -112,7 +112,7 @@ $(document).ready(function () {
           seats: reserved,
           sessionId: sessionId
       })
-
+      window.sessionStorage.initSeats = 'false'
       purchaseFinished = true
       window.location.href = 'index.html'
     } else {
