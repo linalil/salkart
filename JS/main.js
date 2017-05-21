@@ -435,7 +435,7 @@ function mainFunction ($) {
       console.log('Noverande timestamp på brukar: ' + timestamp)
       console.log('Skilnad mellom dei to er' + (newTimestamp - timestamp))
 
-      if ((newTimestamp - timestamp) > 60000) {
+      if ((newTimestamp - timestamp) > 600000) {
         console.log('Session timeout - billettane skal slettast!')
         $('#advarselstekst').html('Tiden løp ut! Vær vennlig å velge billetter på nytt!')
         document.getElementById('advarsel').style.display = 'unset'
