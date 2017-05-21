@@ -566,7 +566,7 @@ function mainFunction ($) {
             return
           }
         } else if ((parseInt(numSeats) === 1 || settings.singleMode) && (settings.seterReservert > settings.seterTotal)) {
-          console.log('Er kome inn i blokk med numSeats1 og res > total')
+          console.log('Er kome inn i blokk med numSeats1 og meir enn 70% opptatt')
           if (!settings.singleMode || (parseInt(numSeats) === 1)) {
             clearMySeats()
           }
@@ -954,7 +954,14 @@ function mainFunction ($) {
     // Metode som sjekkar for gaps på høgre side.
     function checkSeatGapsRight (startId) {
       let _i = startId.split('-')
-      let endSeat = parseInt(_i[1]) + parseInt(numSeats - 1)
+      let endSeat
+      if (settings.singleMode) {
+        console.log('Vi er i singlemode!')
+        endSeat = parseInt(_i[1])
+      } else {
+        console.log('Vi er ikkje i singlemode')
+        endSeat = parseInt(_i[1]) + parseInt(numSeats - 1)
+      }
       console.log('Setet vi sjekkar i forhold til er ' + _i + ' og ' + endSeat)
       let doubleRight = parseInt(endSeat + 2)
       console.log('Setet to hakk til høgre er ' + doubleRight)
@@ -968,6 +975,8 @@ function mainFunction ($) {
           if (!checkBooked(_i[0] + '-' + right) && !checkReserved(_i[0] + '-' + right)) {
             console.log('Får inneklemt sete')
             return false
+          } else {
+
           }
         }
       }
