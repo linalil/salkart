@@ -429,7 +429,7 @@ function mainFunction ($) {
 
     firebase.database().ref('/Saler/' + settings.salNummer + '/Sal_Info/SisteOppdatering').on('value', function (snapshot) {
       let newTimestamp = parseInt(snapshot.val())
-      if ((newTimestamp - timestamp) > 60000 && timestamp !== 0) {
+      if ((newTimestamp - timestamp) > 600000 && timestamp !== 0) {
         $('#advarselstekst').html('Tiden løp ut! Vær vennlig å velge billetter på nytt!')
         document.getElementById('advarsel').style.display = 'unset'
         firebase.database().ref('/Saler/' + settings.salNummer + '/Personer/' + sessionId).remove()
