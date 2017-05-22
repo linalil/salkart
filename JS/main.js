@@ -134,7 +134,7 @@ function mainFunction ($) {
       notavailable: false,
       selected: false,
       utilgjengelig: false,
-      soyle: false
+      pillar: false
     }
 
     /* ----------------------------- SESSION ------------------------------- */
@@ -149,7 +149,6 @@ function mainFunction ($) {
         sessionId = uid
 
         firebase.database().ref('/Saler/' + settings.salNummer + '/Personer/' + sessionId).on('value', function (snapshot) {
-          console.log('Endra verdi på timestamp: ' + parseInt(snapshot.child('timestamp').val()))
           timestamp = parseInt(snapshot.child('timestamp').val())
         })
 
@@ -342,8 +341,8 @@ function mainFunction ($) {
               // Setet vil då bli farga mørkegrått.
               if (snapshot.child(_id).child('utilgjengelig').val() === true) {
                 _seatObject.utilgjengelig = true
-              } else if (snapshot.child(_id).child('soyle').val() === true) {
-                _seatObject.soyle = true
+              } else if (snapshot.child(_id).child('pillar').val() === true) {
+                _seatObject.pillar = true
               } else if (snapshot.child(_id).child('reservert').val() === true) {
                 _seatObject.available = false
                 _seatObject.notavailable = true
@@ -425,18 +424,12 @@ function mainFunction ($) {
 
     firebase.database().ref('/Saler/' + settings.salNummer + '/Sal_Info/SeterReservert').on('value', function (snapshot) {
       var changedPost = snapshot.val()
-      console.log('Endring i db, no er ' + changedPost + ' reservert')
       settings.seterReservert = changedPost
     })
 
     firebase.database().ref('/Saler/' + settings.salNummer + '/Sal_Info/SisteOppdatering').on('value', function (snapshot) {
       let newTimestamp = parseInt(snapshot.val())
-      console.log('Ny timestamp satt i db: ' + newTimestamp)
-      console.log('Noverande timestamp på brukar: ' + timestamp)
-      console.log('Skilnad mellom dei to er' + (newTimestamp - timestamp))
-
-      if ((newTimestamp - timestamp) > 600000 && timestamp !== 0) {
-        console.log('Session timeout - billettane skal slettast!')
+      if ((newTimestamp - timestamp) > 60000 && timestamp !== 0) {
         $('#advarselstekst').html('Tiden løp ut! Vær vennlig å velge billetter på nytt!')
         document.getElementById('advarsel').style.display = 'unset'
         firebase.database().ref('/Saler/' + settings.salNummer + '/Personer/' + sessionId).remove()
@@ -448,10 +441,10 @@ function mainFunction ($) {
     // Draw layout - metoden som teiknar opp salkart
     function draw (container) {
       container.empty()
-
       for (var i = 0; i < settings.rows; i++) {
         // Providing Row label
         var _row = $('<div class="row"></div>')
+
         var _colLabel = $('<span class="row-label">' + (i + 1) + '</span>')
         _row.append(_colLabel)
 
@@ -477,7 +470,7 @@ function mainFunction ($) {
             _checkbox.prop('disabled', 'disabled')
             _checkbox.attr('data-status', 'utilgjengelig')
             _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '"></label>')
-          } else if (_seatObject.soyle) {
+          } else if (_seatObject.pillar) {
             _checkbox.prop('disabled', 'disabled')
             _checkbox.attr('data-status', 'pillar')
             labNum++
@@ -517,7 +510,6 @@ function mainFunction ($) {
           _rowLabel.append('<span class="col-label">' + lab + '</span>')
         }
       }
-
       container.append(_rowLabel)
     }
 /* --------------------------------------------------------------------- */
@@ -922,14 +914,19 @@ function mainFunction ($) {
 
     // Sjekkar at alle sete i intervallet er tilgjengelege.
     function checkAvailable (row, startX, endX) {
+      console.log('Sjekkar sete: ' + startX + 'til' + endX)
       for (let i = startX; i <= endX; i++) {
         if ($('input:checkbox[id="seat' + row + '-' + i + '"]', scope).data('status') === 'notavailable' ||
         $('input:checkbox[id="seat' + row + '-' + i + '"]', scope).data('status') === 'booked' ||
         $('input:checkbox[id="seat' + row + '-' + i + '"]', scope).data('status') === 'selected' ||
-        $('input:checkbox[id="seat' + row + '-' + i + '"]', scope).data('status') === 'utilgjengelig') {
+        $('input:checkbox[id="seat' + row + '-' + i + '"]', scope).data('status') === 'utilgjengelig' ||
+        $('input:checkbox[id="seat' + row + '-' + i + '"]', scope).data('status') === 'pillar') {
           return false
+        } else {
+          console.log('Setet ' + i + ' er tilgjengelig')
         }
       }
+      console.log('Alle seter i intervallet er tilgjengelige!')
       return true
     }
 
@@ -1053,7 +1050,7 @@ function mainFunction ($) {
           return seat.id === _this.id
         })
 
-        if (!_seat[0].utilgjengelig && !_seat[0].soyle) {
+        if (!_seat[0].utilgjengelig && !_seat[0].pillar) {
           _seat[0].available = true
           _seat[0].booked = false
           _seat[0].selected = false
