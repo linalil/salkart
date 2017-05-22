@@ -265,8 +265,7 @@ function mainFunction ($) {
           selectSeat(_id)
         } else {
           console.log('Clearar sete i numseats === 1')
-          clearMySeats()
-          // deselectSeat(_id)
+          return false
         }
       } else {
         if ($(this).prop('checked') === true && !settings.singleMode) {
@@ -276,8 +275,11 @@ function mainFunction ($) {
           selectSeat(_id)
           console.log('myseats i select: ' + mySeats.length)
         } else {
-          clearMySeats()
-          console.log('myseats: ' + mySeats.length)
+          if (settings.singleMode) {
+            clearMySeats()
+          } else {
+            return false
+          }
         }
       }
     })
@@ -732,11 +734,13 @@ function mainFunction ($) {
         } else {
           $('input:checkbox[id="seat' + start + '"]', scope).prop('checked', 'unchecked')
           if (!noGaps) {
-            $('#advarselstekst').html('Ugyldig seteplassering! Du kan ikke la enkeltseter stå igjen mellom reserverte og dine egne!')
+            $('#advarselstekst').html('Du kan ikke la enkeltseter stå igjen mellom reserverte og dine egne!')
+            recursiveSeats()
           } else if (!inside) {
             $('#advarselstekst').html('Ugyldig seteplassering!')
           } else if (!available) {
             $('#advarselstekst').html('Ikke nok seter tilgjengelig på valgt plass!')
+            recursiveSeats()
           } else {
             $('#advarselstekst').html('Ugyldig seteplassering!')
           }
