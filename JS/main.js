@@ -71,7 +71,6 @@ $(document).ready(function () {
 
   firebase.database().ref('/Arrangement/' + arr).once('value', function (snapshot) {
     let arrangement = snapshot.val()
-    console.log('Er inne i arrangement')
     let arrInfo = '<div class="reservasjonsinfo" id="' + arrangement.sal +
     '"><div class="event"><div class="bilde"><img src="img/' +
     arrangement.bilde + '" alt="konsertbilde"/></div><div class="eventinfo"><div class="tittel">' +
@@ -143,9 +142,6 @@ function mainFunction ($) {
       // User is signed in.
         var isAnonymous = user.isAnonymous
         var uid = user.uid
-        console.log('Det eksisterer ein brukar')
-        console.log('Brukaren er anonym: ' + isAnonymous)
-        console.log('Brukaren har sesjonsid: ' + uid)
         sessionId = uid
 
         firebase.database().ref('/Saler/' + settings.salNummer + '/Personer/' + sessionId).on('value', function (snapshot) {
@@ -261,19 +257,15 @@ function mainFunction ($) {
         return false
       } else if (parseInt(numSeats) === 1 && (settings.singleMode || !settings.singleMode)) {
         if ($(this).prop('checked') === true) {
-          console.log('Vel enkeltsete i numseats === 1')
           selectSeat(_id)
         } else {
-          console.log('Clearar sete i numseats === 1')
           return false
         }
       } else {
         if ($(this).prop('checked') === true && !settings.singleMode) {
           selectMultiple(_id, numSeats)
         } else if ($(this).prop('checked') === true && settings.singleMode && mySeats.length < numSeats) {
-          console.log('No skal ein velje i single-mode')
           selectSeat(_id)
-          console.log('myseats i select: ' + mySeats.length)
         } else {
           if (settings.singleMode) {
             clearMySeats()
@@ -319,9 +311,6 @@ function mainFunction ($) {
 
       // Opnar databasetilkopling til 'Plassering'-greina.
       var dbInitReference = firebase.database().ref('Saler/' + settings.salNummer + '/Plassering')
-      console.log('Totalt tal seter i salen:' + settings.seterTotal)
-      console.log('Antall reserverte: ' + settings.seterReservert)
-      console.log('Maks antall billetter: ' + settings.maksBillett)
 
       // Første gong når ein teknar opp salkartet.
       dbInitReference.once('value', function (snapshot) {
@@ -360,12 +349,10 @@ function mainFunction ($) {
               }
             } else {
               if (snapshot.child(_id).child('booked').val() === true) {
-                console.log('Setet er i mine sete, men er booka')
                 _seatObject.booked = true
                 _seatObject.available = false
                 visualSeatNumber++
               } else {
-                console.log('Setet er i mine sete og er ikkje kjøpt endå')
                 _seatObject.selected = true
                 _seatObject.notavailable = true
                 visualSeatNumber++
@@ -517,11 +504,14 @@ function mainFunction ($) {
 /* --------------------------------------------------------------------- */
     // Select a single seat
     function selectSeat (id) {
+      /*firebase.database().ref('/Saler/' + settings.salNummer + '/Plassering/' + id).once('value', function (snapshot) {
+        let sessionId = snapshot.child('ReservasjonsId').val()
+        console.log(sessionId)
+
+      })*/
       if ($.inArray(id, _selected) === -1) {
         document.getElementById('advarsel').style.display = 'none'
-        console.log('Reserverte sete før clearMySeats ' + settings.seterReservert)
         if ((parseInt(numSeats) === 1 || settings.singleMode) && (settings.seterReservert <= settings.seterTotal)) {
-          console.log('Er kome inn i løkka med numSeats1 og mindre enn 70%')
           if (!settings.singleMode || (parseInt(numSeats) === 1)) {
             clearMySeats()
           }
@@ -542,7 +532,6 @@ function mainFunction ($) {
             makeGreenBox(_seatObj[0].label)
 
             settings.seterReservert ++
-            console.log('Lokalt lagra reserverte sete: ' + settings.seterReservert)
             let resSeterRef = firebase.database().ref('/Saler/' + settings.salNummer + '/Sal_Info/')
             resSeterRef.child('SeterReservert').set(settings.seterReservert)
             resSeterRef.child('SisteOppdatering').set(firebase.database.ServerValue.TIMESTAMP)
@@ -558,22 +547,18 @@ function mainFunction ($) {
             if (!checkSeatGapsLeft(id)) {
               let split = id.split('-')
               let newId = split[0] + '-' + (parseInt(split[1]) - 1)
-              console.log('Burde prøve å booke sete ' + newId)
               if (checkSeatGapsRight(newId)) {
                 selectSeat(newId)
               } else {
-                console.log('..men då ville vi berre fått ny gap')
                 $('input:checkbox[id="seat' + id + '"]', scope).prop('checked', 'unchecked')
                 document.getElementById('advarsel').style.display = 'unset'
               }
             } else if (!checkSeatGapsRight(id)) {
               let split = id.split('-')
               let newId = split[0] + '-' + (parseInt(split[1]) + 1)
-              console.log('Burde prøve å booke sete ' + newId)
               if (checkSeatGapsLeft(newId)) {
                 selectSeat(newId)
               } else {
-                console.log('..men då ville vi berre fått ny gap')
                 $('input:checkbox[id="seat' + id + '"]', scope).prop('checked', 'unchecked')
                 document.getElementById('advarsel').style.display = 'unset'
               }
@@ -585,7 +570,6 @@ function mainFunction ($) {
             return
           }
         } else if ((parseInt(numSeats) === 1 || settings.singleMode) && (settings.seterReservert > settings.seterTotal)) {
-          console.log('Er kome inn i blokk med numSeats1 og meir enn 70% opptatt')
           if (!settings.singleMode || (parseInt(numSeats) === 1)) {
             clearMySeats()
           }
@@ -604,7 +588,6 @@ function mainFunction ($) {
           makeGreenBox(_seatObj[0].label)
 
           settings.seterReservert ++
-          console.log('Lokalt lagra reserverte sete: ' + settings.seterReservert)
           let resSeterRef = firebase.database().ref('/Saler/' + settings.salNummer + '/Sal_Info/')
           resSeterRef.child('SeterReservert').set(settings.seterReservert)
           resSeterRef.child('SisteOppdatering').set(firebase.database.ServerValue.TIMESTAMP)
@@ -640,10 +623,13 @@ function mainFunction ($) {
             sete.reservert = true
             sete.booked = false
             sete.label = _seatObj[0].label
+            sete.sessionId = sessionId
           } else {
             console.log('Feilmelding for transaksjon')
           }
           return sete
+        }).catch(function (error) {
+          console.log('Dobbelbooking!.' + error)
         })
       }
     }
@@ -674,6 +660,7 @@ function mainFunction ($) {
           sete.reservert = false
           sete.booked = false
           sete.label = _seatObj[0].label
+          sete.sessionId = null
         } else {
           console.log('Feilmelding for transaksjon')
         }
@@ -681,7 +668,6 @@ function mainFunction ($) {
       })
 
       settings.seterReservert--
-      console.log('Lokalt lagra reserverte sete etter deselect: ' + settings.seterReservert)
       let resSeterRef = firebase.database().ref('/Saler/' + settings.salNummer + '/Sal_Info/')
       resSeterRef.child('SeterReservert').set(settings.seterReservert)
       resSeterRef.child('SisteOppdatering').set(firebase.database.ServerValue.TIMESTAMP)
@@ -790,9 +776,7 @@ function mainFunction ($) {
         if (!findBestSeats(iMaks, numberOfSeats)) {
           iMaks++
           numberOfSeats++
-          console.log('Aukar firkanten, iMaks=' + iMaks + ', numberOfSeats=' + numberOfSeats)
         } else {
-          console.log('Har funne beste sete')
           finished = true
           return true
         }
@@ -822,17 +806,14 @@ function mainFunction ($) {
         tempRad = midtRad
       }
       for (let i = 0; i <= iMaks - 1 && !finished; i++) {
-        console.log('i = ' + i + ' og i%2 = ' + (i % 2))
         if (i % 2 === 0) {
           tempRad -= i
-          console.log('Sjekkar på rad' + (tempRad + 1))
           if (findBestSeatsRow(tempRad, numberOfSeats)) {
             finished = true
             return true
           }
         } else if (i % 2 !== 0) {
           tempRad += i
-          console.log('Sjekkar på rad ' + (tempRad + 1))
           if (findBestSeatsRow(tempRad, numberOfSeats)) {
             finished = true
             return true
@@ -926,11 +907,8 @@ function mainFunction ($) {
         $('input:checkbox[id="seat' + row + '-' + i + '"]', scope).data('status') === 'utilgjengelig' ||
         $('input:checkbox[id="seat' + row + '-' + i + '"]', scope).data('status') === 'pillar') {
           return false
-        } else {
-          console.log('Setet ' + i + ' er tilgjengelig')
         }
       }
-      console.log('Alle seter i intervallet er tilgjengelige!')
       return true
     }
 
@@ -987,31 +965,22 @@ function mainFunction ($) {
       let _i = startId.split('-')
       let endSeat
       if (settings.singleMode) {
-        console.log('Vi er i singlemode!')
         endSeat = parseInt(_i[1])
       } else {
-        console.log('Vi er ikkje i singlemode')
         endSeat = parseInt(_i[1]) + parseInt(numSeats - 1)
       }
-      console.log('Setet vi sjekkar i forhold til er ' + _i + ' og ' + endSeat)
       let doubleRight = parseInt(endSeat + 2)
-      console.log('Setet to hakk til høgre er ' + doubleRight)
       let right = parseInt(endSeat + 1)
-      console.log('Setet til høgre er: ' + right)
 
       if (doubleRight <= (settings.columns - 1)) {
-        console.log('Dobbelhøgre er innanfor salkartet')
         if (checkBooked(_i[0] + '-' + doubleRight) || checkReserved(_i[0] + '-' + doubleRight)) {
-          console.log('Setet dobbelhøgre er booka eller reservert')
           if (!checkBooked(_i[0] + '-' + right) && !checkReserved(_i[0] + '-' + right)) {
-            console.log('Får inneklemt sete')
             return false
           } else {
 
           }
         }
       }
-      console.log('Ingenting er feil på høgre side. ')
       return true
     }
 
