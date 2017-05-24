@@ -17,9 +17,10 @@ $(document).ready(function () {
   firebase.database().ref('/Saler/' + sal + '/Sal_Info').once('value', function (snapshot) {
     let talRader = snapshot.child('Rad').val()
     let talSeter = snapshot.child('Seter').val()
-    let maksSeter = parseInt(snapshot.child('SeterTotal').val())
+    let maksSeter = parseInt(snapshot.child('SeterProsent').val())
     let resSeter = parseInt(snapshot.child('SeterReservert').val())
     let maksBilletter = parseInt(snapshot.child('MaksBilletter').val())
+    let seterISalen = parseInt(snapshot.child('SeterTotal').val())
 
     console.log('Rader: ' + talRader + ', Seter: ' + talSeter)
     console.log('Tal reserverte: ' + resSeter + ', av maks: ' + maksSeter)
@@ -29,8 +30,9 @@ $(document).ready(function () {
       columns: talSeter,
       multiple: false,
       salNummer: sal,
-      seterTotal: maksSeter,
+      seterProsent: maksSeter,
       seterReservert: resSeter,
+      seterISal: seterISalen,
       maksBillett: maksBilletter
     })
 
@@ -99,8 +101,9 @@ function mainFunction ($) {
       multiple: false,
       sessionId: 1,
       salNummer: 'Sal1',
-      seterTotal: 0,
+      seterProsent: 0,
       seterReservert: 0,
+      seterISal: 0,
       singleMode: false,
       maksBillett: 0
     }, options)
@@ -511,7 +514,7 @@ function mainFunction ($) {
       })*/
       if ($.inArray(id, _selected) === -1) {
         document.getElementById('advarsel').style.display = 'none'
-        if ((parseInt(numSeats) === 1 || settings.singleMode) && (settings.seterReservert <= settings.seterTotal)) {
+        if ((parseInt(numSeats) === 1 || settings.singleMode) && (settings.seterReservert <= settings.seterProsent)) {
           if (!settings.singleMode || (parseInt(numSeats) === 1)) {
             clearMySeats()
           }
@@ -569,7 +572,7 @@ function mainFunction ($) {
             draw(_container)
             return
           }
-        } else if ((parseInt(numSeats) === 1 || settings.singleMode) && (settings.seterReservert > settings.seterTotal)) {
+        } else if ((parseInt(numSeats) === 1 || settings.singleMode) && (settings.seterReservert > settings.seterProsent)) {
           if (!settings.singleMode || (parseInt(numSeats) === 1)) {
             clearMySeats()
           }
@@ -685,7 +688,7 @@ function mainFunction ($) {
       }
 
       let noGaps
-      if (settings.seterReservert <= settings.seterTotal) {
+      if (settings.seterReservert <= settings.seterProsent) {
         noGaps = checkNoGaps(start)
       } else {
         noGaps = true
@@ -781,15 +784,30 @@ function mainFunction ($) {
           return true
         }
       }
-      console.log('Det fins ikkje nok sete til at alle kan sitte i lag..')
-      $('#advarselstekst').html('Ikke nok seter samlet! Prøv å velge enkeltvis!')
-      document.getElementById('advarsel').style.display = 'unset'
 
-      $('input[name=mode][value=multimode]').prop('checked', false)
-      $('input[name=mode][value=singlemode]').prop('checked', true)
-      settings.singleMode = true
+      let ledigeSete = parseInt(settings.seterISal) - parseInt(settings.seterReservert)
+      console.log(console.log('Tal ledige sete:' + settings.seterProsent + '-' + settings.seterReservert + '=' + ledigeSete))
+      if (numSeats <= ledigeSete) {
+        console.log('Det fins ikkje nok sete til at alle kan sitte i lag..')
+        $('#advarselstekst').html('Ikke nok seter samlet! Prøv å velge enkeltvis!')
+        document.getElementById('advarsel').style.display = 'unset'
 
-      return false
+        $('input[name=mode][value=multimode]').prop('checked', false)
+        $('input[name=mode][value=singlemode]').prop('checked', true)
+        settings.singleMode = true
+
+        return false
+      } else {
+        console.log('Det fins ikkje nok sete igjen generelt!')
+        $('#advarselstekst').html('Ikke nok seter igjen! Velg et mindre antall!')
+        document.getElementById('advarsel').style.display = 'unset'
+        $('#select').val(0)
+        $('#barn').val(0)
+        $('#honnor').val(0)
+
+        return false
+      }
+
     }
 
     // Metode som skal finne beste sete i salen.
@@ -848,7 +866,7 @@ function mainFunction ($) {
         let endX = tempSeatStart + (numSeats - 1)
         console.log('Sjekkar seta:' + (tempSeatStart + 1) + '-' + (endX + 1))
         if (checkAvailable(parseInt(tempRad), parseInt(tempSeatStart), parseInt(endX))) {
-          if (settings.seterReservert <= settings.seterTotal) {
+          if (settings.seterReservert <= settings.seterProsent) {
             if (checkNoGaps(tempRad + '-' + tempSeatStart) && checkBound(parseInt(tempRad), parseInt(tempSeatStart), parseInt(endX))) {
               if (parseInt(numSeats) === 1) {
                 console.log('Det beste enkeltsetet er ' + (tempRad + 1) + '-' + (tempSeatStart + 1))
