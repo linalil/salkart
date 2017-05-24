@@ -7,9 +7,7 @@ $(document).ready(function () {
     window.location.href = 'index.html'
   } else {
     sal = window.sessionStorage.sal
-    console.log(sal)
     arr = window.sessionStorage.arr
-    console.log(sal)
   }
 
   document.getElementById('advarsel').style.display = 'none'
@@ -864,7 +862,6 @@ function mainFunction ($) {
           tempSeatStart += i
         }
         let endX = tempSeatStart + (numSeats - 1)
-        console.log('Sjekkar seta:' + (tempSeatStart + 1) + '-' + (endX + 1))
         if (checkAvailable(parseInt(tempRad), parseInt(tempSeatStart), parseInt(endX))) {
           if (settings.seterReservert <= settings.seterProsent) {
             if (checkNoGaps(tempRad + '-' + tempSeatStart) && checkBound(parseInt(tempRad), parseInt(tempSeatStart), parseInt(endX))) {
@@ -917,7 +914,6 @@ function mainFunction ($) {
 
     // Sjekkar at alle sete i intervallet er tilgjengelege.
     function checkAvailable (row, startX, endX) {
-      console.log('Sjekkar sete: ' + startX + 'til' + endX)
       for (let i = startX; i <= endX; i++) {
         if ($('input:checkbox[id="seat' + row + '-' + i + '"]', scope).data('status') === 'notavailable' ||
         $('input:checkbox[id="seat' + row + '-' + i + '"]', scope).data('status') === 'booked' ||
