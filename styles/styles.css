@@ -31,18 +31,6 @@ body {
   font-family: 'Raleway', sans-serif;
 }
 
-.field {
-    width: 15px;
-    height: 15px;
-    line-height: 15px;
-    -moz-border-radius: 50px;
-  	-webkit-border-radius: 50px;
-	  border-radius: 50px;
-    position: absolute;
-    background: #f00;
-		text-align: center;
-}
-
 .nav{
 	background-color: #4990E2;
 	height: 100px;

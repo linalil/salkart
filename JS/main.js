@@ -521,8 +521,8 @@ function mainFunction ($) {
         for (let j = 0; j < settings.rows; j++) {
           // Providing Row label
           let _row = $('<div class="row" id="row' + (j + 1) + '"></div>')
-          let _colLabel = $('<span class="row-label">' + (j + 1) + '</span>')
-          _row.append(_colLabel)
+          /*let _colLabel = $('<span class="row-label">' + (j + 1) + '</span>')
+          _row.append(_colLabel)*/
           let labNum = 0
 
           for (let k = 0; k < settings.columns; k++) {
@@ -584,7 +584,7 @@ function mainFunction ($) {
       let step = (1.05 * Math.PI) / fields.length
 
       fields.each(function () {
-        let x = 500 + Math.round(width / 2 + radiusA * Math.cos(angle) - $(container).width() / 2)
+        let x = 1200 + Math.round(width / 2 + radiusA * Math.cos(angle) - $(container).width() / 2)
         let y = 400 + Math.round(height / 2 - radiusB * Math.sin(angle) + $(container).height() / 2)
         if (window.console) {
           console.log($(this).text(), x, y)
