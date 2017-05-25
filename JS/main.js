@@ -19,6 +19,7 @@ $(document).ready(function () {
     let resSeter = parseInt(snapshot.child('SeterReservert').val())
     let maksBilletter = parseInt(snapshot.child('MaksBilletter').val())
     let seterISalen = parseInt(snapshot.child('SeterTotal').val())
+    let type = snapshot.child('Type').val()
 
     console.log('Rader: ' + talRader + ', Seter: ' + talSeter)
     console.log('Tal reserverte: ' + resSeter + ', av maks: ' + maksSeter)
@@ -31,7 +32,8 @@ $(document).ready(function () {
       seterProsent: maksSeter,
       seterReservert: resSeter,
       seterISal: seterISalen,
-      maksBillett: maksBilletter
+      maksBillett: maksBilletter,
+      saltype: type
     })
 
     getBlocks()
@@ -103,7 +105,8 @@ function mainFunction ($) {
       seterReservert: 0,
       seterISal: 0,
       singleMode: false,
-      maksBillett: 0
+      maksBillett: 0,
+      saltype: 'Standard'
     }, options)
 
     // Local Variables
@@ -431,85 +434,171 @@ function mainFunction ($) {
     // Draw layout - metoden som teiknar opp salkart
     function draw (container) {
       container.empty()
-      for (var i = 0; i < settings.rows; i++) {
+
+      if (settings.saltype === 'Standard') {
+        for (var i = 0; i < settings.rows; i++) {
+          // Providing Row label
+          var _row = $('<div class="row"></div>')
+
+          var _colLabel = $('<span class="row-label">' + (i + 1) + '</span>')
+          _row.append(_colLabel)
+
+          let labNum = 0
+          for (var j = 0; j < settings.columns; j++) {
+            var _id = i + '-' + j
+
+            // Finding the seat from the array
+            var _seatObject = _seats.filter(function (seat) {
+              return seat.id === _id
+            })[0]
+
+            var _seatClass = 'seat'
+
+            if (_seatObject.block != null) {
+              let _seatBlockColor = _blocks.filter(function (block) {
+                return block.label === _seatObject.block
+              })[0].color
+            }
+            var _checkbox = $('<input id="seat' + _seatObject.id + '" data-block="' + _seatObject.block + '" type="checkbox" />')
+            var _seat
+            if (_seatObject.utilgjengelig) {
+              _checkbox.prop('disabled', 'disabled')
+              _checkbox.attr('data-status', 'utilgjengelig')
+              _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '"></label>')
+            } else if (_seatObject.pillar) {
+              _checkbox.prop('disabled', 'disabled')
+              _checkbox.attr('data-status', 'pillar')
+              labNum++
+              _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '"></label>')
+            } else {
+              if (_seatObject.booked) {
+                _checkbox.prop('disabled', 'disabled')
+                _checkbox.attr('data-status', 'booked')
+              } else if (_seatObject.selected) {
+                _checkbox.prop('checked', 'checked')
+              } else if (_seatObject.notavailable) {
+                _checkbox.prop('disabled', 'disabled')
+                _checkbox.attr('data-status', 'notavailable')
+              } else {
+                _checkbox.attr('data-status', 'available')
+              }
+              labNum++
+              _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '" title="' + (i + 1) + '-' + labNum + '"></label>')
+            }
+
+            _row.append(_checkbox)
+            _row.append(_seat)
+          }
+          container.append(_row)
+        }
+        // Providing Column labels
+        var _rowLabel = $('<div class="row"><span class="row-label"></span></div>')
+        let lab = 0
+        for (var c = 0; c < settings.columns; c++) {
+          var _s = _seats.filter(function (seat) {
+            return seat.id === ('1-' + c)
+          })[0]
+          if (_s.utilgjengelig) {
+            _rowLabel.append('<span class="col-label"></span>')
+          } else {
+            lab++
+            _rowLabel.append('<span class="col-label">' + lab + '</span>')
+          }
+        }
+        container.append(_rowLabel)
+      } else if (settings.saltype === 'Kurve') {
+        console.log('Teiknar opp ein bua sal!')
+
         // Providing Row label
         var _row = $('<div class="row"></div>')
-
         var _colLabel = $('<span class="row-label">' + (i + 1) + '</span>')
         _row.append(_colLabel)
-
         let labNum = 0
-        for (var j = 0; j < settings.columns; j++) {
-          var _id = i + '-' + j
 
-          // Finding the seat from the array
-          var _seatObject = _seats.filter(function (seat) {
-            return seat.id === _id
-          })[0]
+        let radiusA = 160
+        let radiusB = 100
 
-          var _seatClass = 'seat'
+        for (let j = 0; j < settings.rows; j++) {
+          // Providing Row label
+          let _row = $('<div class="row" id="row' + (j + 1) + '"></div>')
+          let _colLabel = $('<span class="row-label">' + (j + 1) + '</span>')
+          _row.append(_colLabel)
+          let labNum = 0
 
-          if (_seatObject.block != null) {
-            let _seatBlockColor = _blocks.filter(function (block) {
-              return block.label === _seatObject.block
-            })[0].color
-          }
-          var _checkbox = $('<input id="seat' + _seatObject.id + '" data-block="' + _seatObject.block + '" type="checkbox" />')
-          var _seat
-          if (_seatObject.utilgjengelig) {
-            _checkbox.prop('disabled', 'disabled')
-            _checkbox.attr('data-status', 'utilgjengelig')
-            _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '"></label>')
-          } else if (_seatObject.pillar) {
-            _checkbox.prop('disabled', 'disabled')
-            _checkbox.attr('data-status', 'pillar')
-            labNum++
-            _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '"></label>')
-          } else {
-            if (_seatObject.booked) {
+          for (let k = 0; k < settings.columns; k++) {
+            let _id = j + '-' + k
+            // Finding the seat from the array
+            var _seatObject = _seats.filter(function (seat) {
+              return seat.id === _id
+            })[0]
+
+            var _div = $('<div style="color:blue; position:fixed;"><div/>')
+            var _checkbox = $('<input id="seat' + _seatObject.id + '" type="checkbox" />')
+            var _seat
+            if (_seatObject.utilgjengelig) {
               _checkbox.prop('disabled', 'disabled')
-              _checkbox.attr('data-status', 'booked')
-            } else if (_seatObject.selected) {
-              _checkbox.prop('checked', 'checked')
-            } else if (_seatObject.notavailable) {
+              _checkbox.attr('data-status', 'utilgjengelig')
+              _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '"></label>')
+            } else if (_seatObject.pillar) {
               _checkbox.prop('disabled', 'disabled')
-              _checkbox.attr('data-status', 'notavailable')
+              _checkbox.attr('data-status', 'pillar')
+              labNum++
+              _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '"></label>')
             } else {
-              _checkbox.attr('data-status', 'available')
+              if (_seatObject.booked) {
+                _checkbox.prop('disabled', 'disabled')
+                _checkbox.attr('data-status', 'booked')
+              } else if (_seatObject.selected) {
+                _checkbox.prop('checked', 'checked')
+              } else if (_seatObject.notavailable) {
+                _checkbox.prop('disabled', 'disabled')
+                _checkbox.attr('data-status', 'notavailable')
+              } else {
+                _checkbox.attr('data-status', 'available')
+              }
+              labNum++
+              _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '" title="' + (i + 1) + '-' + labNum + '"></label>')
             }
-            labNum++
-            _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '" title="' + (i + 1) + '-' + labNum + '"></label>')
+            _div.append(_checkbox)
+            _div.append(_seat)
+            _row.append(_div)
           }
+          //Teiknar opp kurve
+          container.append(_row)
+          let row = '#row' + (j + 1)
+          distributeFields(0, radiusA, radiusB, row)
+          radiusA = radiusA + 18
+          radiusB = radiusB + 18
 
-          _row.append(_checkbox)
-          _row.append(_seat)
-        }
-        container.append(_row)
-      }
-      // Providing Column labels
-      var _rowLabel = $('<div class="row"><span class="row-label"></span></div>')
-      let lab = 0
-      for (var c = 0; c < settings.columns; c++) {
-        var _s = _seats.filter(function (seat) {
-          return seat.id === ('1-' + c)
-        })[0]
-        if (_s.utilgjengelig) {
-          _rowLabel.append('<span class="col-label"></span>')
-        } else {
-          lab++
-          _rowLabel.append('<span class="col-label">' + lab + '</span>')
         }
       }
-      container.append(_rowLabel)
+    }
+
+    function distributeFields (deg, radiusA, radiusB, row) {
+      deg = deg || 0
+      let fields = $(row).children()
+      let container = $('#setekart')
+      let width = container.width()
+      let height = container.height()
+      let angle = deg || Math.PI * 1
+      let step = (1.05 * Math.PI) / fields.length
+
+      fields.each(function () {
+        let x = 500 + Math.round(width / 2 + radiusA * Math.cos(angle) - $(container).width() / 2)
+        let y = 400 + Math.round(height / 2 - radiusB * Math.sin(angle) + $(container).height() / 2)
+        if (window.console) {
+          console.log($(this).text(), x, y)
+        }
+        $(this).css({
+          left: x + 'px',
+          top: y + 'px'
+        })
+        angle += step
+      })
     }
 /* --------------------------------------------------------------------- */
     // Select a single seat
     function selectSeat (id) {
-      /*firebase.database().ref('/Saler/' + settings.salNummer + '/Plassering/' + id).once('value', function (snapshot) {
-        let sessionId = snapshot.child('ReservasjonsId').val()
-        console.log(sessionId)
-
-      })*/
       if ($.inArray(id, _selected) === -1) {
         document.getElementById('advarsel').style.display = 'none'
         if ((parseInt(numSeats) === 1 || settings.singleMode) && (settings.seterReservert <= settings.seterProsent)) {
@@ -631,6 +720,8 @@ function mainFunction ($) {
           return sete
         }).catch(function (error) {
           console.log('Dobbelbooking!.' + error)
+          console.log('Ditt forsøk på å bytte status på sete ' + _seatObj[0].id + ' feila.')
+          console.log('Det står allereie ein sesjonsid på setet!!')
         })
       }
     }
