@@ -580,12 +580,13 @@ function mainFunction ($) {
       let container = $('#kurve')
       let width = container.width()
       let height = container.height()
+      console.log('Høgde, breidde: ' + width + height)
       let angle = deg || Math.PI * 1
       let step = (1.05 * Math.PI) / fields.length
 
       fields.each(function () {
-        let x = Math.round(width / 2 + radiusA * Math.cos(angle) )
-        let y = Math.round(height / 2 - radiusB * Math.sin(angle) )
+        let x = Math.round(width / 2 + radiusA * Math.cos(angle) - $('#kurve').width() / 2)
+        let y = Math.round(height / 2 - radiusB * Math.sin(angle) + $('#kurve').height() / 2)
         if (window.console) {
           console.log($(this).text(), x, y)
         }
