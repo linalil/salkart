@@ -320,10 +320,16 @@ function mainFunction ($) {
       dbInitReference.once('value', function (snapshot) {
         console.log('Initialisering av salkart... ')
 
+        let maks = settings.columns
+
         // Går gjennom seter og rader som satt i settings.
         for (var i = 0; i < settings.rows; i++) {
           let visualSeatNumber = 0
-          for (var j = 0; j < settings.columns; j++) {
+
+          if(settings.saltype === 'Kurve' && i % 2 != 0){
+            maks++
+          }
+          for (var j = 0; j < maks; j++) {
             // Defining ID
             let _id = i + '-' + j
 
@@ -517,6 +523,7 @@ function mainFunction ($) {
         let radiusA = 160
         let radiusB = 100
 
+        let maks = settings.columns
         for (let j = 0; j < settings.rows; j++) {
           // Providing Row label
           let _row = $('<div class="row" id="row' + (j + 1) + '"></div>')
@@ -524,7 +531,10 @@ function mainFunction ($) {
           _row.append(_colLabel)*/
           let labNum = 0
 
-          for (let k = 0; k < settings.columns; k++) {
+          if(j % 2 != 0) {
+            maks++
+          }
+          for (let k = 0; k < maks; k++) {
             let _id = j + '-' + k
             // Finding the seat from the array
             var _seatObject = _seats.filter(function (seat) {
