@@ -74,6 +74,7 @@ body {
 	justify-content: space-between;
 	-webkit-flex-wrap: wrap;
   flex-wrap: wrap;
+	padding: 5px;
 }
 .event{
 	display: flex;
@@ -110,6 +111,14 @@ body {
 .hover:focus{
 	background-color: #F2F2F2;
 }
+.hover:hover{
+	-webkit-transform: scale(1.03, 1.03);
+  box-shadow: 0 0 15px -10px gray;
+  transition: all 0.15s linear;
+	box-shadow: 0 0 10px -2px;
+	cursor: pointer;
+}
+
 /*-------------------------------------*/
 .overskrift{
 	font-family: 'Raleway', sans-serif;
@@ -138,8 +147,8 @@ body {
 .sidepanel{
 	margin: 0px;
 	order: 1;
-	min-width: 300px;
 	flex-grow: 1;
+	min-width: 300px;
 }
 .beskrivelse{
 	font-family: 'Raleway', sans-serif;
@@ -157,9 +166,7 @@ body {
 	font-weight: bold;
 	order: 1;
 }
-.type_sete .beholder:hover{
-	margin-left: 1px;
-}
+
 .type_sete .beholder{
 	display: flex;
 	justify-content:space-between;
@@ -184,7 +191,24 @@ body {
 	font-family: 'Raleway', sans-serif;
 	margin-left: 20px;
 	order: 2;
+	position: relative;
+	height: 100%;
+  overflow: hidden;
+  overflow-x: scroll;
+
 	/*border: 1px solid black;*/
+}
+.sete{
+	margin: 30px;
+	white-space:nowrap;
+  height: 100%;
+}
+#kurve{
+	position: absolute;
+	width: 500px;
+	height: 300px;
+	margin: 70px 0px 0px 500px;
+	border: 1px solid black;
 }
 .skjerm{
 	font-family: 'Raleway', sans-serif;
@@ -193,7 +217,8 @@ body {
 	border-radius: 15px;
 	text-align: center;
 	padding: 2px;
-	margin: 0px 0px 10px 30px;
+	margin: 0px 0px 10px 20px;
+	width: 100%;
 }
 .seat{
 	background-color: #F2F2F2;
@@ -230,10 +255,16 @@ body {
 	order: 1;
 	margin: 5px
 }
-.mine{
-	background: #7ED321;
+.mine:before{
+	content: "\f007";
+	color: #7ED321;
 	order: 1;
-	margin: 5px
+}
+.hinder:before{
+	content: "\f10c";
+	color: #7ED321;
+	order: 1;
+	margin: 5px;
 }
 .tilleggsinfo{
 	display: flex;
@@ -374,6 +405,7 @@ width: 100%;
 .neste_knapp:hover{
 	background-color: #7ED321;
 	color: white;
+	transition: all 0.2s linear;
 }
 /*-------------------------------------*/
 ol, ul {
@@ -559,9 +591,7 @@ input[type=checkbox]:disabled[data-status=pillar] + label:before{
 	}
 	.setekart{
 		order: 2;
-		min-width: 250px;
-		margin-left: 2px;
-		flex-basis: 0em;
+		width: 100%;
 	}
 
 	.sidepanel{
@@ -573,7 +603,6 @@ input[type=checkbox]:disabled[data-status=pillar] + label:before{
 	}
 	.seteinfo .under_setekart{
 		order: 2;
-		width: 260px;
 		margin: 0px 0px;
 	}
 	.dine_valgte_billetter{

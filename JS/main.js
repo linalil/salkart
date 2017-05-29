@@ -584,8 +584,8 @@ function mainFunction ($) {
       let step = (1.05 * Math.PI) / fields.length
 
       fields.each(function () {
-        let x = Math.round(width / 2 + radiusA * Math.cos(angle) - $(this).width() / 2)
-        let y = Math.round(height / 2 - radiusB * Math.sin(angle) + $(this).height() / 2)
+        let x = Math.round(width / 2 + radiusA * Math.cos(angle) )
+        let y = Math.round(height / 2 - radiusB * Math.sin(angle) )
         if (window.console) {
           console.log($(this).text(), x, y)
         }
