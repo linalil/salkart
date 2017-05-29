@@ -434,7 +434,6 @@ function mainFunction ($) {
     // Draw layout - metoden som teiknar opp salkart
     function draw (container) {
       container.empty()
-
       if (settings.saltype === 'Standard') {
         for (var i = 0; i < settings.rows; i++) {
           // Providing Row label
@@ -532,7 +531,7 @@ function mainFunction ($) {
               return seat.id === _id
             })[0]
 
-            var _div = $('<div style="position:absolute;"><div/>')
+            var _div = $('<div style="position:fixed;"><div/>')
             var _checkbox = $('<input id="seat' + _seatObject.id + '" type="checkbox" />')
             var _seat
             if (_seatObject.utilgjengelig) {
@@ -577,16 +576,20 @@ function mainFunction ($) {
     function distributeFields (deg, radiusA, radiusB, row) {
       deg = deg || 0
       let fields = $(row).children()
-      let container = $('#kurve')
+      let container = $('#seats')
       let width = container.width()
       let height = container.height()
-      console.log('Høgde, breidde: ' + width + height)
+      console.log('Breidde på container: ' + width + ' høgd på container: ' + height)
+      var w = window.innerWidth
+      var h = window.innerHeight
+      let w_2 = w * 0.75
+      console.log('Vindu: breidde ' + w + ', høgde' + h)
       let angle = deg || Math.PI * 1
       let step = (1.05 * Math.PI) / fields.length
 
       fields.each(function () {
-        let x = Math.round(width / 2 + radiusA * Math.cos(angle) - $('#kurve').width() / 2)
-        let y = Math.round(height / 2 - radiusB * Math.sin(angle) + $('#kurve').height() / 2)
+        let x = Math.round(w_2 + radiusA * Math.cos(angle))
+        let y = Math.round(h/2 - radiusB * Math.sin(angle))
         if (window.console) {
           console.log($(this).text(), x, y)
         }
