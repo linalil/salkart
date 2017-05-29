@@ -532,7 +532,7 @@ function mainFunction ($) {
               return seat.id === _id
             })[0]
 
-            var _div = $('<div style="color:blue; position:fixed;"><div/>')
+            var _div = $('<div style="position:absolute;"><div/>')
             var _checkbox = $('<input id="seat' + _seatObject.id + '" type="checkbox" />')
             var _seat
             if (_seatObject.utilgjengelig) {
@@ -577,15 +577,15 @@ function mainFunction ($) {
     function distributeFields (deg, radiusA, radiusB, row) {
       deg = deg || 0
       let fields = $(row).children()
-      let container = $('#setekart')
+      let container = $('#kurve')
       let width = container.width()
       let height = container.height()
       let angle = deg || Math.PI * 1
       let step = (1.05 * Math.PI) / fields.length
 
       fields.each(function () {
-        let x = 1200 + Math.round(width / 2 + radiusA * Math.cos(angle) - $(container).width() / 2)
-        let y = 400 + Math.round(height / 2 - radiusB * Math.sin(angle) + $(container).height() / 2)
+        let x = Math.round(width / 2 + radiusA * Math.cos(angle) - $(this).width() / 2)
+        let y = Math.round(height / 2 - radiusB * Math.sin(angle) + $(this).height() / 2)
         if (window.console) {
           console.log($(this).text(), x, y)
         }
