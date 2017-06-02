@@ -1,656 +1,901 @@
-
 /* Reset */
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed,
-figure, figcaption, footer, header, hgroup,
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	font: inherit;
-	vertical-align: baseline;
+
+a,
+abbr,
+acronym,
+address,
+applet,
+article,
+aside,
+audio,
+b,
+big,
+blockquote,
+body,
+canvas,
+caption,
+center,
+cite,
+code,
+dd,
+del,
+details,
+dfn,
+div,
+dl,
+dt,
+em,
+embed,
+fieldset,
+figcaption,
+figure,
+footer,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+header,
+hgroup,
+html,
+i,
+iframe,
+img,
+ins,
+kbd,
+label,
+legend,
+li,
+mark,
+menu,
+nav,
+object,
+ol,
+output,
+p,
+pre,
+q,
+ruby,
+s,
+samp,
+section,
+small,
+span,
+strike,
+strong,
+sub,
+summary,
+sup,
+table,
+tbody,
+td,
+tfoot,
+th,
+thead,
+time,
+tr,
+tt,
+u,
+ul,
+var,
+video {
+  margin         : 0;
+  padding        : 0;
+  border         : 0;
+  vertical-align : baseline;
+  font           : inherit;
+  font-size      : 100%;
 }
+
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure,
-footer, header, hgroup, menu, nav, section {
-	display: block;
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display : block;
 }
+
 body {
-  margin: 0px;
-	line-height: 1;
-  font-family: 'Raleway', sans-serif;
+  margin      : 0px;
+  font-family : 'Raleway',
+                sans-serif;
+  line-height : 1;
+}
+/* -----------------STANDARD BRUKT FLERE STEDER-------------------- */
+
+.overskrift {
+  width       : 60%;
+  margin      : 15px auto;
+  color       : #4A4A4A;
+  font-family : 'Raleway',
+                sans-serif;
+  font-size   : 1.5em;
+  font-weight : bold;
 }
 
-.nav{
-	background-color: #4990E2;
-	height: 100px;
-	width: 100%;
-	margin: 0px;
-	padding: 0px;
-	display: flex;
-	flex-direction: row;
-	font-family: 'Raleway', sans-serif;
-	font-weight: bold;
-	font-size: 1.5em;
-}
-.logo{
-	width: 80px;
-	height: 80px;
-	margin: 10px 30px;
-	order: 1;
-}
-.navigering{
-	order:2;
-	list-style-type: none;
-  margin: 45px 10px 10px;
-  padding: 10px;
-}
-.navigering li{
-	display: inline;
-	margin: 2px;
-	padding: 5px 10px;
-}
-.navigering li:hover{
-	background-color: white;
-	border-radius: 15px;
-}
-/*-------------------------------------*/
-.reservasjonsinfo{
-	margin: auto;
-	margin-bottom: 50px;
-	width: 60%;
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	-webkit-flex-wrap: wrap;
-  flex-wrap: wrap;
-	padding: 5px;
-}
-.event{
-	display: flex;
-}
-.tittel, .tid{
-	font-family: 'Raleway', sans-serif;
-	font-size: 1.8em;
-	font-weight: bold;
-}
-.sjanger, .lengde, .sal{
-	font-family: 'Raleway', sans-serif;
-	font-size: 1.2em;
-}
-.dato{
-	font-family: 'Raleway', sans-serif;
-	font-size: 1.2em;
-	font-weight: bold;
-}
-.bilde img{
-	order: 1;
-	height: 90px;
-	box-shadow: 2px 2px 10px #888888;
-}
-.eventinfo{
-	order: 2;
-	text-align: left;
-	margin: 0px 20px;
-}
-.tidspunkt{
-	order: 3;
-	text-align: center;
-	justify-content: flex-end;
-}
-.hover:focus{
-	background-color: #F2F2F2;
-}
-.hover:hover{
-	-webkit-transform: scale(1.03, 1.03);
-  box-shadow: 0 0 15px -10px gray;
-  transition: all 0.15s linear;
-	box-shadow: 0 0 10px -2px;
-	cursor: pointer;
+.beholder {
+  display : flex;
 }
 
-/*-------------------------------------*/
-.overskrift{
-	font-family: 'Raleway', sans-serif;
-	font-size: 1.5em;
-	font-weight: bold;
-	margin: 15px auto;
-	width: 60%;
-	color: #4A4A4A;
-}
-/*-------------------------------------*/
-.billettbakgrunn{
-	background-color: #F2F2F2;
-	padding-top: 10px;
-	padding-bottom: 10px;
-}
-.billettvalg{
-	margin: auto;
-	width: 60%;
-	display: flex;
-	flex-direction: row;
-	-webkit-flex-wrap: wrap;
-  flex-wrap: wrap;
-	justify-content: space-between;
-	align-items: flex-start;
-}
-.sidepanel{
-	margin: 0px;
-	order: 1;
-	flex-grow: 1;
-	min-width: 300px;
-}
-.beskrivelse{
-	font-family: 'Raleway', sans-serif;
-	font-size: 1em;
-	font-weight: bold;
-}
-.type_sete{
-	order:1;
-	width: 50%;
-	height: 200px;
-}
-.type_sete label{
-	font-family: 'Raleway', sans-serif;
-	font-size: 1em;
-	font-weight: bold;
-	order: 1;
+.box {
+  border : 1px solid black;
 }
 
-.type_sete .beholder{
-	display: flex;
-	justify-content:space-between;
-	flex-wrap: wrap;
-	margin: 10px 0px;
-	width: 180px;
-	flex-direction: row-reverse;
+/* ----------------NAV/TOPP--------------------- */
+.nav {
+  display          : flex;
+  width            : 100%;
+  height           : 100px;
+  margin           : 0px;
+  padding          : 0px;
+  background-color : #4990E2;
+  font-family      : 'Raleway',
+                     sans-serif;
+  font-size        : 1.5em;
+  font-weight      : bold;
+  flex-direction   : row;
 }
-.select, .barn, .honnor{
-	order: 2;
-}
-.mode{
-	font-family: 'Raleway', sans-serif;
-	font-weight: bold;
-	font-size: 1em;
-	margin: 20px 0px;
-}
-.under_setekart{
-	display: none;
-}
-.setekart{
-	font-family: 'Raleway', sans-serif;
-	margin-left: 20px;
-	order: 2;
-	position: relative;
-	height: 100%;
-  overflow: hidden;
-  overflow-x: scroll;
 
-	/*border: 1px solid black;*/
+.logo {
+  width  : 80px;
+  height : 80px;
+  margin : 10px 30px;
+  order  : 1;
 }
-.sete{
-	margin: 30px;
-	white-space:nowrap;
-  height: 100%;
-}
-#kurve{
-	position: absolute;
-	width: 500px;
-	height: 300px;
-	margin: 70px 0px 0px 500px;
-	border: 1px solid black;
-}
-.skjerm{
-	font-family: 'Raleway', sans-serif;
-	font-size: 1em;
-	background-color: #B9B9B9;
-	border-radius: 15px;
-	text-align: center;
-	padding: 2px;
-	margin: 0px 0px 10px 20px;
-	width: 100%;
-}
-.seat{
-	background-color: #F2F2F2;
-}
-.seteinfo{
-	font-family: 'Raleway', sans-serif;
-	margin: 30px 0px;
-	width: 180px;
-	order: 3;
-}
-.sirkel{
-	width: 10px;
-	height: 10px;
 
-	-moz-border-radius: 50px;
-	-webkit-border-radius: 50px;
-	border-radius: 50px;
+.navigering {
+  margin          : 45px 10px 10px;
+  padding         : 10px;
+  order           : 2;
+  list-style-type : none;
 }
-.ledig{
-	order: 2;
+
+.navigering li {
+  display : inline;
+  margin  : 2px;
+  padding : 5px 10px;
 }
-.ledig_sete{
-	background: #B9B9B9;
-	order: 1;
-	margin: 5px
+
+.navigering li:hover {
+  border-radius    : 15px;
+  background-color : white;
 }
-.opptatt{
-	background: #6C4977;
-	order: 1;
-	margin: 5px
+
+/* -----------------INFOBOKS-------------------- */
+
+.reservasjonsinfo {
+  display           : flex;
+  width             : 60%;
+  margin            : auto;
+  margin-bottom     : 50px;
+  padding           : 5px;
+  flex-direction    : row;
+  -webkit-flex-wrap : wrap;
+  flex-wrap         : wrap;
+  justify-content   : space-between;
 }
-.midlertidig{
-	background: #4990E2;
-	order: 1;
-	margin: 5px
+
+.event {
+  display : flex;
 }
-.mine:before{
-	content: "\f007";
-	color: #7ED321;
-	order: 1;
+
+.tid,
+.tittel {
+  font-family : 'Raleway',
+                sans-serif;
+  font-size   : 1.8em;
+  font-weight : bold;
 }
-.hinder:before{
-	content: "\f10c";
-	color: #7ED321;
-	order: 1;
-	margin: 5px;
+
+.lengde,
+.sal,
+.sjanger {
+  font-family : 'Raleway',
+                sans-serif;
+  font-size   : 1.2em;
 }
-.tilleggsinfo{
-	display: flex;
-	justify-content:space-between;
-	flex-wrap: wrap;
-	width: 60%;
-	margin: auto;
+
+.dato {
+  font-family : 'Raleway',
+                sans-serif;
+  font-size   : 1.2em;
+  font-weight : bold;
 }
-.valgte_billetter{
-	display: inline-block;
-	padding: 3px 7px;
-	border-radius: 10px;
-	background-color: #7ED321;
-	margin: 2px 1px;
-	visibility: visible;
+
+.bilde img {
+  height     : 90px;
+  box-shadow : 2px 2px 10px #888888;
+  order      : 1;
 }
-.dine_valgte_billetter{
-	width: 180px;
-	order: 1;
+
+.eventinfo {
+  margin     : 0px 20px;
+  text-align : left;
+  order      : 2;
 }
-.dine_valgte_billetter p{
-	visibility: hidden;
+
+.tidspunkt {
+  text-align      : center;
+  justify-content : flex-end;
+  order           : 3;
 }
-.advarsel{
-	color: #D0011B;
-	font-family: 'Raleway', sans-serif;
-	font-size: 1.2em;
-	font-weight: bold;
-	display: none;
-	order: 2;
-	width: 50%;
+
+.hover:focus {
+  background-color : #F2F2F2;
 }
-.advarsel img{
-	width: 40px;
-	height: 40px;
-	order:1;
+
+.hover:hover {
+  box-shadow        : 0 0 15px -10px gray;
+  box-shadow        : 0 0 10px -2px;
+  -webkit-transform : scale(1.03, 1.03);
+  transition        : all 0.15s linear;
+  cursor            : pointer;
 }
-.advarsel p{
-	order: 2;
-	margin-left: 10px;
+
+
+
+/* -----------------BILLETTMODUL-------------------- */
+
+.billettbakgrunn {
+  padding-top      : 10px;
+  padding-bottom   : 10px;
+  background-color : #F2F2F2;
 }
-#valgt_arrangement{
-	margin: 20px auto;
-	height: 100px;
+
+.billettvalg {
+  display           : flex;
+  width             : 60%;
+  margin            : auto;
+  align-items       : flex-start;
+  flex-direction    : row;
+  -webkit-flex-wrap : wrap;
+  flex-wrap         : wrap;
+  justify-content   : space-between;
 }
+
+.sidepanel {
+  min-width : 300px;
+  margin    : 0px;
+  flex-grow : 1;
+  order     : 1;
+}
+
+.beskrivelse {
+  font-family : 'Raleway',
+                sans-serif;
+  font-size   : 1em;
+  font-weight : bold;
+}
+
+.type_sete {
+  width  : 50%;
+  height : 200px;
+  order  : 1;
+}
+
+.type_sete label {
+  font-family : 'Raleway',
+                sans-serif;
+  font-size   : 1em;
+  font-weight : bold;
+  order       : 1;
+}
+
+.type_sete .beholder {
+  display         : flex;
+  width           : 180px;
+  margin          : 10px 0px;
+  flex-direction  : row-reverse;
+  flex-wrap       : wrap;
+  justify-content : space-between;
+}
+
+.barn,
+.honnor,
+.select {
+  order : 2;
+}
+
+.mode {
+  margin      : 20px 0px;
+  font-family : 'Raleway',
+                sans-serif;
+  font-size   : 1em;
+  font-weight : bold;
+}
+
+.under_setekart {
+  display : none;
+}
+
+.setekart {
+  position    : relative;
+  height      : 100%;
+  margin-left : 20px;
+  overflow    : hidden;
+  overflow-x  : scroll;
+  font-family : 'Raleway',
+                sans-serif;
+  order       : 2;
+  /* border: 1px solid black; */
+}
+
+.sete {
+  height      : 100%;
+  margin      : 30px;
+  white-space : nowrap;
+}
+
+#kurve {
+  position : relative;
+  top      : 70px;
+  left     : 500px;
+  width    : 500px;
+  height   : 300px;
+  border   : 1px solid black;
+  /* margin: 70px 0px 0px 500px; */
+}
+
+.skjerm {
+  width            : 92%;
+  margin           : 0px 0px 10px 5%;
+  padding          : 2px;
+  border-radius    : 15px;
+  background-color : #B9B9B9;
+  text-align       : center;
+  font-family      : 'Raleway',
+                     sans-serif;
+  font-size        : 1em;
+}
+
+.seat {
+  background-color : #F2F2F2;
+}
+
+.seteinfo {
+  width       : 180px;
+  margin      : 30px 0px;
+  font-family : 'Raleway',
+                sans-serif;
+  order       : 3;
+}
+
+.sirkel {
+  width                 : 10px;
+  height                : 10px;
+  -moz-border-radius    : 50px;
+  -webkit-border-radius : 50px;
+  border-radius         : 50px;
+}
+
+.ledig {
+  order : 2;
+}
+
+.ledig_sete {
+  margin-top   : 4px;
+  margin-right : 2px;
+  color        : #B9B9B9;
+  order        : 1;
+}
+
+.opptatt {
+  margin-top   : 4px;
+  margin-right : 2px;
+  color        : #6C4977;
+  order        : 1;
+}
+
+.midlertidig {
+  margin-top   : 4px;
+  margin-right : 2px;
+  color        : #4990E2;
+  order        : 1;
+}
+
+.mine {
+  margin-top   : 4px;
+  margin-right : 2px;
+  color        : #7ED321;
+  order        : 1;
+}
+
+.hinder {
+  content      : "\f10c";
+  margin-top   : 4px;
+  margin-right : 2px;
+  color        : #B9B9B9;
+  order        : 1;
+}
+
+.tilleggsinfo {
+  display         : flex;
+  width           : 60%;
+  margin          : auto;
+  flex-wrap       : wrap;
+  justify-content : space-between;
+}
+
+.valgte_billetter {
+  display          : inline-block;
+  visibility       : visible;
+  margin           : 2px 1px;
+  padding          : 3px 7px;
+  border-radius    : 10px;
+  background-color : #7ED321;
+}
+
+.dine_valgte_billetter {
+  width : 180px;
+  order : 1;
+}
+
+.dine_valgte_billetter p {
+  visibility : hidden;
+}
+
+.advarsel {
+  display     : none;
+  width       : 50%;
+  color       : #D0011B;
+  font-family : 'Raleway',
+                sans-serif;
+  font-size   : 1.2em;
+  font-weight : bold;
+  order       : 2;
+}
+
+.advarsel img {
+  width  : 40px;
+  height : 40px;
+  order  : 1;
+}
+
+.advarsel p {
+  margin-left : 10px;
+  order       : 2;
+}
+
+#valgt_arrangement {
+  height : 100px;
+  margin : 20px auto;
+}
+
 .betalingsinfo {
-	width: 60%;
-	margin: auto;
-	font-family: 'Raleway', sans-serif;
-	font-size: 1.2em;
-	font-weight: bold;
-	height: 240px;
+  width       : 60%;
+  height      : 240px;
+  margin      : auto;
+  font-family : 'Raleway',
+                sans-serif;
+  font-size   : 1.2em;
+  font-weight : bold;
 }
-.betalingsinfo .beholder{
-	display: flex;
-	flex-direction: row;
-	-webkit-flex-wrap: wrap;
-  flex-wrap: wrap;
-	justify-content: space-between;
-	margin: 10px 0px;
+
+.betalingsinfo .beholder {
+  display           : flex;
+  margin            : 10px 0px;
+  flex-direction    : row;
+  -webkit-flex-wrap : wrap;
+  flex-wrap         : wrap;
+  justify-content   : space-between;
 }
-.betalingsinfo form{
-	margin: 20px 0px;
-	width: 300px;
+
+.betalingsinfo form {
+  width  : 300px;
+  margin : 20px 0px;
 }
+
 .betalingsinfo p {
-	order: 1;
-}
-.betalingsinfo input{
-	order: 2;
-	width: 200px;
-}
-.betalingsinfo button{
-	margin: 5px;
-}
-.valgte_billetter_boks{
-	margin: 20px 0px;
-	height: 70px;
-}
-#valgte_billettbokser{
-	font-size: 1em;
-	font-weight: normal;
-}
-.footer{
-	width: 60%;
-	margin: 20px auto;
-}
-#billett_tilbakemelding{
-	font-family: 'Raleway', sans-serif;
-	font-size: 2em;
-	font-weight: bold;
-	margin: 10px auto;
-	text-align: center;
+  order : 1;
 }
 
-/*-------------------------------------*/
-.prisoversikt{
-	width: 60%;
-	margin: 20px auto;
+.betalingsinfo input {
+  width : 200px;
+  order : 2;
 }
-.pristabell{
-width: 100%;
+
+.betalingsinfo button {
+  margin : 5px;
 }
-.pristabell th{
-	border: 1px solid #F2F2F2;
-	height: 30px;
-	padding: 10px;
-	font-weight: bold;
-	background: #F2F2F2;
+
+.valgte_billetter_boks {
+  height : 70px;
+  margin : 20px 0px;
 }
-.pristabell td{
-	border: 1px solid #F2F2F2;
-	padding: 10px;
+
+#valgte_billettbokser {
+  font-size   : 1em;
+  font-weight : normal;
 }
-.sum td{
-	border-bottom: 2px solid #9B9B9B;
+
+.footer {
+  width  : 60%;
+  margin : 20px auto;
 }
-.prisoversikt button{
-	float: right;
-	margin: 10px 10px 30px;
+
+#billett_tilbakemelding {
+  margin      : 10px auto;
+  text-align  : center;
+  font-family : 'Raleway',
+                sans-serif;
+  font-size   : 2em;
+  font-weight : bold;
 }
-.prisoversikt .kort{
-	width: 100px;
+
+/* ------------------PRISOVERSIKT------------------- */
+
+.prisoversikt {
+  width  : 60%;
+  margin : 20px auto;
 }
-.pristabell tr:hover{
-	background-color:#F2F2F2;
+
+.pristabell {
+  width : 100%;
 }
-.neste_knapp{
-	border-radius: 25px;
-	border: 3px solid #7ED321;
-	font-family: 'Raleway', sans-serif;
-	font-size: 0.9em;
-	font-weight: bold;
-	padding: 5px 10px;
-	color: #4A4A4A;
-	background-color: white;
+
+.pristabell th {
+  height      : 30px;
+  padding     : 10px;
+  border      : 1px solid #F2F2F2;
+  background  : #F2F2F2;
+  font-weight : bold;
 }
-.neste_knapp:hover{
-	background-color: #7ED321;
-	color: white;
-	transition: all 0.2s linear;
+
+.pristabell td {
+  padding : 10px;
+  border  : 1px solid #F2F2F2;
 }
-/*-------------------------------------*/
-ol, ul {
-	list-style: none;
+
+.sum td {
+  border-bottom : 2px solid #9B9B9B;
 }
-blockquote, q {
-	quotes: none;
+
+.prisoversikt button {
+  float  : right;
+  margin : 10px 10px 30px;
 }
-blockquote:before, blockquote:after,
-q:before, q:after {
-	content: '';
-	content: none;
+
+.prisoversikt .kort {
+  width : 100px;
 }
+
+.pristabell tr:hover {
+  background-color : #F2F2F2;
+}
+
+.neste_knapp {
+  padding          : 5px 10px;
+  color            : #4A4A4A;
+  border           : 3px solid #7ED321;
+  border-radius    : 25px;
+  background-color : white;
+  font-family      : 'Raleway',
+                     sans-serif;
+  font-size        : 0.9em;
+  font-weight      : bold;
+}
+
+.neste_knapp:hover {
+  color            : white;
+  background-color : #7ED321;
+  transition       : all 0.2s linear;
+}
+
+/* -----------------CSS FRA TIDLIGERE EKSEMPEL-------------------- */
+
+ol,
+ul {
+  list-style : none;
+}
+
+blockquote,
+q {
+  quotes : none;
+}
+
+blockquote:after,
+blockquote:before,
+q:after,
+q:before {
+  content : '';
+  content : none;
+}
+
 table {
-	border-collapse: collapse;
-	border-spacing: 0;
+  border-collapse : collapse;
+  border-spacing  : 0;
 }
-#seats label{
-	transform: scale(1.5);
-	width: 21px;
+
+#seats label {
+  width     : 21px;
+  transform : scale(1.5);
 }
-.col-label{
-	margin-left: 2px;
+
+.col-label {
+  margin-left : 2px;
 }
+
 /* Custom */
+
 .legends {
-  font-family: 'Raleway', sans-serif;
-  font-size: 12px;
-  margin: 10px 0;
-  color: #666;
+  margin      : 10px 0;
+  color       : #666;
+  font-family : 'Raleway',
+                sans-serif;
+  font-size   : 12px;
 }
-.methods{
-    margin: 10px 0;
+
+.methods {
+  margin : 10px 0;
 }
+
 .row span.row-label {
-    font-size: 14px;
-    display: inline-block;
-    width: 23px;
-    padding-right: 0px;
-    text-align: left;
+  display       : inline-block;
+  width         : 23px;
+  padding-right : 0px;
+  text-align    : left;
+  font-size     : 14px;
 }
+
 .row span.col-label {
-    font-size: 14px;
-    display: inline-block;
-    width: 19px;
-    text-align: left;
-    margin-bottom: 10px;
+  display       : inline-block;
+  width         : 19px;
+  margin-bottom : 10px;
+  text-align    : left;
+  font-size     : 14px;
 }
 
-input[type=checkbox] { display:none; } /* to hide the checkbox itself */
+input[type=checkbox] {
+  display : none;
+}
+
+/* to hide the checkbox itself */
+
 input[type=checkbox] + label:before {
-  font-family: FontAwesome;
-  font-size: 12px;
-  display: inline-block;
-  margin: 0 2px;
-  line-height: 17px;
+  display     : inline-block;
+  margin      : 0 2px;
+  font-family : FontAwesome;
+  font-size   : 12px;
+  line-height : 17px;
 }
 
 input[type=checkbox] + label:before {
-  content: "\f111";
-  color: #B9B9B9;
-  cursor: pointer;
+  content : "\f111";
+  color   : #B9B9B9;
+  cursor  : pointer;
 }
 
 input[type=checkbox]:checked + label:before {
-  content: "\f007";
-	color: #7ED321;
+  content : "\f007";
+  color   : #7ED321;
 }
 
-input[type=checkbox]:disabled[data-status=booked] + label:before{
-  content: "\f057";
-	color: #6C4977;
+input[type=checkbox]:disabled[data-status=booked] + label:before {
+  content : "\f057";
+  color   : #6C4977;
 }
 
-input[type=checkbox]:disabled[data-status=notavailable] + label:before{
-  content: "\f007";
-	color: #4990E2;
-}
-input[type=checkbox]:disabled[data-status=utilgjengelig] + label:before{
-  content: "\f007";
-	visibility: hidden;
-}
-input[type=checkbox]:disabled[data-status=pillar] + label:before{
-  content: "\f10c";
-	color: #747474
-}
-/*--------------FLEXBOX---------------*/
-.beholder{
-	display: flex;
-}
-.box{
-	border: 1px solid black;
+input[type=checkbox]:disabled[data-status=notavailable] + label:before {
+  content : "\f007";
+  color   : #4990E2;
 }
 
-@media all and (max-width: 1200px) {
-	.reservasjonsinfo{
-		width: 80%;
-	}
-	.overskrift{
-		width: 80%;
-	}
-	.billettvalg{
-		width: 80%;
-	}
-	.prisoversikt{
-		width: 80%;
-	}
-	.tilleggsinfo{
-		width: 80%;
-	}
+input[type=checkbox]:disabled[data-status=utilgjengelig] + label:before {
+  content    : "\f007";
+  visibility : hidden;
 }
-@media all and (max-width: 992px) {
-	.reservasjonsinfo{
-		width: 90%;
-		padding: 0px 30px;
-	}
-	.overskrift{
-		width: 90%;
-		padding: 0px 30px;
-	}
-	.billettvalg{
-		width: 90%;
-		padding: 0px 30px;
-	}
-	.prisoversikt{
-		width: 90%;
-		padding: 0px 30px;
-	}
-	.tilleggsinfo{
-		width: 90%;
-		padding: 0px 30px;
-	}
-}
-@media all and (max-width: 768px) {
-	.reservasjonsinfo{
-		width: 100%;
-	}
-	.overskrift{
-		width: 100%;
-	}
-	.billettvalg{
-		width: 100%
-	}
-	.prisoversikt{
-		width: 100%;
-	}
-	.tilleggsinfo{
-		width: 100%;
-	}
-	.nav{
-		height: 50px;
-	}
-	.logo{
-		width: 40px;
-		height: 40px;
-		margin: 5px 15px;
-	}
-	.under_setekart{
-		display: inline;
-	}
-	.over_setekart{
-		display: none;
-	}
-	/*--------------------------------------*/
-	.reservasjonsinfo{
-		flex-direction: row;
-	}
-	.tidspunkt{
-		margin: 20px 0px 0px;
-	}
-	/*--------------------------------------*/
-	.billettbakgrunn{
-		height: auto;
-	}
-	.billettvalg{
-		display: flex;
-		flex-direction: column;
-		align-items:center;
-	}
-	.type_sete{
-		order: 1;
-		width: 260px;
-	}
-	.setekart{
-		order: 2;
-		width: 100%;
-	}
 
-	.sidepanel{
-		display: contents;
-	}
-	.tilleggsinfo{
-		flex-direction: column;
-		align-items:center;
-	}
-	.seteinfo .under_setekart{
-		order: 2;
-		margin: 0px 0px;
-	}
-	.dine_valgte_billetter{
-		order: 3;
-		width: 260px;
-	}
-	.type_sete .beholder{
-		display: 0;
-		width: 260px;
-	}
-	.advarsel{
-		margin: 15px auto 0px;
-		display: none;
-		order:1;
-		width: 60%;
-	}
+input[type=checkbox]:disabled[data-status=pillar] + label:before {
+  content : "\f10c";
+  color   : #B9B9B9;
 }
-@media all and (max-width: 500px) {
-	#valgt_arrangement{
-		height: auto;
-	}
-	.overskrift {
-    font-size: 1em;
-    font-weight: bold;
-    margin: 5px auto;
-		padding: 0px 20px;
-		text-decoration: underline;
+
+
+/* --------------MEDIA QUERIES--------------- */
+@media all
+       and (max-width : 1200px) {
+  .reservasjonsinfo {
+    width : 80%;
+  }
+
+  .overskrift {
+    width : 80%;
+  }
+
+  .billettvalg {
+    width : 80%;
+  }
+
+  .prisoversikt {
+    width : 80%;
+  }
+
+  .tilleggsinfo {
+    width : 80%;
+  }
 }
-.tittel, .tid {
-    font-size: 1.2em;
+
+@media all
+       and (max-width : 992px) {
+  .reservasjonsinfo {
+    width   : 90%;
+    padding : 0px 30px;
+  }
+
+  .overskrift {
+    width   : 90%;
+    padding : 0px 30px;
+  }
+
+  .billettvalg {
+    width   : 90%;
+    padding : 0px 30px;
+  }
+
+  .prisoversikt {
+    width   : 90%;
+    padding : 0px 30px;
+  }
+
+  .tilleggsinfo {
+    width   : 90%;
+    padding : 0px 30px;
+  }
 }
-.dato {
-    font-size: 1em;
-    font-weight: bold;
+
+@media all
+       and (max-width : 768px) {
+  .reservasjonsinfo {
+    width : 100%;
+  }
+
+  .overskrift {
+    width : 100%;
+  }
+
+  .billettvalg {
+    width : 100%;
+  }
+
+  .prisoversikt {
+    width : 100%;
+  }
+
+  .tilleggsinfo {
+    width : 100%;
+  }
+
+  .nav {
+    height : 50px;
+  }
+
+  .logo {
+    width  : 40px;
+    height : 40px;
+    margin : 5px 15px;
+  }
+
+  .under_setekart {
+    display : inline;
+  }
+
+  .over_setekart {
+    display : none;
+  }
+  /* -------------------------------------- */
+
+  .reservasjonsinfo {
+    flex-direction : row;
+  }
+
+  .tidspunkt {
+    margin : 20px 0px 0px;
+  }
+  /* -------------------------------------- */
+
+  .billettbakgrunn {
+    height : auto;
+  }
+
+  .billettvalg {
+    display        : flex;
+    align-items    : center;
+    flex-direction : column;
+  }
+
+  .type_sete {
+    width : 260px;
+    order : 1;
+  }
+
+  .setekart {
+    width : 100%;
+    order : 2;
+  }
+
+  .sidepanel {
+    display : contents;
+  }
+
+  .tilleggsinfo {
+    align-items    : center;
+    flex-direction : column;
+  }
+
+  .seteinfo .under_setekart {
+    margin : 0px 0px;
+    order  : 2;
+  }
+
+  .dine_valgte_billetter {
+    width : 260px;
+    order : 3;
+  }
+
+  .type_sete .beholder {
+    display : 0;
+    width   : 260px;
+  }
+
+  .advarsel {
+    display : none;
+    width   : 60%;
+    margin  : 15px auto 0px;
+    order   : 1;
+  }
 }
-	.reservasjonsinfo{
-		flex-direction: column;
-		margin-bottom: 5px;
-	}
-	.seteinfo{
-		margin: 5px 0px 8px;
-	}
-	.advarsel{
-		width: 80%;
-	}
+
+@media all
+       and (max-width : 500px) {
+  #valgt_arrangement {
+    height : auto;
+  }
+
+  .overskrift {
+    margin          : 5px auto;
+    padding         : 0px 20px;
+    text-decoration : underline;
+    font-size       : 1em;
+    font-weight     : bold;
+  }
+
+  .tid,
+  .tittel {
+    font-size : 1.2em;
+  }
+
+  .dato {
+    font-size   : 1em;
+    font-weight : bold;
+  }
+
+  .reservasjonsinfo {
+    margin-bottom  : 5px;
+    flex-direction : column;
+  }
+
+  .seteinfo {
+    margin : 5px 0px 8px;
+  }
+
+  .advarsel {
+    width : 80%;
+  }
 }
-@media all and (max-width: 320px) {
-	.advarsel{
-		width: 100%;
-	}
+
+@media all
+       and (max-width : 320px) {
+  .advarsel {
+    width : 100%;
+  }
 }

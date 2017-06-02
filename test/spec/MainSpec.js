@@ -6,6 +6,7 @@
   })
 
 describe("Antall seter", function(){
+
   it("bør stemme med riktig antall seter", function(){
     firebase.database().ref('Saler/Sal1/Sal_Info/SeterTotal').once('value', function(snapshot){
       expect(snapshot.val()).toBe('67');
