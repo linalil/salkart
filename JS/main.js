@@ -326,7 +326,7 @@ function mainFunction ($) {
         for (var i = 0; i < settings.rows; i++) {
           let visualSeatNumber = 0
 
-          if(settings.saltype === 'Kurve' && i % 2 != 0){
+          if(settings.saltype === 'Kurve' && i > 0){
             maks++
           }
           for (var j = 0; j < maks; j++) {
@@ -531,7 +531,7 @@ function mainFunction ($) {
           _row.append(_colLabel)*/
           let labNum = 0
 
-          if(j % 2 != 0) {
+          if(j > 0) {
             maks++
           }
           for (let k = 0; k < maks; k++) {
@@ -566,7 +566,7 @@ function mainFunction ($) {
                 _checkbox.attr('data-status', 'available')
               }
               labNum++
-              _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '" title="' + (i + 1) + '-' + labNum + '"></label>')
+              _seat = $('<label class="' + _seatClass + '" for="seat' + _seatObject.id + '" title="' + (j + 1) + '-' + labNum + '"></label>')
             }
             _div.append(_checkbox)
             _div.append(_seat)

@@ -66,7 +66,15 @@ $(document).ready(function () {
     let email = $('#e-mail').val()
     let tlf = $('#tlf').val()
 
-    if (name != '' && email != '' && tlf != '') {
+    let nameRegExp = /^[æøåÆØÅa-zA-Z\s]*$/
+    let emailRegExp = /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/
+    let phoneRegExp = /^[0-9]{8}$/
+
+
+    if (name != '' && email != '' && tlf != ''
+    && name.match(nameRegExp)
+    && email.match(emailRegExp)
+    && tlf.match(phoneRegExp)) {
       console.log('Inputfelt godkjent')
       return true
     } else {
@@ -82,13 +90,6 @@ $(document).ready(function () {
       let email = $('#e-mail').val()
       let tlf = $('#tlf').val()
 
-      // var credential = firebase.auth.EmailAuthProvider.credential(email, tlf)
-
-      /*auth.currentUser.link(credential).then(function(user) {
-        console.log('Anonymous account successfully upgraded', user)
-      }, function (error) {
-        console.log('Error upgrading anonymous account', error)
-      })*/
 
       console.log('Tektstfelt sin verdi: ' + name + email + tlf)
       $.each(mySeats, function (i, v) {
